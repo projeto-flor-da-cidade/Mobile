@@ -1,0 +1,46 @@
+.centralizar-conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .header-logos {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .logo-prefeitura, .logo-projeto {
+    height: 50px; /* Ajuste o tamanho conforme necessário */
+  }
+
+.banner-projeto {
+    width: 90%;          /* Define a largura como 100% do contêiner */
+    max-width: 200px;     /* Define um limite máximo de largura */
+    height: auto;         /* Mantém a proporção da altura */
+    object-fit: cover;    /* Ajusta a imagem para cobrir o espaço disponível */
+    object-fit: cover;    /* Ajusta a imagem para cobrir o espaço disponível */
+    display: block;       /* Torna a imagem um elemento em bloco */
+    margin: 0 auto;       /* Centraliza a imagem horizontalmente */
+  }
+  
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center; 
+  }
+  
+  .titulo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d4d4d4;
+    margin-bottom: 20px;
+  }
+  
+  
+  

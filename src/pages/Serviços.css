@@ -1,0 +1,49 @@
+.centralizar-botoes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centraliza verticalmente */
+    padding-top: 0; /* Remove o padding para centralizar melhor */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center; /* Centraliza o contêiner horizontalmente */
+    align-items: center; /* Centraliza o contêiner verticalmente */
+    width: 100%; /* Ocupa toda a largura da tela */
+    height: 100%; /* Ocupa toda a altura da tela para centralização vertical */
+  }
+  
+  .header-logos {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .logo-prefeitura, .logo-projeto {
+    height: 50px; /* Ajuste o tamanho conforme necessário */
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%; /* Largura total do contêiner */
+    max-width: 500px; /* Limita a largura máxima para botões */
+    padding: 20px; /* Espaço ao redor dos botões */
+    box-sizing: border-box;
+  }
+  
+  
+  .voltar-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%; /* Posiciona o botão a partir do centro da tela */
+    transform: translateX(-50%); /* Centraliza o botão */
+    width: 50%; /* Define uma largura menor para o botão Voltar */
+    max-width: 100px; /* Define uma largura máxima para o botão Voltar */
+    padding: 10px;
+    text-align: center;
+  }
+  
