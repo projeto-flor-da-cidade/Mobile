@@ -11,23 +11,22 @@
     justify-content: center; /* Centraliza o contêiner horizontalmente */
     align-items: center; /* Centraliza o contêiner verticalmente */
     width: 100%; /* Ocupa toda a largura da tela */
-    height: 100%; /* Ocupa toda a altura da tela para centralização vertical */
+    height: 25%; /* Ocupa toda a altura da tela para centralização vertical */
   }
 
-    
-.botao-personalizado {
-  --background: white; /* Fundo branco */
-  --color: #5985B6; /* Texto azul */
-  --border-color: #5985B6; /* Borda azul */
-  border-width: 2px; /* Opcional: borda mais visível */
-  font-weight: bold; /* Deixar o texto mais destacado */
-}
-
-.botao-personalizado:hover {
-  --background: #5985B6; /* Fundo azul no hover */
-  --color: white; /* Texto branco no hover */
-  --border-color: #5985B6;
-}
+  .botao-personalizado {
+    --background: white; /* Fundo branco */
+    --color: #5985B6; /* Texto azul */
+    --border-color: #5985B6; /* Borda azul */
+    border-width: 2px; /* Opcional: borda mais visível */
+    font-weight: bold; /* Deixar o texto mais destacado */
+  }
+  
+  .botao-personalizado:hover {
+    --background: #5985B6; /* Fundo azul no hover */
+    --color: white; /* Texto branco no hover */
+    --border-color: #5985B6;
+  }
   
   .header-logos {
     display: flex;
@@ -43,24 +42,25 @@
   .button-group {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     width: 100%; /* Largura total do contêiner */
     max-width: 500px; /* Limita a largura máxima para botões */
     padding: 20px; /* Espaço ao redor dos botões */
     box-sizing: border-box;
-    justify-content: flex-start;
-    margin-top: 250px; 
+    height: 400px;
   }
   
   
+  .mapa {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
   .voltar-button {
-    position: absolute;
-    bottom: -250px;
-    left: 50%; /* Posiciona o botão a partir do centro da tela */
-    transform: translateX(-50%); /* Centraliza o botão */
-    width: 50%; /* Define uma largura menor para o botão Voltar */
-    max-width: 100px; /* Define uma largura máxima para o botão Voltar */
-    padding: 10px;
-    justify-content: flex-start;
-    text-align: center;
+    position: relative;
+    margin-top: 15px;
+    width: 50%;
+    max-width: 200px;
   }

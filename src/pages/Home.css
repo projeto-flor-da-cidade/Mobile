@@ -5,6 +5,22 @@
     height: 100vh;
   }
 
+  
+.botao-personalizado {
+  --background: white; /* Fundo branco */
+  --color: #5985B6; /* Texto azul */
+  --border-color: #5985B6; /* Borda azul */
+  border-width: 2px; /* Opcional: borda mais visível */
+  font-weight: bold; /* Deixar o texto mais destacado */
+}
+
+.botao-personalizado:hover {
+  --background: #5985B6; /* Fundo azul no hover */
+  --color: white; /* Texto branco no hover */
+  --border-color: #5985B6;
+}
+
+
   .header-logos {
     display: flex;
     justify-content: space-between;

@@ -1,8 +1,8 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar  , IonButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
-import logoPrefeitura from '../assets/logo-prefeitura.jpg'; 
-import logoProjeto from '../assets/logo-projeto.jpg';  
+import logoPrefeitura from '../assets/logo-prefeitura.png'; 
+import logoProjeto from '../assets/logo-projeto.png';  
 import bannerProjeto from '../assets/banner-projeto.jpg'
 
 const Home: React.FC = () => {
@@ -14,7 +14,8 @@ const Home: React.FC = () => {
           <IonTitle>Blank</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding centralizar-botoes">
+      <IonContent className="ion-padding centralizar-conteudo" 
+       style={{ '--background': '#316cae'}}>
       <div className="header-logos">
           <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
           <img src={logoProjeto} alt="Logo Projeto" className="logo-projeto" />
@@ -28,10 +29,10 @@ const Home: React.FC = () => {
         <div className="container">  <p className="titulo">Secretaria Executiva de Agricultura Urbana 
           SEAU
          </p>
-         <IonButton expand="block" color="primary">
+         <IonButton expand="block"  className="botao-personalizado" >
             Sou membro da secretaria
           </IonButton>
-          <IonButton expand="block" color="secondary" onClick={() => history.push('/serviços')}>
+          <IonButton expand="block"  className="botao-personalizado"  onClick={() => history.push('/serviços')}>
             Não sou membro da secretaria
           </IonButton>
          </div>
