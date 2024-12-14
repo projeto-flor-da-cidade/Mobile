@@ -1,0 +1,38 @@
+.centralizar-botoes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    height: 50px;
+    object-fit: contain;
+  }
+  
+  .SAFUC, .Sitio {
+    width: 150px; /* Defina a largura desejada */
+    height: auto; /* Mantém a proporção da imagem */
+    margin: 10px 0; /* Espaçamento opcional */
+  }
+  
+  .botao-personalizado {
+    --background: white; /* Fundo branco */
+    --color: #5985B6; /* Texto azul */
+    --border-color: #5985B6; /* Borda azul */
+    border-width: 2px; /* Opcional: borda mais visível */
+    font-weight: bold; /* Deixar o texto mais destacado */
+  }
+
+ 
+ .botao-voltar {
+    margin-top: 1rem;
+    width: 10px; /* Set the width of the button */
+    align-self: center; /* Ensure the button is centered */
+  }
+    

@@ -14,7 +14,7 @@ const Home: React.FC = () => {
           <IonTitle>Blank</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding centralizar-conteudo" 
+      <IonContent className="ion-padding  centralizar-conteudo" 
        style={{ '--background': '#316cae'}}>
       <div className="header-logos">
           <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />

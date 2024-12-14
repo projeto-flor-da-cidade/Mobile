@@ -4,6 +4,12 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Serviços from './pages/Serviços';
 import Mapa from './pages/Mapa'; 
+import Serv1 from './pages/Serv1';
+import Serv2 from './pages/Serv2'
+import Espaço from './pages/Espaço';
+import SAFUC from './pages/SAFUC';
+import Sítio from './pages/Sítio';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -49,6 +55,21 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/mapa">
           <Mapa/>
+        </Route>
+        <Route exact path="/serv1">
+        <Serv1/>
+        </Route>
+        <Route exact path="/serv2">
+        <Serv2/>
+        </Route>
+        <Route exact path="/espaço">
+        <Espaço/>
+        </Route>
+        <Route exact path="/safuc">
+        <SAFUC/>
+        </Route>
+        <Route exact path="/sítio">
+        <Sítio/>
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />
