@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import logoPrefeitura from '../assets/logo-prefeitura.png'; 
 import logoProjeto from '../assets/logo-projeto.png'; 
 import SAFUC from '../assets/SAFUC.png';
-import Sítio from '../assets/Sítio.png'; // Fixed the image import name to match the variable
+import Sítio from '../assets/Sítio.png';
 
 const Espaco: React.FC = () => {
   const history = useHistory();
@@ -12,7 +12,7 @@ const Espaco: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Recife Prefeitura</IonTitle> {/* Add a title */}
+          <IonTitle>Recife Prefeitura</IonTitle> 
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding centralizar-botoes" style={{ '--background': '#316cae' }}>
@@ -24,15 +24,15 @@ const Espaco: React.FC = () => {
     src={SAFUC}
     alt="SAFUC"
     className="SAFUC"
-    onClick={() => history.push('/safuc')} // Navegar para outra página
-    style={{ cursor: 'pointer' }} // Adiciona um cursor de ponteiro para indicar clicável
+    onClick={() => history.push('/safuc')} 
+    style={{ cursor: 'pointer' }} 
   />
   <img
     src={Sítio}
     alt="Sítio"
     className="sítio"
-    onClick={() => history.push('/sítio')} // Navegar para outra página
-    style={{ cursor: 'pointer' }} // Adiciona um cursor de ponteiro para indicar clicável
+    onClick={() => history.push('/sítio')} 
+    style={{ cursor: 'pointer' }}
   />
         <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/serv1')}>Voltar</IonButton>
       </IonContent>

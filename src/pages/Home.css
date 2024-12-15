@@ -7,16 +7,16 @@
 
   
 .botao-personalizado {
-  --background: white; /* Fundo branco */
-  --color: #5985B6; /* Texto azul */
-  --border-color: #5985B6; /* Borda azul */
-  border-width: 2px; /* Opcional: borda mais visível */
-  font-weight: bold; /* Deixar o texto mais destacado */
+  --background: white; 
+  --color: #5985B6; 
+  --border-color: #5985B6;
+  border-width: 2px; 
+  font-weight: bold; 
 }
 
 .botao-personalizado:hover {
-  --background: #5985B6; /* Fundo azul no hover */
-  --color: white; /* Texto branco no hover */
+  --background: #5985B6; 
+  --color: white; 
   --border-color: #5985B6;
 }
 
@@ -29,17 +29,17 @@
   }
   
   .logo-prefeitura, .logo-projeto {
-    height: 50px; /* Ajuste o tamanho conforme necessário */
+    height: 50px; 
   }
 
 .banner-projeto {
-    width: 90%;          /* Define a largura como 100% do contêiner */
-    max-width: 200px;     /* Define um limite máximo de largura */
-    height: auto;         /* Mantém a proporção da altura */
-    object-fit: cover;    /* Ajusta a imagem para cobrir o espaço disponível */
-    object-fit: cover;    /* Ajusta a imagem para cobrir o espaço disponível */
-    display: block;       /* Torna a imagem um elemento em bloco */
-    margin: 0 auto;       /* Centraliza a imagem horizontalmente */
+    width: 90%;          
+    max-width: 200px;     
+    height: auto;         
+    object-fit: cover;   
+    object-fit: cover;    
+    display: block;       
+    margin: 0 auto;     
   }
   
   

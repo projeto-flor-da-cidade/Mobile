@@ -15,18 +15,13 @@
     object-fit: contain;
   }
   
-  .SAFUC, .Sitio {
-    width: 150px; /* Defina a largura desejada */
-    height: auto; /* Mantém a proporção da imagem */
-    margin: 10px 0; /* Espaçamento opcional */
-  }
   
   .botao-personalizado {
-    --background: white; /* Fundo branco */
-    --color: #5985B6; /* Texto azul */
-    --border-color: #5985B6; /* Borda azul */
-    border-width: 2px; /* Opcional: borda mais visível */
-    font-weight: bold; /* Deixar o texto mais destacado */
+    --background: white; 
+    --color: #5985B6; 
+    --border-color: #5985B6; 
+    border-width: 2px; 
+    font-weight: bold; 
   }
 
  
