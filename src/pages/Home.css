@@ -1,3 +1,15 @@
+.BakgroundPagina {
+  --background: url('../assets/background-image.jpeg');
+  --background-size: cover; /* Mostra a imagem inteira */
+  --background-position: center; /* Centraliza a imagem */
+  --background-repeat: no-repeat; /* Evita repetição */
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+}
+
+
+
 .centralizar-conteudo {
     display: flex;
     justify-content: center;
@@ -6,20 +18,58 @@
   }
 
   
-.botao-personalizado {
-  --background: white; 
-  --color: #5985B6; 
-  --border-color: #5985B6;
-  border-width: 2px; 
-  font-weight: bold; 
+  ion-button.botao-personalizado {
+    --background: #6E66FF; /* Cor de fundo */
+    --color: #ffffff; /* Cor do texto */
+    --border-color: #000000; /* Cor da borda */
+    --border-width: 2px;
+    --border-radius: 8px; /* Borda arredondada */
+    --padding: 12px; /* Espaçamento interno */
+    --width: 90%; /* Mesma largura para ambos os botões */
+    height: 50px; /* Define a altura fixa */
+    display: block; /* Garante que os botões ocupem uma nova linha */
+    margin: 8px auto; /* Adiciona espaço entre os botões e centraliza */
+    text-align: center; /* Centraliza o texto */
+  }
+  
+
+ion-button.botao-personalizado:hover {
+  --background: #5b54d6; 
+  --color: rgb(224, 224, 224); 
+  --border-color: #222324;
 }
 
-.botao-personalizado:hover {
-  --background: #5985B6; 
-  --color: white; 
-  --border-color: #5985B6;
+.borda-arredondada {
+  background-color: rgb(220, 229, 255); /* Fundo branco */
+  border-radius: 20px; /* Bordas arredondadas */
+  padding: 20px; /* Espaçamento interno */
+  margin: 20px auto; /* Espaçamento externo e centralização */
+  width: 100%; /* Largura do contêiner */
+  max-width: 600px; /* Largura máxima */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  text-align: center; /* Centraliza os elementos internos */
 }
 
+.borda-arredondada-banner {
+  display: flex; /* Habilita flexbox para alinhamento */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  background-color: rgb(220, 229, 255); /* Fundo branco */
+  border-radius: 20px; /* Bordas arredondadas */
+  padding: 20px; /* Espaçamento interno */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  max-width: 300px; /* Largura máxima da caixa */
+  margin: 0 auto; /* Centraliza a caixa na tela */
+  padding-right: 0%;
+}
+
+.borda-arredondada-banner img {
+  width: 100%; /* Faz a imagem preencher o contêiner */
+  height: auto; /* Mantém a proporção da imagem */
+  object-fit: cover; /* Ajusta a imagem para preencher o espaço disponível */
+  object-position: center; /* Centraliza o conteúdo da imagem */
+  border-radius: 10px; /* Mantém bordas arredondadas na imagem */
+}
 
   .header-logos {
     display: flex;
@@ -54,9 +104,6 @@
   .titulo {
     font-size: 18px;
     font-weight: bold;
-    color: #d4d4d4;
+    color: #413a3a;
     margin-bottom: 20px;
   }
-  
-  
-  
