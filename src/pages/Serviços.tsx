@@ -16,11 +16,8 @@ const Servicos: React.FC = () => {
           <IonTitle>Serviços</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="background-customizado ion-padding  centralizar-botoes"
-       style={{ '--background': '#316cae',
-        background: `url(${backgroundImage}) no-repeat center center fixed`,
-        backgroundSize: 'cover',
-       }}>
+      <IonContent className="background ion-padding  centralizar-botoes"
+       style={{ '--background': '#316cae'}}>
       <div className="header-logos">
           <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
           <img src={logoProjeto} alt="Logo Projeto" className="logo-projeto" />

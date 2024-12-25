@@ -17,7 +17,13 @@ const Home: React.FC = () => {
       <IonContent className="ion-padding  centralizar-conteudo" 
        style={{ '--background': '#316cae'}}>
       <div className="header-logos">
-          <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
+      <img
+    src={logoPrefeitura}
+    alt="Logo Prefeitura"
+    className="logo-prefeitura"
+    onClick={() => history.push('/info')} 
+    style={{ cursor: 'pointer' }} 
+  />
           <img src={logoProjeto} alt="Logo Projeto" className="logo-projeto" />
         </div>
         <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />
