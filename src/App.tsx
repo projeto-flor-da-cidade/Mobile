@@ -42,6 +42,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import CadastroFeira from './pages/CadastroFeira';
 
 setupIonicReact();
 
@@ -57,6 +58,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/mapa">
           <Mapa/>
+        </Route>
+        <Route exact path="/cadastrofeira">
+        <CadastroFeira/>
         </Route>
         <Route exact path="/serv1">
         <Serv1/>

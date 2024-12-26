@@ -8,6 +8,7 @@ import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-routing-machine';
 
 
+
 const DefaultIcon = new L.Icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -76,7 +77,7 @@ const Mapa: React.FC = () => {
               Rotas
             </IonButton>
 
-            <IonButton expand="block" className="botao-personalizado">
+            <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/cadastrofeira')} >
               Cadastre sua Feira Agroecológica
             </IonButton>
           </div>
