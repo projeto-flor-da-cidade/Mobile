@@ -1,66 +1,51 @@
 .centralizar-botoes {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Centraliza verticalmente */
-    padding-top: 0; /* Remove o padding para centralizar melhor */
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center; /* Centraliza o contêiner horizontalmente */
-    align-items: center; /* Centraliza o contêiner verticalmente */
-    width: 100%; /* Ocupa toda a largura da tela */
-    height: 25%; /* Ocupa toda a altura da tela para centralização vertical */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Mantém os elementos alinhados ao topo */
+  padding-top: 0; /* Remove qualquer espaçamento extra no topo */
+  margin-top: -20px; /* Ajusta a posição vertical dos botões */
+}
 
-  .botao-personalizado {
-    --background: white; /* Fundo branco */
-    --color: #5985B6; /* Texto azul */
-    --border-color: #5985B6; /* Borda azul */
-    border-width: 2px; /* Opcional: borda mais visível */
-    font-weight: bold; /* Deixar o texto mais destacado */
-  }
-  
-  .botao-personalizado:hover {
-    --background: #5985B6; /* Fundo azul no hover */
-    --color: white; /* Texto branco no hover */
-    --border-color: #5985B6;
-  }
-  
-  .header-logos {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .logo-prefeitura, .logo-projeto {
-    height: 50px; /* Ajuste o tamanho conforme necessário */
-  }
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Mantém os elementos alinhados ao topo */
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: -20px; /* Move todo o conteúdo mais para cima */
+}
 
-  .button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%; /* Largura total do contêiner */
-    max-width: 500px; /* Limita a largura máxima para botões */
-    padding: 20px; /* Espaço ao redor dos botões */
-    box-sizing: border-box;
-    height: 400px;
-  }
-  
-  
-  .mapa {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 20px 0;
-  }
-  
-  .voltar-button {
-    position: relative;
-    margin-top: 15px;
-    width: 50%;
-    max-width: 200px;
-  }
+.botao-personalizado {
+  --background: white;
+  --color: #5985B6;
+  --border-color: #5985B6;
+  border-width: 2px;
+  font-weight: bold;
+}
+
+.botao-personalizado:hover {
+  --background: #5985B6;
+  --color: white;
+  --border-color: #5985B6;
+}
+
+.map-container {
+  width: 100%;
+  height: 300px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  margin-top: -20px; /* Move o mapa mais para cima */
+}
+
+.voltar-button {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 200px;
+}

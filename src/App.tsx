@@ -9,7 +9,9 @@ import Serv2 from './pages/Serv2'
 import Espaço from './pages/Espaço';
 import SAFUC from './pages/SAFUC';
 import Sítio from './pages/Sítio';
-
+import Info from './pages/Info';
+import Missão from './pages/Missão';
+import Agroeco from './pages/Agroeco';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -70,6 +72,15 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/sítio">
         <Sítio/>
+        </Route>
+        <Route exact path="/info">
+        <Info/>
+        </Route>
+        <Route exact path="/missão">
+        <Missão/>
+        </Route>
+        <Route exact path="/agroeco">
+        <Agroeco/>
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />
