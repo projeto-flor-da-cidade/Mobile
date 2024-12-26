@@ -1,43 +1,41 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem , IonButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonButton, IonIcon } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
+import { arrowBack } from 'ionicons/icons'; // Ícones para o botão voltar
 import './Serviços.css';
-import logoPrefeitura from '../assets/logo-prefeitura.png'; 
-import logoProjeto from '../assets/logo-projeto.png'; 
-import backgroundImage from '../assets/background-image.jpeg';
-
-
+import servicoIcon from '../assets/iconeServicosSeau.png'; 
+import mapaIcon from '../assets/iconeMapaHortasFeira.png'; 
+import cursosIcon from '../assets/iconeCursos.png'; 
 
 const Servicos: React.FC = () => {
-    const history = useHistory();
+  const history = useHistory();
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Serviços</IonTitle>
-        </IonToolbar>
+    <IonPage className='Servicos'>
+      <IonHeader className="header-custom">
+        <div className="header-container">
+          <IonButton className="circle-button" onClick={() => history.push('/home')}>
+            <IonIcon icon={arrowBack} />
+          </IonButton>
+          <div className="titulo">
+            <p>SERVIÇOS</p>
+          </div>
+        </div>
       </IonHeader>
-      <IonContent className="background-customizado ion-padding  centralizar-botoes"
-       style={{ '--background': '#316cae',
-        background: `url(${backgroundImage}) no-repeat center center fixed`,
-        backgroundSize: 'cover',
-       }}>
-      <div className="header-logos">
-          <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
-          <img src={logoProjeto} alt="Logo Projeto" className="logo-projeto" />
-        </div>
-          <div className="button-container">  <div className="button-group">
-          <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/serv1')}>
-            Serviços da SEAU
-          </IonButton>
-          <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/mapa')}>
-            Mapa das feiras
-          </IonButton>
-        </div>
-        </div>
-        <div className="voltar-button">
-          <IonButton expand="block"  className="botao-personalizado" onClick={() => history.push('/home')}>
-            Voltar
-          </IonButton>
+      
+      <IonContent className="ion-padding centralizar-conteudo BackgroundPagina">
+        {/* Grade de botões */}
+        <div className="grid-container">
+          <div className="card" onClick={() => history.push('/serv1')}>
+            <img src={servicoIcon} alt="Serviços da SEAU" className="card-image" />
+            <p className="card-caption">Serviços da SEAU</p>
+          </div>
+          <div className="card" onClick={() => history.push('/mapa')}>
+            <img src={mapaIcon} alt="Mapa das feiras" className="card-image" />
+            <p className="card-caption">Mapa das feiras</p>
+          </div>
+          <div className="card" onClick={() => history.push('/serv1')}>
+            <img src={cursosIcon} alt="Cursos" className="card-image" />
+            <p className="card-caption">Cursos</p>
+          </div>
         </div>
       </IonContent>
     </IonPage>
@@ -45,3 +43,4 @@ const Servicos: React.FC = () => {
 };
 
 export default Servicos;
+

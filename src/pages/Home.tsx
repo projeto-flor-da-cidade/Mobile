@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonButton, } from '@ionic/react';
+import { IonContent, IonPage, IonButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
 import logoPrefeitura from '../assets/logo-prefeitura.png';
@@ -14,22 +14,22 @@ const Home: React.FC = () => {
           <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
           <img src={logoProjeto} alt="Logo Projeto" className="logo-projeto" />
         </div>
-        <div className='borda-arredondada-banner'>
+        <div className="borda-arredondada-banner">
           <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />
         </div>
-        <div className="borda-arredondada">
-          <p className="titulo">
-            Secretaria Executiva de Agricultura Urbana SEAU
-          </p>
-          <IonButton className="botao-personalizado">
-            Sou membro da secretaria
-          </IonButton>
-          <IonButton
-            className="botao-personalizado"
-            onClick={() => history.push('/serviços')}
-          >
-            Não sou membro da secretaria
-          </IonButton>
+        <div className="caixa-inferior">
+          <div className="borda-arredondada">
+            <p className="titulo-login">Login:</p>
+            <IonButton className="botao-personalizado">
+              Sou membro da secretaria
+            </IonButton>
+            <IonButton
+              className="botao-personalizado"
+              onClick={() => history.push('/serviços')}
+            >
+              Não sou membro da secretaria
+            </IonButton>
+          </div>
         </div>
       </IonContent>
     </IonPage>
@@ -37,4 +37,5 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
 
