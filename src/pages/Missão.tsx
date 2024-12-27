@@ -22,7 +22,7 @@ envolvimento da população e o aproveitamento de áreas propícias ao cultivo.
         </h1>
       </div>
       <div className="voltar-button">
-          <IonButton expand="block"  className="botao-personalizado" onClick={() => history.push('/info')}>
+          <IonButton expand="block"  className="botao-personalizado" onClick={() => history.goBack()}>
             Voltar
           </IonButton>
         </div>

@@ -4,8 +4,8 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Serviços from './pages/Serviços';
 import Mapa from './pages/Mapa'; 
-import Serv1 from './pages/Serv1';
-import Serv2 from './pages/Serv2'
+import CadastroFeira from './pages/CadastroFeira';
+import ServiçoSEAU from './pages/ServiçoSEAU';
 import Espaço from './pages/Espaço';
 import SAFUC from './pages/SAFUC';
 import Sítio from './pages/Sítio';
@@ -42,7 +42,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import CadastroFeira from './pages/CadastroFeira';
+
+
 
 setupIonicReact();
 
@@ -62,11 +63,8 @@ const App: React.FC = () => (
         <Route exact path="/cadastrofeira">
         <CadastroFeira/>
         </Route>
-        <Route exact path="/serv1">
-        <Serv1/>
-        </Route>
-        <Route exact path="/serv2">
-        <Serv2/>
+        <Route exact path="/serviçoseau">
+        <ServiçoSEAU/>
         </Route>
         <Route exact path="/espaço">
         <Espaço/>

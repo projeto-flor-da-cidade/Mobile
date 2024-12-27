@@ -34,7 +34,7 @@ const Espaco: React.FC = () => {
     onClick={() => history.push('/sítio')} 
     style={{ cursor: 'pointer' }}
   />
-        <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/serv1')}>Voltar</IonButton>
+        <IonButton expand="block" className="botao-personalizado"onClick={() => history.goBack()}>Voltar</IonButton>
       </IonContent>
     </IonPage>
   );
