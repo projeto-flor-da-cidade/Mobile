@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption,} from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Mapa.css';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-routing-machine';
-
-
 
 const DefaultIcon = new L.Icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -31,6 +29,12 @@ const Mapa: React.FC = () => {
 
   // Estado para o destino selecionado
   const [selectedDestination, setSelectedDestination] = useState<LatLngExpression | null>(null);
+  const [mapKey, setMapKey] = useState<number>(0);
+
+  useEffect(() => {
+    // Atualiza a chave do mapa toda vez que o componente é montado
+    setMapKey(prevKey => prevKey + 1);
+  }, []);
 
   return (
     <IonPage>
@@ -84,6 +88,7 @@ const Mapa: React.FC = () => {
 
           <div className="map-container">
             <MapContainer
+              key={mapKey}
               center={initialPosition}
               zoom={13}
               style={{ height: '400px', width: '100%' }}
@@ -117,4 +122,5 @@ const Mapa: React.FC = () => {
 };
 
 export default Mapa;
+
 

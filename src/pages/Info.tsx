@@ -22,7 +22,7 @@ const Info: React.FC = () => {
         </div>
         </div>
       <div className="voltar-button">
-          <IonButton expand="block"  className="botao-personalizado" onClick={() => history.push('/home')}>
+          <IonButton expand="block"  className="botao-personalizado" onClick={() => history.goBack()}>
             Voltar
           </IonButton>
         </div>
