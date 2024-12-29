@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonSelect,
+  IonSelectOption,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonAlert,
+} from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Mapa.css';
 import L, { LatLngExpression } from 'leaflet';
-import 'leaflet-routing-machine';
 
 const DefaultIcon = new L.Icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -14,27 +30,72 @@ const DefaultIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+const getCoordinates = async (logradouro: string) => {
+  const address = `${logradouro}`;
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`
+    );
+    const data = await response.json();
+    if (data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    } else {
+      throw new Error("Endereço não encontrado.");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar coordenadas:", error);
+    return null;
+  }
+};
+
 const Mapa: React.FC = () => {
   const history = useHistory();
   const initialPosition: LatLngExpression = [-8.0476, -34.8770]; // Recife
+  const [equipments, setEquipments] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  const [alertMessage, setAlertMessage] = useState('');
   const mapRef = React.useRef<L.Map | null>(null);
 
-  // Dados dos marcadores
-  const markers = [
-    { name: 'Feira Agroecológica 1', position: [-8.0488, -34.8762] as L.LatLngTuple },
-    { name: 'Feira Agroecológica 2', position: [-8.0512, -34.8756] as L.LatLngTuple },
-    { name: 'Espaço Agroecológico', position: [-8.0455, -34.8798] as L.LatLngTuple },
-    { name: 'Feira de Orgânicos Ceasa', position: [-8.0541, -34.8813] as L.LatLngTuple },
-  ];
+  const fetchEquipments = async () => {
+    try {
+      const response = await fetch('http://localhost:8081/equipamento'); // Substitua pela sua URL
+      const data = await response.json();
 
-  // Estado para o destino selecionado
-  const [selectedDestination, setSelectedDestination] = useState<LatLngExpression | null>(null);
-  const [mapKey, setMapKey] = useState<number>(0);
+      const equipmentsWithCoordinates = await Promise.all(
+        data.map(async (equipment: any) => {
+          const coordinates = await getCoordinates(equipment.logradouro);
+          return { ...equipment, coordinates };
+        })
+      );
+
+      setEquipments(equipmentsWithCoordinates);
+    } catch (error) {
+      console.error('Erro ao buscar equipamentos:', error);
+    }
+  };
 
   useEffect(() => {
-    // Atualiza a chave do mapa toda vez que o componente é montado
-    setMapKey(prevKey => prevKey + 1);
+    fetchEquipments();
   }, []);
+
+  const openInGoogleMaps = (lat: number, lon: number) => {
+    const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+    window.open(googleMapsUrl, '_blank');
+  };
+
+  const handleSearch = () => {
+    const foundEquipment = equipments.find(e => e.nome.toLowerCase() === searchQuery.toLowerCase());
+    if (foundEquipment) {
+      setSelectedEquipment(foundEquipment);
+      mapRef.current?.flyTo(
+        [foundEquipment.coordinates.lat, foundEquipment.coordinates.lon],
+        15
+      );
+    } else {
+      setAlertMessage('Nome inválido ou equipamento não existe.');
+    }
+  };
 
   return (
     <IonPage>
@@ -43,84 +104,121 @@ const Mapa: React.FC = () => {
           <IonTitle>Mapa</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding centralizar-botoes" style={{ '--background': '#316cae' }}>
-        <div className="content-container">
-          <div className="button-group">
-            <IonSelect
-              placeholder="Escolha um destino"
-              onIonChange={(e) => setSelectedDestination(e.detail.value)}
-            >
-              {markers.map((marker, index) => (
-                <IonSelectOption key={index} value={marker.position}>
-                  {marker.name}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
+      <IonContent className="ion-padding" style={{ '--background': '#316cae' }}>
+        <IonGrid>
+          {/* Busca por nome */}
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="12" sizeMd="8">
+              <IonItem>
+                <IonLabel position="floating">Buscar pelo nome</IonLabel>
+                <IonInput
+                  value={searchQuery}
+                  onIonChange={(e) => setSearchQuery(e.detail.value!)}
+                  placeholder="Digite o nome do equipamento"
+                />
+              </IonItem>
+              <IonButton expand="block" className="botao-personalizado" onClick={handleSearch}>
+                Buscar
+              </IonButton>
+            </IonCol>
+          </IonRow>
 
-            <IonButton
-              expand="block"
-              className="botao-personalizado"
-              onClick={() => {
-                if (mapRef.current && selectedDestination) {
-                  const routingControl = L.Routing.control({
-                    waypoints: [
-                      L.latLng(initialPosition),
-                      L.latLng(selectedDestination),
-                    ],
-                    routeWhileDragging: true,
-                  }).addTo(mapRef.current);
+          {/* Listar equipamentos */}
+          <IonRow className="ion-justify-content-center">
+            <IonCol size="12" sizeMd="8">
+              <IonSelect
+                placeholder="Listar equipamentos"
+                onIonChange={(e) => setSelectedEquipment(e.detail.value)}
+              >
+                {equipments.map((equipment, index) => (
+                  equipment.coordinates && (
+                    <IonSelectOption key={index} value={equipment}>
+                      {equipment.nome}
+                    </IonSelectOption>
+                  )
+                ))}
+              </IonSelect>
 
-                  // Remover rota após 10 segundos (opcional)
-                  setTimeout(() => routingControl.remove(), 10000);
-                } else {
-                  console.error("Mapa não inicializado ou destino não selecionado.");
-                }
-              }}
-              disabled={!selectedDestination}
-            >
-              Rotas
-            </IonButton>
+              {selectedEquipment && (
+                <IonButton
+                  expand="block"
+                  className="botao-personalizado"
+                  onClick={() => openInGoogleMaps(selectedEquipment.coordinates.lat, selectedEquipment.coordinates.lon)}
+                >
+                  Ver Rota no Google Maps
+                </IonButton>
+              )}
+            </IonCol>
+          </IonRow>
 
-            <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/cadastrofeira')} >
-              Cadastre sua Feira Agroecológica
-            </IonButton>
-          </div>
+          {/* Mapa */}
+          <IonRow>
+            <IonCol size="12">
+              <div className="map-container">
+                <MapContainer
+                  center={initialPosition}
+                  zoom={13}
+                  style={{ height: '300px', width: '100%' }}
+                  ref={mapRef}
+                >
+                  <TileLayer
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution="&copy; OpenStreetMap contributors"
+                  />
+                  {equipments.map((equipment, index) => (
+                    equipment.coordinates && (
+                      <Marker
+                        key={index}
+                        position={[equipment.coordinates.lat, equipment.coordinates.lon]}
+                        icon={DefaultIcon}
+                      >
+                        <Popup>
+                          <strong>{equipment.nome}</strong>
+                          <br />
+                          {equipment.logradouro}
+                          <br />
+                          Aberto até {equipment.horario}
+                          <br />
+                          <IonButton
+                            size="small"
+                            onClick={() => openInGoogleMaps(equipment.coordinates.lat, equipment.coordinates.lon)}
+                          >
+                            Ver no Google Maps
+                          </IonButton>
+                        </Popup>
+                      </Marker>
+                    )
+                  ))}
+                </MapContainer>
+              </div>
+            </IonCol>
+          </IonRow>
 
-          <div className="map-container">
-            <MapContainer
-              key={mapKey}
-              center={initialPosition}
-              zoom={13}
-              style={{ height: '400px', width: '100%' }}
-              ref={mapRef}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-              />
-              {markers.map((marker, index) => (
-                <Marker key={index} position={marker.position} icon={DefaultIcon}>
-                  <Popup>{marker.name}</Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </div>
+          {/* Botão "Cadastre sua Feira Agroecológica" */}
+          <IonRow className="ion-justify-content-center ion-margin-top">
+            <IonCol size="12" sizeMd="8" className="ion-text-center">
+              <IonButton
+                expand="block"
+                className="botao-personalizado"
+                onClick={() => history.push('/cadastrofeira')}
+              >
+                Cadastre sua Feira Agroecológica
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
 
-          <div className="voltar-button">
-            <IonButton
-              expand="block"
-              className="botao-personalizado"
-              onClick={() => history.goBack()}
-            >
-              Voltar
-            </IonButton>
-          </div>
-        </div>
+        {/* Alerta de erro */}
+        <IonAlert
+          isOpen={!!alertMessage}
+          onDidDismiss={() => setAlertMessage('')}
+          header="Erro"
+          message={alertMessage}
+          buttons={['OK']}
+        />
       </IonContent>
     </IonPage>
   );
 };
 
 export default Mapa;
-
-

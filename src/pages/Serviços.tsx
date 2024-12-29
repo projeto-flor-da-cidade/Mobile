@@ -24,11 +24,11 @@ const Servicos: React.FC = () => {
       <IonContent className="ion-padding centralizar-conteudo BackgroundPagina">
         {/* Grade de botões */}
         <div className="grid-container">
-          <div className="card" onClick={() => history.push('/serv1')}>
+          <div className="card" onClick={() => history.push('/ServiçoSEAU')}>
             <img src={servicoIcon} alt="Serviços da SEAU" className="card-image" />
             <p className="card-caption">Serviços da SEAU</p>
           </div>
-          <div className="card" onClick={() => history.push('/mapa')}>
+          <div className="card" onClick={() => history.push('/Mapa')}>
             <img src={mapaIcon} alt="Mapa das feiras" className="card-image" />
             <p className="card-caption">Mapa das feiras</p>
           </div>

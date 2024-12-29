@@ -14,14 +14,17 @@
   "dependencies": {
     "@capacitor/app": "6.0.1",
     "@capacitor/core": "6.1.2",
+    "@capacitor/google-maps": "^6.0.1",
     "@capacitor/haptics": "6.0.1",
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "6.0.1",
+    "@googlemaps/js-api-loader": "^1.16.8",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",
     "@types/leaflet-routing-machine": "^3.2.8",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.7.9",
     "ionicons": "^7.0.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
@@ -51,5 +54,6 @@
     "vite": "~5.2.0",
     "vitest": "^0.34.6"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
