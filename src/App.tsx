@@ -13,6 +13,7 @@ import Sítio from './pages/Sítio';
 import Info from './pages/Info';
 import Missão from './pages/Missão';
 import Agroeco from './pages/Agroeco';
+import ListaResponsavel from './pages/ListaResponsavel';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -91,6 +92,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />
+        </Route>
+        <Route exact path="/listaresponsavel">
+          <ListaResponsavel/>
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
