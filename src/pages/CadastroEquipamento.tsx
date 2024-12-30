@@ -9,49 +9,45 @@ const CadastroEquipamento: React.FC = () => {
   const [tipoEquipamento, setTipoEquipamento] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [observacaoEquipamento, setObservacaoEquipamento] = useState('');
-  const [enderecoEquipamento, setEnderecoEquipamento] = useState('');
-  const [placeholder, setPlaceholder] = useState('');
-  const [idResponsavel, setIdResponsavel] = useState<number | null>(null); // ID do responsável criado
+  const [responsaveis, setResponsaveis] = useState<{ id: number; nome: string }[]>([]);
+  const [idResponsavelSelecionado, setIdResponsavelSelecionado] = useState<number | null>(null);
 
-  // Obter o ID do responsável ao carregar a página
   useEffect(() => {
-    const storedId = localStorage.getItem('idResponsavel');
-    if (storedId) {
-      setIdResponsavel(Number(storedId));
-    }
+    const fetchResponsaveis = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/responsavel/listar-nomes-ids');
+        if (response.ok) {
+          const data = await response.json();
+          setResponsaveis(data);
+        } else {
+          console.error('Erro ao carregar responsáveis:', response.statusText);
+          alert('Erro ao carregar responsáveis.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar responsáveis:', error);
+        alert('Erro ao buscar responsáveis.');
+      }
+    };
+
+    fetchResponsaveis();
   }, []);
 
-  const handleTipoEquipamentoChange = (e: CustomEvent) => {
-    const value = e.detail.value;
-    setTipoEquipamento(value);
-    setPlaceholder(`Fale aqui sobre ${value === 'feira' ? 'a feira' : 'a horta'}.`);
-  };
-
-  const handleVoltar = async () => {
-    if (idResponsavel) {
-      try {
-        // Apaga o responsável recém-criado
-        await fetch(`http://localhost:8080/responsavel/${idResponsavel}`, { method: 'DELETE' });
-        localStorage.removeItem('idResponsavel');
-      } catch (error) {
-        console.error('Erro ao apagar o responsável:', error);
-      }
-    }
+  const handleVoltar = () => {
     history.goBack();
   };
 
   const enviarEquipamento = async () => {
-    if (!idResponsavel) {
-      alert('Erro: Responsável não encontrado.');
+    if (!idResponsavelSelecionado) {
+      alert('Por favor, selecione um responsável.');
       return;
     }
 
     const equipamentoData = {
       nome: nomeEquipamento,
-      tipoEqui: tipoEquipamento === 'feira' ? 1 : 2, // Exemplo de mapeamento
+      tipoEqui: tipoEquipamento === 'feira' ? 1 : 2,
       qtdBancas: parseInt(quantidade, 10),
       observ: observacaoEquipamento,
-      idResp: idResponsavel,
+      Id_resp: idResponsavelSelecionado, // Incluindo o ID do responsável selecionado
     };
 
     try {
@@ -63,12 +59,11 @@ const CadastroEquipamento: React.FC = () => {
 
       if (response.ok) {
         alert('Equipamento cadastrado com sucesso!');
-        history.push('/'); // Redireciona para a página inicial ou outra página desejada
+        history.push('/Mapa');
       } else {
         alert('Erro ao cadastrar equipamento.');
       }
     } catch (error) {
-      console.error('Erro ao enviar equipamento:', error);
       alert('Erro ao conectar-se ao servidor.');
     }
   };
@@ -96,7 +91,10 @@ const CadastroEquipamento: React.FC = () => {
 
         <IonItem>
           <IonLabel position="floating">Tipo do Equipamento</IonLabel>
-          <IonSelect value={tipoEquipamento} onIonChange={handleTipoEquipamentoChange}>
+          <IonSelect
+            value={tipoEquipamento}
+            onIonChange={(e) => setTipoEquipamento(e.detail.value)}
+          >
             <IonSelectOption value="feira">Feira</IonSelectOption>
             <IonSelectOption value="horta">Horta</IonSelectOption>
           </IonSelect>
@@ -118,23 +116,23 @@ const CadastroEquipamento: React.FC = () => {
             <IonLabel position="floating">Observação do Equipamento</IonLabel>
             <IonTextarea
               value={observacaoEquipamento}
-              placeholder={placeholder}
               onIonChange={(e) => setObservacaoEquipamento(e.detail.value!)}
-              onFocus={() => setPlaceholder('')}
-              onBlur={() =>
-                observacaoEquipamento.trim() === '' &&
-                setPlaceholder(`Fale aqui sobre ${tipoEquipamento === 'feira' ? 'a feira' : 'a horta'}.`)
-              }
             />
           </IonItem>
         )}
 
         <IonItem>
-          <IonLabel position="floating">Endereço do Equipamento</IonLabel>
-          <IonInput
-            value={enderecoEquipamento}
-            onIonChange={(e) => setEnderecoEquipamento(e.detail.value!)}
-          />
+          <IonLabel position="floating">Responsável</IonLabel>
+          <IonSelect
+            value={idResponsavelSelecionado}
+            onIonChange={(e) => setIdResponsavelSelecionado(e.detail.value)}
+          >
+            {responsaveis.map((resp) => (
+              <IonSelectOption key={resp.id} value={resp.id}>
+                {resp.nome}
+              </IonSelectOption>
+            ))}
+          </IonSelect>
         </IonItem>
 
         <IonButton expand="block" onClick={enviarEquipamento}>

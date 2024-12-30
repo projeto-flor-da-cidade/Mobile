@@ -81,7 +81,7 @@ const Mapa: React.FC = () => {
               Rotas
             </IonButton>
 
-            <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/cadastroresponsavel')} >
+            <IonButton expand="block" className="botao-personalizado" onClick={() => history.push('/cadastroequipamento')} >
               Cadastre sua Feira Agroecológica
             </IonButton>
           </div>
