@@ -9,6 +9,7 @@ const CadastroEquipamento: React.FC = () => {
   const [tipoEquipamento, setTipoEquipamento] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [observacaoEquipamento, setObservacaoEquipamento] = useState('');
+  const [logradouro, setLogradouro] = useState('');
   const [responsaveis, setResponsaveis] = useState<{ id: number; nome: string }[]>([]);
   const [idResponsavelSelecionado, setIdResponsavelSelecionado] = useState<number | null>(null);
 
@@ -47,6 +48,7 @@ const CadastroEquipamento: React.FC = () => {
       tipoEqui: tipoEquipamento === 'feira' ? 1 : 2,
       qtdBancas: parseInt(quantidade, 10),
       observ: observacaoEquipamento,
+      logradouro: logradouro,
       Id_resp: idResponsavelSelecionado, // Incluindo o ID do responsável selecionado
     };
 
@@ -98,6 +100,14 @@ const CadastroEquipamento: React.FC = () => {
             <IonSelectOption value="feira">Feira</IonSelectOption>
             <IonSelectOption value="horta">Horta</IonSelectOption>
           </IonSelect>
+        </IonItem>
+
+        <IonItem>
+          <IonLabel position="floating">Logradouro</IonLabel>
+          <IonInput
+            value={logradouro}
+            onIonChange={(e) => setLogradouro(e.detail.value!)}
+          />
         </IonItem>
 
         {tipoEquipamento && (
