@@ -20,7 +20,7 @@ const Home: React.FC = () => {
         <div className="caixa-inferior">
           <div className="borda-arredondada">
             <p className="titulo-login">Login:</p>
-            <IonButton className="botao-personalizado">
+            <IonButton className="botao-personalizado" onClick={() => history.push('/cadastroresponsavel')}>
               Sou membro da secretaria
             </IonButton>
             <IonButton

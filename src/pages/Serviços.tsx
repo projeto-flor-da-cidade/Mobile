@@ -32,7 +32,7 @@ const Servicos: React.FC = () => {
             <img src={mapaIcon} alt="Mapa das feiras" className="card-image" />
             <p className="card-caption">Mapa das feiras</p>
           </div>
-          <div className="card" onClick={() => history.push('/serv1')}>
+          <div className="card" onClick={() => history.push('/listaResponsavel')}>
             <img src={cursosIcon} alt="Cursos" className="card-image" />
             <p className="card-caption">Cursos</p>
           </div>

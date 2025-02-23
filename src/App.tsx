@@ -4,7 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Serviços from './pages/Serviços';
 import Mapa from './pages/Mapa'; 
-import CadastroFeira from './pages/CadastroFeira';
+import CadastroEquipamento from './pages/CadastroEquipamento';
 import ServiçoSEAU from './pages/ServiçoSEAU';
 import Espaço from './pages/Espaço';
 import SAFUC from './pages/SAFUC';
@@ -13,6 +13,8 @@ import Info from './pages/Info';
 import Missão from './pages/Missão';
 import Agroeco from './pages/Agroeco';
 import ListaResponsavel from './pages/ListaResponsavel';
+import CadastroResponsavel from './pages/CadastroResponsavel';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -61,8 +63,8 @@ const App: React.FC = () => (
         <Route exact path="/mapa">
           <Mapa/>
         </Route>
-        <Route exact path="/cadastrofeira">
-        <CadastroFeira/>
+        <Route exact path="/cadastroequipamento">
+        <CadastroEquipamento/>
         </Route>
         <Route exact path="/serviçoseau">
         <ServiçoSEAU/>
@@ -90,6 +92,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/listaresponsavel">
           <ListaResponsavel/>
+        </Route>
+        <Route exact path="/cadastroresponsavel">
+          <CadastroResponsavel/>
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
