@@ -1,0 +1,47 @@
+.splash {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    transition: opacity 2s ease-out; /* Aumentamos a duração para 2s */
+    opacity: 1;
+    position: relative;
+  }
+  
+  .splash.fade-out {
+    opacity: 0;
+  }
+  
+  .borda-arredondada-banner {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(220, 229, 255, 1); /* Se desejar mudar a cor, altere aqui */
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: 300px;
+    object-position: 10%;
+  }
+  
+  .borda-arredondada-banner img {
+    width: 300px;
+    height: 200px;
+    object-fit: fill;
+    margin-left: 57px;
+  }
+  
+  .banner-projeto {
+    width: 90%;
+    max-width: 200px;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+  
