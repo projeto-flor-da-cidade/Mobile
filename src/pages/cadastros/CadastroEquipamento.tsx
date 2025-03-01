@@ -5,6 +5,7 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import './CadastroEquipamento.css';
 
 const CadastroEquipamento: React.FC = () => {
   const history = useHistory();
@@ -96,7 +97,6 @@ const CadastroEquipamento: React.FC = () => {
       observ,
       // Envia qtdBancas somente se o tipo selecionado for FEIRAS
       qtdBancas: (() => {
-        // Busca a opção selecionada para verificar sua descrição
         const tipoSelecionado = tipoEquOptions.find(option => option.seqTipoEqu === selectedTipoEquId);
         if (tipoSelecionado && tipoSelecionado.descrTipoEqu.toUpperCase() === 'FEIRAS') {
           return qtdBancas;
@@ -105,7 +105,6 @@ const CadastroEquipamento: React.FC = () => {
       })(),
       horarioAbertura,
       horarioFechamento,
-      // Envia o identificador da entidade já persistida
       tipoEqu: {
         seqTipoEqu: selectedTipoEquId
       },
@@ -136,7 +135,7 @@ const CadastroEquipamento: React.FC = () => {
           <IonTitle>Cadastro de Equipamento</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding background-custom">
         <form onSubmit={handleSubmit}>
           {/* Seleção do Tipo de Equipamento */}
           <IonItem>
@@ -154,8 +153,8 @@ const CadastroEquipamento: React.FC = () => {
             </IonSelect>
           </IonItem>
 
-          {/* Enquanto o tipo não for selecionado, desabilita os demais campos */}
-          <div style={{ pointerEvents: selectedTipoEquId ? 'auto' : 'none', opacity: selectedTipoEquId ? 1 : 0.5 }}>
+          {/* Campos habilitados somente após a seleção do tipo */}
+          <div className={selectedTipoEquId ? "fields-enabled" : "fields-disabled"}>
             {/* Seleção do Responsável */}
             <IonItem>
               <IonLabel position="stacked">
@@ -297,7 +296,6 @@ const CadastroEquipamento: React.FC = () => {
           </div>
         </form>
 
-        {/* Toast para feedback */}
         <IonToast
           isOpen={showToast}
           message={toastMessage}

@@ -1,0 +1,28 @@
+.agroeco-background {
+    --background: #316cae;
+  }
+  
+  .agroeco-container {
+    background-color: lightgray;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+  }
+  
+  .agroeco-title {
+    color: blue;
+  }
+  
+  .botao-personalizado {
+    --background: #008100;
+    --color: white;
+    --border-radius: 8px;
+    --width: 90%;
+    height: 50px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .botao-personalizado:hover {
+    --background: #006d1b;
+  }
+  

@@ -1,10 +1,10 @@
 import { IonContent, IonHeader, IonPage, IonButton, IonIcon } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { arrowBack } from 'ionicons/icons'; // Ícones para o botão voltar
-import './Serviços.css';
-import servicoIcon from '../assets/iconeServicosSeau.png'; 
-import mapaIcon from '../assets/iconeMapaHortasFeira.png'; 
-import cursosIcon from '../assets/iconeCursos.png'; 
+import './Servicos.css';
+import servicoIcon from '../../assets/iconeServicosSeau.png'; 
+import mapaIcon from '../../assets/iconeMapaHortasFeira.png'; 
+import cursosIcon from '../../assets/iconeCursos.png'; 
 
 const Servicos: React.FC = () => {
   const history = useHistory();
@@ -32,7 +32,7 @@ const Servicos: React.FC = () => {
             <img src={mapaIcon} alt="Mapa das feiras" className="card-image" />
             <p className="card-caption">Mapa das feiras</p>
           </div>
-          <div className="card" onClick={() => history.push('/listaResponsavel')}>
+          <div className="card" onClick={() => history.push('/info')}>
             <img src={cursosIcon} alt="Cursos" className="card-image" />
             <p className="card-caption">Cursos</p>
           </div>

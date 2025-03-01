@@ -1,7 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonButton, IonIcon } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { arrowBack } from 'ionicons/icons'; // Ícones para o botão voltar
-import './Serviços.css';
+import './Servicos.css';
 
 const ServicoSEAU: React.FC = () => {
   const history = useHistory();

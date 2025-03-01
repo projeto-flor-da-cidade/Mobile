@@ -1,0 +1,41 @@
+/* Define a cor de fundo */
+.ion-content-custom {
+  --background: #316cae;
+}
+
+/* Estiliza os botões */
+.botao-personalizado {
+  background-color: #008100;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.botao-personalizado:hover {
+  background-color: #006d1b;
+}
+
+/* Ajusta as logos */
+.header-logos {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.logo-prefeitura, .logo-projeto {
+  height: 50px;
+}
+
+/* Estiliza imagens clicáveis */
+.imagem-clicavel {
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 300px;
+}
+
+.voltar-button {
+  margin-top: 20px;
+  text-align: center;
+}

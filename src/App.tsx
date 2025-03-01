@@ -1,20 +1,20 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import AnimeInicial from './pages/AnimeInicial';
-import Home from './pages/Home';
-import Serviços from './pages/Serviços';
-import Mapa from './pages/Mapa'; 
-import CadastroEquipamento from './pages/CadastroEquipamento';
-import ServiçoSEAU from './pages/ServiçoSEAU';
-import Espaço from './pages/Espaço';
-import SAFUC from './pages/SAFUC';
-import Sítio from './pages/Sítio';
-import Info from './pages/Info';
-import Missão from './pages/Missão';
-import Agroeco from './pages/Agroeco';
+import AnimeInicial from './pages/animacao_telas/AnimeInicial';
+import Home from './pages/home/Home';
+import Serviços from './pages/servicos_SAU/Servicos';
+import Mapa from './pages/mapa/Mapa'; 
+import CadastroEquipamento from './pages/cadastros/CadastroEquipamento';
+import ServiçoSEAU from './pages/servicos_SAU/ServicoSEAU';
+import Espaço from './pages/servicos_SAU/Espaco';
+import SAFUC from './pages/servicos_SAU/SAFUC';
+import Info from './pages/informacao/Info';
+import Missão from './pages/informacao/Missão';
+import Agroeco from './pages/informacao/Agroeco';
 import ListaResponsavel from './pages/ListaResponsavel';
-import CadastroResponsavel from './pages/CadastroResponsavel';
+import CadastroResponsavel from './pages/cadastros/CadastroResponsavel';
+import Sitio from './pages/servicos_SAU/Sitio';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -65,8 +65,8 @@ const App: React.FC = () => (
         <Route exact path="/safuc">
           <SAFUC />
         </Route>
-        <Route exact path="/sítio">
-          <Sítio />
+        <Route exact path="/sitio">
+          <Sitio />
         </Route>
         <Route exact path="/info">
           <Info />

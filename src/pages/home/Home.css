@@ -2,7 +2,7 @@
 
 
 .BakgroundPagina {
-  --background: url('../assets/background-image.jpeg');
+  --background: url('../../assets/background-image.jpeg');
   --background-size: cover; /* Mostra a imagem inteira */
   --background-position: center; /* Centraliza a imagem */
   --background-repeat: no-repeat; /* Evita repetição */
@@ -136,4 +136,7 @@ ion-button.botao-personalizado:hover {
   left: 50%; /* Centraliza horizontalmente */
   transform: translateX(-50%);
 }
-  
+
+.clickable {
+  cursor: pointer;
+}

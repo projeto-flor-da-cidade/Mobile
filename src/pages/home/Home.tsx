@@ -1,0 +1,48 @@
+import { IonContent, IonPage, IonButton} from '@ionic/react';
+import { useHistory } from 'react-router-dom';
+import './Home.css';
+import logoPrefeitura from '../../assets/logo-prefeitura.png';
+import logoProjeto from '../../assets/logo-projeto.png';
+import bannerProjeto from '../../assets/banner-pricipal.svg';
+
+const Home: React.FC = () => {
+  const history = useHistory();
+
+  return (
+    <IonPage className="BakgroundPagina">
+      <IonContent className="ion-padding centralizar-conteudo BakgroundPagina">
+        <div className="header-logos">
+          {/* Logo Prefeitura: redireciona para um site */}
+          <a href="https://www2.recife.pe.gov.br/" target="_blank" rel="noopener noreferrer">
+            <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
+          </a>
+        
+          <img 
+            src={logoProjeto} 
+            alt="Logo Projeto" 
+            className="logo-projeto clickable" 
+            onClick={() => history.push('/info')}
+/>
+
+        </div>
+
+        <div className="borda-arredondada-banner">
+          <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />
+        </div>
+        <div className="caixa-inferior">
+          <div className="borda-arredondada">
+            <p className="titulo-login">Login:</p>
+            <IonButton className="botao-personalizado" onClick={() => history.push('/cadastroresponsavel')}>
+              Sou membro da secretaria
+            </IonButton>
+            <IonButton className="botao-personalizado" onClick={() => history.push('/serviços')}>
+              Não sou membro da secretaria
+            </IonButton>
+          </div>
+        </div>
+      </IonContent>
+    </IonPage>
+  );
+};
+
+export default Home;

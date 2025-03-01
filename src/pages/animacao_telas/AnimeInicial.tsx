@@ -2,8 +2,8 @@ import { IonPage, IonContent } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './AnimeInicial.css';
-import bannerProjeto from '../assets/banner-pricipal.svg';
-import backgroundImage from '../assets/background-image.jpeg';
+import bannerProjeto from '../../assets/banner-pricipal.svg';
+import backgroundImage from '../../assets/background-image.jpeg';
 
 const AnimeInicial: React.FC = () => {
   const history = useHistory();

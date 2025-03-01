@@ -1,0 +1,31 @@
+/* Classe para quando os campos estão habilitados */
+.fields-enabled {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* Classe para quando os campos estão desabilitados */
+.fields-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Exemplo de customização para botões */
+.botao-personalizado {
+  --background: white;
+  --color: #5985B6;
+  --border-color: #5985B6;
+  border-width: 2px;
+  font-weight: bold;
+}
+
+.botao-personalizado:hover {
+  --background: #5985B6;
+  --color: white;
+  --border-color: #5985B6;
+}
+
+/* Ajuste de margem */
+.ion-margin-top {
+  margin-top: 1rem;
+}
