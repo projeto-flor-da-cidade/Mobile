@@ -1,9 +1,16 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
+import { 
+  IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
+  IonButton, IonModal, IonDatetime 
+} from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import './SAFUC.css'; // Importação do arquivo CSS
+import { useState } from 'react';
+import './SAFUC.css';
 
 const SAFUC: React.FC = () => {
   const history = useHistory();
+  const [showDatetimeModal, setShowDatetimeModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>();
+
   return (
     <IonPage>
       <IonHeader>
@@ -16,14 +23,72 @@ const SAFUC: React.FC = () => {
           <h1>SAFUC</h1>
         </div>
         <div className="button-container">
-          <IonButton expand="block" className="botao-personalizado">Fotos do SAFUC</IonButton>
-          <IonButton expand="block" className="botao-personalizado">Agende sua visita ao SAFUC</IonButton>
+          <IonButton expand="block" className="botao-personalizado">
+            Fotos do SAFUC
+          </IonButton>
+          <IonButton 
+            expand="block" 
+            className="botao-personalizado" 
+            onClick={() => setShowDatetimeModal(true)}
+          >
+            Agende sua visita ao SAFUC
+          </IonButton>
         </div>
         <div className="voltar-button">
-          <IonButton expand="block" className="botao-personalizado" onClick={() => history.goBack()}>
+          <IonButton 
+            expand="block" 
+            className="botao-personalizado" 
+            onClick={() => history.goBack()}
+          >
             Voltar
           </IonButton>
         </div>
+
+        {/* Modal com IonDatetime */}
+        <IonModal isOpen={showDatetimeModal} onDidDismiss={() => setShowDatetimeModal(false)}>
+         
+          <IonContent className="ion-padding">
+            <IonDatetime 
+              locale="pt-BR"
+              presentation="date-time"
+              cancelText="Cancelar"
+              doneText="Marcar visita"
+              value={selectedDate}
+              highlightedDates={[
+                { date: '2025-04-01', textColor: '#000000', backgroundColor: '#ffd700' },
+                { date: '2025-03-15', textColor: '#000000', backgroundColor: '#ffd700' },
+                { date: '2025-03-25', textColor: '#000000', backgroundColor: '#ffd700' },
+                { date: '2025-04-30', textColor: '#000000', backgroundColor: '#ffd700' }
+              ]}
+              onIonChange={(e) => {
+                let newValue = e.detail.value;
+                if (Array.isArray(newValue)) {
+                  newValue = newValue[0];
+                }
+                setSelectedDate(newValue ?? undefined);
+              }}
+            />
+            <div className="modal-buttons">
+              <IonButton 
+                expand="block" 
+                className="botao-personalizado" 
+                onClick={() => setShowDatetimeModal(false)}
+              >
+                Cancelar
+              </IonButton>
+              <IonButton 
+                expand="block" 
+                className="botao-personalizado" 
+                onClick={() => {
+                  // Adicione aqui a lógica para confirmar a data escolhida
+                  setShowDatetimeModal(false);
+                }}
+              >
+                Marcar visita
+              </IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

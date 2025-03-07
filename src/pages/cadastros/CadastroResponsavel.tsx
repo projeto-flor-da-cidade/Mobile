@@ -89,7 +89,8 @@ const CadastroResponsavel: React.FC = () => {
               value={nome} 
               placeholder="Digite seu nome" 
               onIonChange={e => setNome(e.detail.value!)} 
-              required 
+              required
+              clearInput={true}
             />
           </IonItem>
 
@@ -100,7 +101,8 @@ const CadastroResponsavel: React.FC = () => {
               value={logradouro} 
               placeholder="Rua Abaeté" 
               onIonChange={e => setLogradouro(e.detail.value!)} 
-              required 
+              required
+              clearInput={true}
             />
           </IonItem>
           <IonText color="danger" className="ion-padding-start">
@@ -114,7 +116,8 @@ const CadastroResponsavel: React.FC = () => {
               value={numero} 
               placeholder="Digite o número" 
               onIonChange={e => setNumero(e.detail.value!)} 
-              required 
+              required
+              clearInput={true} 
             />
           </IonItem>
 
@@ -125,7 +128,8 @@ const CadastroResponsavel: React.FC = () => {
               value={bairro} 
               placeholder="Ex: Centro" 
               onIonChange={e => setBairro(e.detail.value!)} 
-              required 
+              required
+              clearInput={true} 
             />
           </IonItem>
           <IonText color="danger" className="ion-padding-start">
@@ -137,9 +141,10 @@ const CadastroResponsavel: React.FC = () => {
             <IonLabel position="stacked">Documento (RG)</IonLabel>
             <IonInput 
               value={documento} 
-              placeholder="Digite o RG" 
+              placeholder="99.999.999-9." 
               onIonChange={e => setDocumento(e.detail.value!)} 
-              required 
+              required
+              clearInput={true} 
             />
           </IonItem>
 
@@ -150,7 +155,8 @@ const CadastroResponsavel: React.FC = () => {
               value={cpf} 
               placeholder="611.178.333.45" 
               onIonChange={e => setCpf(e.detail.value!)} 
-              required 
+              required
+              clearInput={true}
             />
           </IonItem>
 
@@ -172,22 +178,30 @@ const CadastroResponsavel: React.FC = () => {
           <IonItem>
             <IonLabel position="stacked">Telefone</IonLabel>
             <IonInput 
-              value={telefone} 
+              value={telefone}
+              aria-label="Telephone"
               placeholder="(81)9 8722-7991" 
               onIonChange={e => setTelefone(e.detail.value!)} 
-              required 
+              required
+              clearInput={true}
             />
           </IonItem>
 
           {/* Email */}
           <IonItem>
-            <IonLabel position="stacked">Email</IonLabel>
-            <IonInput 
-              value={email} 
-              placeholder="exemplo@dominio.com" 
-              onIonChange={e => setEmail(e.detail.value!)} 
-              type="email"
-            />
+            <IonInput labelPlacement="floating" value={email} onIonChange={e => setEmail(e.detail.value!)} placeholder="exemplo@dominio.com" required clearInput={true}>
+              <div slot="label">
+                Email <IonText color="danger"></IonText>
+              </div>
+            </IonInput>
+          </IonItem>
+
+          <IonItem>
+            <IonButton size='small' color={'success'} disabled={true}>
+             <IonText color={'dark'}>
+              Upload de documento
+              </IonText> 
+            </IonButton>
           </IonItem>
 
           {/* Botão de Finalizar Cadastro */}

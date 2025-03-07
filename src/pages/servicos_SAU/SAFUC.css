@@ -1,37 +1,56 @@
-/* Define a cor de fundo */
+/* Define a cor de fundo do conteúdo */
 .ion-content-custom {
-    --background: #316cae;
-  }
-  
-  /* Caixa destacada */
-  .caixa-destaque {
-    background-color: lightgray;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-  }
-  
-  /* Estiliza botões */
-  .botao-personalizado {
-    background-color: #008100;
-    color: white;
-    border-radius: 8px;
-    font-size: 16px;
-    display: block;
-    margin: 10px auto;
-    width: 90%;
-    max-width: 300px;
-  }
-  
-  .botao-personalizado:hover {
-    background-color: #006d1b;
-  }
-  
-  /* Ajuste do botão voltar */
-  .voltar-button {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
+  --background: #316cae;
+}
+
+/* Caixa destacada */
+.caixa-destaque {
+  background-color: lightgray;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* Estiliza botões */
+.botao-personalizado {
+  background-color: #008100;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  display: block;
+  margin: 10px auto;
+  width: 90%;
+  max-width: 300px;
+}
+
+.botao-personalizado:hover {
+  background-color: #006d1b;
+}
+
+/* Ajuste do botão "Voltar" */
+.voltar-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Adicionando a cor verde personalizada */
+.ion-color-green {
+  --ion-color-base: var(--ion-color-green);
+  --ion-color-base-rgb: var(--ion-color-green-rgb);
+  --ion-color-contrast: var(--ion-color-green-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-green-contrast-rgb);
+  --ion-color-shade: var(--ion-color-green-shade);
+  --ion-color-tint: var(--ion-color-green-tint);
+}
+
+/* Personalização do IonDatetime em tom pastel de verde */
+ion-datetime {
+  --background: #e6f9e6;     /* Fundo verde pastel */
+  --color: #006400;          /* Texto verde escuro */
+  border-radius: 1rem;
+  padding: 1rem;
+  --button-background: #ffffff;
+  --button-color: #006400;
+}

@@ -1,5 +1,5 @@
 /* Fundo da página */
-.Servicos .BackgroundPagina {
+.BackgroundPagina {
   --background: linear-gradient(to top, #c2c2c2, #00973f);
   --background-size: cover;
   --background-position: center;
