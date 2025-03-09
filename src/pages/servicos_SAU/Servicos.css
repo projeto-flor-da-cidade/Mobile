@@ -1,91 +1,171 @@
-/* Fundo da página */
-.BackgroundPagina {
-  --background: linear-gradient(to top, #c2c2c2, #00973f);
-  --background-size: cover;
-  --background-position: center;
-  --background-repeat: no-repeat;
-  height: 100%;
-  min-height: 100vh;
-  width: 100%;
-}
+/* =====================================
+   Estilos existentes (já fornecidos)
+   ===================================== */
 
-/* Header personalizado */
-.header-custom {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: rgb(220, 229, 255);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.header-container {
-  display: flex;
-  width: 100%;
-  height: 40px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-ion-button.circle-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  --background: #008100;
-  color: #fff;
-  font-size: 10px;
-}
-
-.titulo {
-  font-size: 30px;
-  font-weight: bold;
-  color: #d36600;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
-  flex-grow: 1;
-  padding-top: 15px;
-  padding-right: 10px;
-}
-
-/* Grid no Body */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin: 20px 10px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between; /* Alinha o conteúdo corretamente */
-  background-color: #008100;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 0; /* Remove o padding extra para melhor controle */
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  overflow: hidden;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card-image {
-  width: 100%;
-  height: 75%;
-  object-fit: cover;
-}
-
-.card-caption {
-  width: 100%; /* Faz o texto ocupar toda a largura disponível */
-  text-align: center;
-  font-size: 20px;
-  color: #ffffff;
-  padding: 10px; /* Espaçamento adequado ao redor do texto */
- /* Fundo semi-transparente para o texto ficar legível */
-}
+/* ============================
+   Itens do Menu com Texto Escuro
+   ============================ */
+   .menu-list-item ion-label {
+    color: #222; /* Cor escura para melhor contraste */
+  }
+  
+  /* ============================
+     Background com Efeito Tundra para a Página Principal
+     ============================ */
+  #main-content {
+    background: linear-gradient(135deg, rgba(130, 130, 130, 0.5), rgba(180, 180, 180, 0.5)),
+                url('../../assets/servicoimagenova.png');
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-position: static; /* Usado "center" para compatibilidade */
+  }
+  
+  /* Remover fundo branco do IonContent para exibir o background do IonPage */
+  ion-content {
+    --background: transparent;
+  }
+  
+  /* ============================
+     Títulos em Branco
+     ============================ */
+  .titleText {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px; /* Tamanho 10 para títulos */
+    color: #fff;
+  }
+  
+  .titleTextCard {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: #000; /* Pode ajustar a cor conforme desejado */
+  }
+  
+  .bodyText {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #fff;
+  }
+  
+  .bodyTextCard {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #222;
+  }
+  
+  /* Espaço em torno de cada seção */
+  .sectionContainer {
+    padding: 1rem;
+  }
+  
+  /* Scroll horizontal para ícones e cards */
+  .horizontalScroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .fabIconContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Estilização dos Cards */
+  .customCard,
+  .customCardDestaque {
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    background-color: #ffbd59; /* Cor pêssego */
+  }
+  
+  /* Tamanhos específicos para os Cards */
+  .customCard {
+    min-width: 180px;
+    min-height: 190px;
+  }
+  
+  .customCardDestaque {
+    min-height: 150px;
+  }
+  
+  /* Estilo para as imagens dos Cards */
+  .cardImage {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Espaço extra no final da tela */
+  .footerSpacing {
+    height: 2rem;
+  }
+  
+  /* =====================================
+     Estilos do Menu
+     ===================================== */
+  
+  /* Container superior (ícone + nome do usuário) */
+  .menu-top-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  /* Ícone grande do usuário */
+  .menu-user-icon {
+    font-size: 80px;
+    color: #444;
+  }
+  
+  /* Nome do usuário abaixo do ícone */
+  .menu-username {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    font-size: 14px;
+    color: #222;
+  }
+  
+  /* Lista de itens do menu */
+  .menu-list {
+    margin-top: 1rem;
+  }
+  
+  /* Cada item da lista com fundo transparente e sem linhas */
+  .menu-list-item {
+    background: transparent;
+    --ion-item-background: transparent;
+    --ion-item-lines: none;
+    --ion-item-background-hover: transparent;
+    --ion-ripple-color: transparent;
+  }
+  
+  /* Rodapé do menu (botões lado a lado) */
+  .menu-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  /* Botão de Sair */
+  .menu-exit-button {
+    color: #d9534f;
+    font-weight: bold;
+  }
+  
+  /* Logo do projeto no rodapé do menu */
+  .logo-projeto {
+    height: 40px;
+    cursor: pointer;
+  }
+  
+  .clickable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  

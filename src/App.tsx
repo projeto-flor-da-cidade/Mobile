@@ -7,7 +7,7 @@ import Serviços from './pages/servicos_SAU/Servicos';
 import Mapa from './pages/mapa/Mapa'; 
 import CadastroEquipamento from './pages/cadastros/CadastroEquipamento';
 import ServiçoSEAU from './pages/servicos_SAU/ServicoSEAU';
-import Espaço from './pages/servicos_SAU/Espaco';
+import Espaco from './pages/servicos_SAU/Espaco';
 import SAFUC from './pages/servicos_SAU/SAFUC';
 import Info from './pages/informacao/Info';
 import Missão from './pages/informacao/Missão';
@@ -59,8 +59,8 @@ const App: React.FC = () => (
         <Route exact path="/serviçoseau">
           <ServiçoSEAU />
         </Route>
-        <Route exact path="/espaço">
-          <Espaço />
+        <Route exact path="/espaco">
+          <Espaco />
         </Route>
         <Route exact path="/safuc">
           <SAFUC />
