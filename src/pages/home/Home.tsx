@@ -1,46 +1,88 @@
-import { IonContent, IonPage, IonButton} from '@ionic/react';
+import React from 'react';
+import { IonPage, IonContent, IonFooter, IonButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
-import logoPrefeitura from '../../assets/logo-prefeitura.png';
-import logoProjeto from '../../assets/logo-projeto.png';
-import bannerProjeto from '../../assets/banner-pricipal.svg';
+
+/* Ajuste os imports de imagem conforme sua estrutura */
+import logoPrefeitura from '../../assets/logo-prefeitura.jpg';
+import logoDobanner from '../../assets/LogoFlordacidade.svg';
 
 const Home: React.FC = () => {
   const history = useHistory();
 
   return (
-    <IonPage className="BakgroundPagina">
-      <IonContent className="ion-padding centralizar-conteudo BakgroundPagina">
-        <div className="header-logos">
-          {/* Logo Prefeitura: redireciona para um site */}
-          <a href="https://www2.recife.pe.gov.br/" target="_blank" rel="noopener noreferrer">
-            <img src={logoPrefeitura} alt="Logo Prefeitura" className="logo-prefeitura" />
+    <IonPage className="page-container">
+      {/* 
+        IonContent com o fundo + overlay.
+        Dentro dele, posicionamos a logo da prefeitura (top-left)
+        e a circunferência centralizada (absoluta).
+      */}
+      <IonContent className="main-content">
+        {/* 1) Logo da prefeitura no canto superior esquerdo */}
+        <div className="logo-prefeitura-container">
+          <a
+            href="https://www2.recife.pe.gov.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={logoPrefeitura}
+              alt="Logo Prefeitura"
+              className="logo-prefeitura"
+            />
           </a>
-        
-          <img 
-            src={logoProjeto} 
-            alt="Logo Projeto" 
-            className="logo-projeto clickable" 
-            onClick={() => history.push('/info')}
-/>
-
         </div>
 
+        {/* 2) Circunferência no centro (posição absoluta), com a logo do banner */}
         <div className="borda-arredondada-banner">
-          <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />
-        </div>
-        <div className="caixa-inferior">
-          <div className="borda-arredondada">
-            <p className="titulo-login">Login:</p>
-            <IonButton className="botao-personalizado" onClick={() => history.push('/cadastroresponsavel')}>
-              Sou membro da secretaria
-            </IonButton>
-            <IonButton className="botao-personalizado" onClick={() => history.push('/serviços')}>
-              Não sou membro da secretaria
-            </IonButton>
-          </div>
+          <img
+            src={logoDobanner}
+            alt="Banner Projeto"
+            className="banner-projeto"
+          />
         </div>
       </IonContent>
+
+      {/* 
+        3) IonFooter no rodapé, com a onda (wave) e os botões.
+           A onda fica no topo do footer; em seguida, a "white-box" com botões.
+      */}
+      <IonFooter className="footer-container">
+        <div className="wave-container">
+          <svg
+            className="wave-bottom"
+            viewBox="0 0 450 150"
+            preserveAspectRatio="none"
+          >
+            <path
+              className="wavePath"
+              d="M0,49 C150,150 349,0 500,49 L500,0 L0,0 Z"
+            />
+          </svg>
+        </div>
+
+        <div className="white-box">
+          <IonButton
+            className="botao-entrar"
+            onClick={() => history.push('/cadastroresponsavel')}
+          >
+            Entrar
+          </IonButton>
+          <IonButton
+            className="botao-convidado"
+            onClick={() => history.push('/servicos')}
+          >
+            Entrar como convidado
+          </IonButton>
+
+          <p
+            className="cadastro-text"
+            onClick={() => history.push('/cadastroresponsavel')}
+          >
+            Não tem conta? <span>Cadastre-se</span>
+          </p>
+        </div>
+      </IonFooter>
     </IonPage>
   );
 };

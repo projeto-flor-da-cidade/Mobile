@@ -1,30 +1,26 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  IonPage,
+  IonModal,
+  IonAlert,
+  IonToast,
+  IonMenu,
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent,
-  IonItem,
-  IonLabel,
-  IonToast,
-  IonAlert,
-  IonModal,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonList,
-  IonSearchbar,
-  IonButton,
   IonButtons,
-  IonMenuButton,
+  // IonMenuButton, // REMOVIDO: Ícone do menu
+  IonButton,
+  IonContent,
   IonFab,
   IonFabButton,
   IonIcon,
-  IonMenu
+  IonSearchbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonPage
 } from '@ionic/react';
 import { menuController } from '@ionic/core/components';
-import { useHistory } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Mapa.css';
@@ -42,8 +38,13 @@ import {
   storefrontOutline
 } from 'ionicons/icons';
 
-// Importe a imagem de fallback (verifique o caminho conforme sua estrutura)
 import noImageFound from '../../assets/ErroFotoEquipamento.jpg';
+
+// Tipagem opcional para as novas props
+interface MapaProps {
+  isOpen?: boolean;   // controla abertura do modal externamente
+  onClose?: () => void; // callback para fechar modal externamente
+}
 
 const DefaultIcon = new L.Icon({
   iconUrl:
@@ -100,11 +101,8 @@ const fetchRoute = async (
   }
 };
 
-const Mapa: React.FC = () => {
-  const history = useHistory();
-  const initialPosition: LatLngExpression = [-8.0476, -34.8770]; // Recife
-
-  // Estados principais
+const Mapa: React.FC<MapaProps> = ({ isOpen, onClose }) => {
+  // ========== States originais ==========
   const [equipments, setEquipments] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
@@ -112,7 +110,6 @@ const Mapa: React.FC = () => {
   const [showEquipmentList, setShowEquipmentList] = useState(false);
   const [showFullScreenMap, setShowFullScreenMap] = useState(false);
 
-  // Estados do campo de busca principal
   const [showSuggestions, setShowSuggestions] = useState(true);
   const filteredSuggestions = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -121,27 +118,44 @@ const Mapa: React.FC = () => {
     );
   }, [searchQuery, equipments]);
 
-  // Estados do modal/rota
+  // Modal de rota
   const [currentLocation, setCurrentLocation] = useState('');
   const [equipmentName, setEquipmentName] = useState('');
   const [filteredEquipments, setFilteredEquipments] = useState<any[]>([]);
   const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
   const [selectedRouteEquipment, setSelectedRouteEquipment] = useState<any>(null);
 
-  // Estados para Toast e Alertas
+  // Feedback
   const [toastMessage, setToastMessage] = useState('');
   const [toastColor, setToastColor] = useState<'success' | 'danger'>('success');
   const [showToast, setShowToast] = useState(false);
   const [showProblemAlert, setShowProblemAlert] = useState(false);
 
-  // Estado para armazenar a foto (URL) do equipamento
+  // Foto do equipamento
   const [photoSrc, setPhotoSrc] = useState<string | null>(null);
 
-  // Refs para os mapas
+  // Referências do mapa
   const mapRef = useRef<LeafletMap | null>(null);
   const fullScreenMapRef = useRef<LeafletMap | null>(null);
 
-  // Buscar equipamentos
+  // ========== NOVO: localização do usuário ==========
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+  // Ao montar, tentamos obter a localização do usuário
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation([position.coords.latitude, position.coords.longitude]);
+      },
+      (error) => {
+        console.error('Usuário não permitiu localização ou erro:', error);
+        // Se der erro, mantemos userLocation = null e usamos default
+      }
+    );
+  }, []);
+
+  // ========== FUNÇÕES ORIGINAIS ==========
+
   const fetchEquipments = async () => {
     try {
       const response = await fetch('http://localhost:8081/equipamento');
@@ -163,7 +177,6 @@ const Mapa: React.FC = () => {
     fetchEquipments();
   }, []);
 
-  // Atualiza sugestões no modal de rota
   useEffect(() => {
     if (equipmentName.trim()) {
       const filtered = equipments.filter((e) =>
@@ -175,17 +188,14 @@ const Mapa: React.FC = () => {
     }
   }, [equipmentName, equipments]);
 
-  // Atualiza a URL da foto a partir do campo photoLocalPath
-useEffect(() => {
-  if (selectedRouteEquipment && selectedRouteEquipment.photoLocalPath) {
-    // Constrói a URL usando a pasta de uploads, que deve estar configurada para servir arquivos estáticos
-    setPhotoSrc(`http://localhost:8081/uploads/${selectedRouteEquipment.photoLocalPath}`);
-  } else {
-    setPhotoSrc(null);
-  }
-}, [selectedRouteEquipment]);
+  useEffect(() => {
+    if (selectedRouteEquipment && selectedRouteEquipment.photoLocalPath) {
+      setPhotoSrc(`http://localhost:8081/uploads/${selectedRouteEquipment.photoLocalPath}`);
+    } else {
+      setPhotoSrc(null);
+    }
+  }, [selectedRouteEquipment]);
 
-  // Seleciona sugestão no search principal
   const handleSelectSuggestion = (name: string) => {
     setSearchQuery(name);
     setShowSuggestions(false);
@@ -196,7 +206,6 @@ useEffect(() => {
     }
   };
 
-  // Dispara a busca ao pressionar Enter ou ao selecionar uma sugestão
   const handleSearch = () => {
     const foundEquipment = equipments.find(
       (e) => e.nome.toLowerCase() === searchQuery.toLowerCase()
@@ -210,27 +219,47 @@ useEffect(() => {
     }
   };
 
-  // Exibe a rota no modal de mapa expandido
   const handleDisplayRoute = async (nomeEquipamento?: string) => {
     const nome = nomeEquipamento ? nomeEquipamento : equipmentName;
     let currentLoc = currentLocation.trim();
+
+    // Se o usuário não informou nada, mas temos userLocation, usamos a do device
+    if (!currentLoc && userLocation) {
+      currentLoc = `${userLocation[0]},${userLocation[1]}`; // "lat,lon"
+    }
+    // Caso não haja userLocation, fallback para algo
     if (!currentLoc) {
       currentLoc = 'R. Joaquim Nabuco, Pernambuco';
     }
+
     if (!nome.trim()) {
       setAlertMessage('Por favor, informe o nome do equipamento desejado.');
       return;
     }
+
     const foundEquipment = equipments.find(
       (e) => e.nome.toLowerCase() === nome.trim().toLowerCase()
     );
     if (!foundEquipment) {
+      // ALERTA de equipamento não encontrado
       setAlertMessage('Equipamento não encontrado.');
       return;
     }
     setSelectedRouteEquipment(foundEquipment);
+
+    // Pega coordenadas do equipamento
     const desiredCoords = await getCoordinates(foundEquipment.logradouro);
-    const currentCoords = await getCoordinates(currentLoc);
+
+    // Pega coordenadas do currentLoc (pode ser userLocation ou um logradouro)
+    let currentCoords: { lat: number; lon: number } | null = null;
+    if (userLocation && currentLoc === `${userLocation[0]},${userLocation[1]}`) {
+      // Se a string for "lat,lon" e bater com userLocation, usamos direto
+      currentCoords = { lat: userLocation[0], lon: userLocation[1] };
+    } else {
+      // Tenta via Nominatim
+      currentCoords = await getCoordinates(currentLoc);
+    }
+
     if (currentCoords && desiredCoords) {
       const route = await fetchRoute(currentCoords, desiredCoords);
       if (route.length > 0) {
@@ -247,29 +276,23 @@ useEffect(() => {
     }
   };
 
-  // Centraliza o mapa do modal na localização atual
   const handleCenterFullMap = () => {
+    // Se userLocation existe, centraliza nela; se não, exibe alerta
     if (!fullScreenMapRef.current) return;
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fullScreenMapRef.current?.flyTo([latitude, longitude], 14);
-      },
-      (error) => {
-        console.error('Erro ao obter localização:', error);
-        setAlertMessage('Não foi possível obter sua localização.');
-      }
-    );
+    if (userLocation) {
+      fullScreenMapRef.current.flyTo(userLocation, 14);
+    } else {
+      setAlertMessage('Não foi possível obter sua localização.');
+    }
   };
 
-  // Força recálculo do mapa ao abrir o modal
   const handleModalDidPresent = () => {
     setTimeout(() => {
       fullScreenMapRef.current?.invalidateSize();
     }, 200);
   };
 
-  // Marcadores do mapa principal
+  // Agora exibiremos todos os equipamentos no mapa:
   const markers = useMemo(() => {
     return equipments
       .filter((equipment) => equipment.coordinates)
@@ -288,14 +311,13 @@ useEffect(() => {
       ));
   }, [equipments]);
 
-  // Função para renderizar a foto do equipamento com fallback
   const renderEquipmentPhoto = () => {
     return (
       <img
         src={photoSrc || noImageFound}
         alt="Foto do estabelecimento"
         onError={(e) => {
-          e.currentTarget.onerror = null; // Evita loop infinito
+          e.currentTarget.onerror = null;
           e.currentTarget.src = noImageFound;
         }}
         className="equipment-photo"
@@ -303,173 +325,39 @@ useEffect(() => {
     );
   };
 
+  // Lógica para abrir/fechar via props ou state interno
+  const effectiveModalState = isOpen !== undefined ? isOpen : showFullScreenMap;
+
+  // Define a posição inicial do mapa:
+  // 1) Se temos rota, usamos a primeira coordenada da rota
+  // 2) Senão, se temos userLocation, usamos ela
+  // 3) Senão, usamos o default
+  const defaultCenter: [number, number] = [-8.0476, -34.8770]; // Recife
+  const mapCenter = routeCoordinates.length > 0
+    ? routeCoordinates[0]
+    : (userLocation || defaultCenter);
+
   return (
     <>
-      {/* Página Principal */}
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Mapa</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding page-content">
-          <IonGrid className="content-container">
-            {/* Busca principal */}
-            <IonRow className="ion-justify-content-center">
-              <IonCol size="12" sizeMd="8">
-                <IonSearchbar
-                  value={searchQuery}
-                  onIonChange={(e) => {
-                    setSearchQuery(e.detail.value!);
-                    setShowSuggestions(true);
-                  }}
-                  onKeyDown={(e: React.KeyboardEvent) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSearch();
-                    }
-                  }}
-                  placeholder="Buscar equipamento"
-                  debounce={500}
-                />
-                {showSuggestions && filteredSuggestions.length > 0 && (
-                  <IonList>
-                    {filteredSuggestions.map((item, idx) => (
-                      <IonItem
-                        button
-                        key={idx}
-                        onClick={() => {
-                          handleSelectSuggestion(item.nome);
-                          handleSearch();
-                        }}
-                      >
-                        <div>
-                          <strong>{item.nome}</strong>
-                          <br />
-                          {item.logradouro}
-                          <br />
-                        </div>
-                      </IonItem>
-                    ))}
-                  </IonList>
-                )}
-              </IonCol>
-            </IonRow>
-
-            {/* Botão para listar equipamentos */}
-            <IonRow className="ion-justify-content-center">
-              <IonCol size="12" sizeMd="8" className="ion-text-center">
-                <IonButton
-                  expand="block"
-                  className="botao-personalizado"
-                  onClick={() => setShowEquipmentList(true)}
-                >
-                  Listar Feiras e Hortas Próximas
-                </IonButton>
-              </IonCol>
-            </IonRow>
-
-            {/* Mapa principal */}
-            <IonRow className="ion-justify-content-center">
-              <IonCol size="300" sizeMd="10">
-                <div className="map-container">
-                  <MapContainer
-                    center={initialPosition}
-                    zoom={10}
-                    style={{ height: '300px', width: '100%' }}
-                    ref={mapRef}
-                  >
-                    <TileLayer
-                      url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution="&copy; OpenStreetMap contributors"
-                    />
-                    {markers}
-                  </MapContainer>
-                </div>
-              </IonCol>
-            </IonRow>
-
-            {/* Botões extras */}
-            <IonRow className="ion-justify-content-center ion-margin-top">
-              <IonCol size="12" sizeMd="20" className="ion-text-center">
-                <IonButton
-                  expand="block"
-                  className="botao-personalizado"
-                  onClick={() => setShowFullScreenMap(true)}
-                >
-                  Expandir Mapa
-                </IonButton>
-              </IonCol>
-            </IonRow>
-            <IonRow className="ion-justify-content-center ion-margin-top">
-              <IonCol size="12" sizeMd="8" className="ion-text-center">
-                <IonButton
-                  expand="block"
-                  className="botao-personalizado"
-                  onClick={() => history.push('/cadastroequipamento')}
-                >
-                  Cadastre sua Feira Agroecológica
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-
-          {/* Modal para listar equipamentos (na página principal) */}
-          <IonModal isOpen={showEquipmentList}>
-            <IonHeader>
-              <IonToolbar>
-                <IonTitle>Lista de Feiras e Hortas</IonTitle>
-                <IonButton slot="end" onClick={() => setShowEquipmentList(false)}>
-                  Fechar
-                </IonButton>
-              </IonToolbar>
-            </IonHeader>
-            <IonContent>
-              <IonList>
-                {equipments.map((eq, idx) => (
-                  eq.coordinates && (
-                    <IonItem
-                      key={idx}
-                      button
-                      onClick={() => {
-                        setSelectedEquipment(eq);
-                        mapRef.current?.flyTo([eq.coordinates.lat, eq.coordinates.lon], 18);
-                        setShowEquipmentList(false);
-                      }}
-                    >
-                      <div>
-                        <strong>{eq.nome}</strong>
-                        <br />
-                        {eq.logradouro}
-                        <br />
-                        Fecha às {eq.horarioFechamento ? eq.horarioFechamento : 'N/D'}
-                      </div>
-                    </IonItem>
-                  )
-                ))}
-              </IonList>
-            </IonContent>
-          </IonModal>
-        </IonContent>
-      </IonPage>
-
-      {/* Modal de tela cheia + IonMenu */}
-      <IonModal isOpen={showFullScreenMap} onDidPresent={handleModalDidPresent}>
-        {/* IonMenu com contentId="modal-map-content" */}
+      <IonModal
+        isOpen={effectiveModalState}
+        onDidPresent={handleModalDidPresent}
+        onDidDismiss={() => {
+          if (onClose) onClose();
+          setShowFullScreenMap(false);
+        }}
+      >
+        {/** IonMenu para exibir informações do equipamento */}
         <IonMenu menuId="modalMenu" contentId="modal-map-content" side="start" type="overlay">
           <IonContent>
             <div className="menu-content">
               {selectedRouteEquipment ? (
                 <>
-                  {/* Imagem do equipamento ou fallback */}
                   <div className="equipment-photo-container">
                     {renderEquipmentPhoto()}
                   </div>
-
-                  {/* Nome do equipamento */}
                   <h2 className="equipment-name">{selectedRouteEquipment.nome}</h2>
 
-                  {/* Cinco estrelas */}
                   <div className="stars-row">
                     <IonIcon icon={starOutline} className="star-icon" />
                     <IonIcon icon={starOutline} className="star-icon" />
@@ -478,29 +366,24 @@ useEffect(() => {
                     <IonIcon icon={starOutline} className="star-icon" />
                   </div>
 
-                  {/* Horário de fechamento */}
                   <div className="closing-time">
                     Fecha às {selectedRouteEquipment.horarioFechamento || 'N/D'}
                   </div>
 
-                  {/* Endereço */}
                   <div className="address-info">
                     {selectedRouteEquipment.logradouro}, {selectedRouteEquipment.numero} -{' '}
                     {selectedRouteEquipment.compl}
                   </div>
 
-                  {/* Observação */}
                   <div className="observation-info">
                     {selectedRouteEquipment.observ}
                   </div>
 
-                  {/* Botão "Ir para a loja" (desativado) */}
                   <IonButton disabled className="ir-loja-button">
                     <IonIcon icon={storefrontOutline} size="small" />
                     <strong>Ir para a loja</strong>
                   </IonButton>
 
-                  {/* Ícones de ação */}
                   <div className="actions-row">
                     <div className="action-item">
                       <IonIcon icon={bookmarkOutline} size="small" />
@@ -527,25 +410,26 @@ useEffect(() => {
           </IonContent>
         </IonMenu>
 
-        {/* IonPage que o menu sobrepõe */}
+        {/** IonPage que o menu sobrepõe */}
         <IonPage>
           <IonHeader>
             <IonToolbar>
-              <IonButtons slot="start">
-                <IonMenuButton />
-              </IonButtons>
+              {/** REMOVIDO: IonButtons slot="start" com IonMenuButton */}
               <IonTitle className="ion-text-center">Mapa</IonTitle>
               <IonButtons slot="end">
-                <IonButton onClick={() => setShowFullScreenMap(false)}>
+                <IonButton
+                  onClick={() => {
+                    if (onClose) onClose();
+                    setShowFullScreenMap(false);
+                  }}
+                >
                   <IonIcon icon={closeOutline} />
                 </IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
 
-          {/* Content que o IonMenu usa */}
           <IonContent id="modal-map-content">
-            {/* Formulário para rota */}
             <IonItem>
               <IonSearchbar
                 value={currentLocation}
@@ -584,9 +468,9 @@ useEffect(() => {
               Exibir Rota
             </IonButton>
 
-            {/* Mapa dentro do modal */}
+            {/** Mapa principal (agora exibindo todos os markers) */}
             <MapContainer
-              center={routeCoordinates.length > 0 ? routeCoordinates[0] : initialPosition}
+              center={mapCenter}
               zoom={13}
               className="full-screen-map"
               ref={fullScreenMapRef}
@@ -595,6 +479,10 @@ useEffect(() => {
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap contributors"
               />
+              {/** Mostra todos os equipamentos */}
+              {markers}
+
+              {/** Se houver rota, mostra o trajeto e marcadores de início/fim */}
               {routeCoordinates.length > 0 && (
                 <>
                   <Marker position={routeCoordinates[0]} icon={DefaultIcon}>
@@ -613,7 +501,7 @@ useEffect(() => {
                           style={{ cursor: 'pointer' }}
                           size="medium"
                           data-open-menu
-                          onClick={() => menuController.open("modalMenu")}
+                          onClick={() => menuController.open('modalMenu')}
                         />
                         <br />
                         Fecha às{' '}
@@ -628,12 +516,14 @@ useEffect(() => {
               )}
             </MapContainer>
 
-            {/* FABs dentro do Modal */}
+            {/** FAB para centralizar na localização do usuário */}
             <IonFab vertical="bottom" horizontal="end" slot="fixed">
               <IonFabButton size="small" onClick={handleCenterFullMap}>
                 <IonIcon icon={compassOutline} />
               </IonFabButton>
             </IonFab>
+
+            {/** FAB para alertar problemas */}
             <IonFab
               vertical="bottom"
               horizontal="end"

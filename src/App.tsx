@@ -3,7 +3,7 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import AnimeInicial from './pages/animacao_telas/AnimeInicial';
 import Home from './pages/home/Home';
-import Serviços from './pages/servicos_SAU/Servicos';
+import Servicos from './pages/servicos_SAU/Servicos';
 import Mapa from './pages/mapa/Mapa'; 
 import CadastroEquipamento from './pages/cadastros/CadastroEquipamento';
 import ServiçoSEAU from './pages/servicos_SAU/ServicoSEAU';
@@ -47,8 +47,8 @@ const App: React.FC = () => (
         <Route exact path="/home">
           <Home />
         </Route>
-        <Route exact path="/serviços">
-          <Serviços />
+        <Route exact path="/servicos">
+          <Servicos />
         </Route>
         <Route exact path="/mapa">
           <Mapa />

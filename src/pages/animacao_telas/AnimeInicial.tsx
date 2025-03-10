@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './AnimeInicial.css';
 import bannerProjeto from '../../assets/banner-pricipal.svg';
-import backgroundImage from '../../assets/background-image.jpeg';
 
 const AnimeInicial: React.FC = () => {
   const history = useHistory();
@@ -25,7 +24,7 @@ const AnimeInicial: React.FC = () => {
     <IonPage>
       <IonContent 
         className={`splash ${fadeOut ? 'fade-out' : ''}`}
-        style={{ backgroundImage: `url(${backgroundImage})`, backgroundColor: '#ffffff' }}
+        
       >
         <div className="borda-arredondada-banner">
           <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />

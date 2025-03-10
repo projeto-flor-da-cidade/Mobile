@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IonPage,
   IonContent,
@@ -13,14 +13,14 @@ import {
   IonCardTitle,
   IonMenu,
   IonHeader,
-  IonToolbar,
   IonContent as IonMenuContent,
   IonList,
   IonItem,
   IonMenuToggle,
   IonLabel,
   IonButton,
-  IonFooter
+  IonFooter,
+  IonToolbar
 } from '@ionic/react';
 import { menuController } from '@ionic/core/components';
 import {
@@ -31,17 +31,23 @@ import {
   settingsOutline,
   exitOutline,
   earthOutline,
-  pencilOutline
+  pencilOutline,
+  locationOutline,
+  schoolOutline
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 
+import Mapa from '../../pages/mapa/Mapa'; // <-- importe seu Mapa
 import logoProjeto from '../../assets/logo-projeto.png';
 import './Servicos.css';
 
 const Servicos: React.FC = () => {
   const history = useHistory();
 
-  // Array de objetos com URL e título para cada card
+  // Cria um state para abrir/fechar o modal do Mapa
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+
+  // Dados de cards (exemplo)
   const cardsData = [
     { img: 'https://picsum.photos/300/200?random=1', title: 'Curso Cultiva Recife 1' },
     { img: 'https://picsum.photos/300/200?random=2', title: 'Curso Cultiva Recife 2' },
@@ -49,7 +55,7 @@ const Servicos: React.FC = () => {
     { img: 'https://picsum.photos/300/200?random=4', title: 'Curso Cultiva Recife 4' }
   ];
 
-  // Função para abrir o menu manualmente
+  // Abre o menu lateral
   const abrirMenu = async () => {
     await menuController.open('menu');
   };
@@ -151,17 +157,26 @@ const Servicos: React.FC = () => {
         </IonFooter>
       </IonMenu>
 
+      {/**
+       * IMPORTANTE:
+       * Renderiza o Mapa aqui (fora ou dentro do IonPage),
+       * passando "isOpen" e "onClose"
+       */}
+      <Mapa
+        isOpen={mapModalOpen}
+        onClose={() => setMapModalOpen(false)}
+      />
+
       {/** PÁGINA PRINCIPAL */}
       <IonPage id="main-content">
         <IonContent fullscreen>
-          {/** Ícone de usuário no topo, alinhado à esquerda, com margem para não sobrepor o conteúdo */}
+          {/** Botão FAB para abrir o menu */}
           <IonFab vertical="top" horizontal="start" style={{ marginTop: '2rem' }}>
             <IonFabButton onClick={abrirMenu}>
               <IonIcon icon={personCircleOutline} size="large" />
             </IonFabButton>
           </IonFab>
 
-          {/** SEÇÃO 1: "Bem vindo..." + Ícones (Mapa, Cursos) */}
           <IonGrid className="sectionContainer" style={{ marginTop: '6rem' }}>
             <IonRow>
               <IonCol>
@@ -171,13 +186,14 @@ const Servicos: React.FC = () => {
               </IonCol>
             </IonRow>
 
+            {/** SEÇÃO DE ÍCONES */}
             <IonRow>
               <IonCol>
                 <div className="horizontalScroll">
-                  {/** Ícone 1 (Mapa) */}
+                  {/** Ícone 1 (Mapa) - ABRE O MODAL DO MAPA AGORA */}
                   <div className="fabIconContainer">
-                    <IonFabButton onClick={() => history.push('/mapa')}>
-                      <IonIcon icon={personCircleOutline} size="large" />
+                    <IonFabButton onClick={() => setMapModalOpen(true)}>
+                      <IonIcon icon={locationOutline} size="large" />
                     </IonFabButton>
                     <IonText className="bodyText">Mapa Feiras/Hortas</IonText>
                   </div>
@@ -185,7 +201,7 @@ const Servicos: React.FC = () => {
                   {/** Ícone 2 (Cursos) */}
                   <div className="fabIconContainer">
                     <IonFabButton>
-                      <IonIcon icon={personCircleOutline} size="large" />
+                      <IonIcon icon={schoolOutline} size="large" />
                     </IonFabButton>
                     <IonText className="bodyText">Cursos</IonText>
                   </div>
@@ -194,7 +210,7 @@ const Servicos: React.FC = () => {
             </IonRow>
           </IonGrid>
 
-          {/** SEÇÃO 2: "Outros Serviços SEAU" + IonCards */}
+          {/** OUTRAS SEÇÕES E CARDS */}
           <IonGrid className="sectionContainer">
             <IonRow>
               <IonCol>
@@ -204,7 +220,6 @@ const Servicos: React.FC = () => {
               </IonCol>
             </IonRow>
 
-            {/** Cards em scroll horizontal */}
             <IonRow>
               <IonCol>
                 <div className="horizontalScroll">
@@ -224,7 +239,6 @@ const Servicos: React.FC = () => {
               </IonCol>
             </IonRow>
 
-            {/** 5º IonCard - Destaque (fora do scroll horizontal) */}
             <IonRow>
               <IonCol>
                 <IonCard
@@ -245,7 +259,6 @@ const Servicos: React.FC = () => {
             </IonRow>
           </IonGrid>
 
-          {/** Espaçamento extra no final (opcional) */}
           <div className="footerSpacing"></div>
         </IonContent>
       </IonPage>
