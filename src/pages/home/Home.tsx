@@ -1,5 +1,19 @@
-import React from 'react';
-import { IonPage, IonContent, IonFooter, IonButton } from '@ionic/react';
+import React, { useRef, useState } from 'react';
+import { 
+  IonPage, 
+  IonContent, 
+  IonFooter, 
+  IonButton, 
+  IonModal, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonCheckbox,
+  IonInputPasswordToggle
+} from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
 
@@ -9,16 +23,31 @@ import logoDobanner from '../../assets/LogoFlordacidade.svg';
 
 const Home: React.FC = () => {
   const history = useHistory();
+  const modal = useRef<HTMLIonModalElement>(null);
+
+  // Estados para os inputs do modal
+  const [cpf, setCpf] = useState('');
+  const [senha, setSenha] = useState('');
+  const [salvar, setSalvar] = useState(false);
+
+  const handleEntrar = () => {
+    console.log('Dados do modal:', { cpf, senha, salvar });
+    if (modal.current) {
+      modal.current.dismiss();
+    }
+    history.push('/servicos');
+  };
+
+  const handleCancelar = () => {
+    if (modal.current) {
+      modal.current.dismiss();
+    }
+  };
 
   return (
     <IonPage className="page-container">
-      {/* 
-        IonContent com o fundo + overlay.
-        Dentro dele, posicionamos a logo da prefeitura (top-left)
-        e a circunferência centralizada (absoluta).
-      */}
       <IonContent className="main-content">
-        {/* 1) Logo da prefeitura no canto superior esquerdo */}
+        {/* Logo da prefeitura no canto superior esquerdo */}
         <div className="logo-prefeitura-container">
           <a
             href="https://www2.recife.pe.gov.br/"
@@ -32,8 +61,8 @@ const Home: React.FC = () => {
             />
           </a>
         </div>
-
-        {/* 2) Circunferência no centro (posição absoluta), com a logo do banner */}
+        
+        {/* Circunferência central com a logo do banner */}
         <div className="borda-arredondada-banner">
           <img
             src={logoDobanner}
@@ -43,10 +72,6 @@ const Home: React.FC = () => {
         </div>
       </IonContent>
 
-      {/* 
-        3) IonFooter no rodapé, com a onda (wave) e os botões.
-           A onda fica no topo do footer; em seguida, a "white-box" com botões.
-      */}
       <IonFooter className="footer-container">
         <div className="wave-container">
           <svg
@@ -62,10 +87,8 @@ const Home: React.FC = () => {
         </div>
 
         <div className="white-box">
-          <IonButton
-            className="botao-entrar"
-            onClick={() => history.push('/cadastroresponsavel')}
-          >
+          {/* Botão que dispara o modal */}
+          <IonButton id="open-modal" className="botao-entrar">
             Entrar
           </IonButton>
           <IonButton
@@ -74,7 +97,6 @@ const Home: React.FC = () => {
           >
             Entrar como convidado
           </IonButton>
-
           <p
             className="cadastro-text"
             onClick={() => history.push('/cadastroresponsavel')}
@@ -83,6 +105,65 @@ const Home: React.FC = () => {
           </p>
         </div>
       </IonFooter>
+
+      {/* IonModal com classe custom-modal para isolar os estilos */}
+      <IonModal 
+        ref={modal} 
+        className="custom-modal"
+        trigger="open-modal" 
+        initialBreakpoint={1} 
+        breakpoints={[0, 1]}
+      >
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Insira os dados</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          {/* Envolvemos o conteúdo do modal em um bloco */}
+          <div className="block">
+            <IonItem>
+              <IonLabel position="floating">CPF</IonLabel>
+              <IonInput
+                value={cpf}
+                placeholder="ex: 123.456.789-00"
+                onIonChange={e => setCpf(e.detail.value!)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="floating">Senha</IonLabel>
+              <IonInput
+                value={senha}
+                type="password"
+                placeholder="Senha"
+                onIonChange={e => setSenha(e.detail.value!)}
+                
+              >
+                <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
+              </IonInput>
+              
+
+            </IonItem>
+
+            <IonItem lines="none">
+              <IonLabel>Deseja salvar os dados?</IonLabel>
+              <IonCheckbox
+                slot="start"
+                checked={salvar}
+                onIonChange={e => setSalvar(e.detail.checked)}
+              />
+            </IonItem>
+            <div className="modal-buttons">
+              <IonButton color="danger" onClick={handleCancelar}>
+                Cancelar
+              </IonButton>
+              <IonButton color="success" onClick={handleEntrar}>
+                Entrar
+              </IonButton>
+            </div>
+          </div>
+        </IonContent>
+      </IonModal>
     </IonPage>
   );
 };

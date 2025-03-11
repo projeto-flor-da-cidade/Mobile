@@ -2,7 +2,7 @@ import { IonPage, IonContent } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './AnimeInicial.css';
-import bannerProjeto from '../../assets/banner-pricipal.svg';
+import bannerProjeto from '../../assets/LogoFlordacidade.svg';
 
 const AnimeInicial: React.FC = () => {
   const history = useHistory();
@@ -26,8 +26,8 @@ const AnimeInicial: React.FC = () => {
         className={`splash ${fadeOut ? 'fade-out' : ''}`}
         
       >
-        <div className="borda-arredondada-banner">
-          <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto" />
+        <div className="borda-arredondada-banner-animado">
+          <img src={bannerProjeto} alt="Banner Projeto" className="banner-projeto-animado" />
         </div>
       </IonContent>
     </IonPage>

@@ -3,7 +3,7 @@
     background-repeat: no-repeat;
     height: 100vh;
     width: 100%;
-    transition: opacity 2s ease-out; /* Aumentamos a duração para 2s */
+    transition: opacity 4s ease-out; /* Aumentamos a duração para 2s */
     opacity: 1;
     position: relative;
   }
@@ -12,7 +12,7 @@
     opacity: 0;
   }
   
-  .borda-arredondada-banner {
+  .borda-arredondada-banner-animado {
     position: absolute;
     top: 45%;
     left: 50%;
@@ -28,14 +28,14 @@
     object-position: 10%;
   }
   
-  .borda-arredondada-banner img {
+  .borda-arredondada-banner-animado img {
     width: 300px;
     height: 200px;
     object-fit: fill;
     margin-left: 57px;
   }
   
-  .banner-projeto {
+  .banner-projeto-animado {
     width: 90%;
     max-width: 200px;
     height: auto;
