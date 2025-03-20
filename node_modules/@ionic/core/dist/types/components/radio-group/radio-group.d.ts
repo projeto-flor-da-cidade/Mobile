@@ -2,6 +2,8 @@ import type { ComponentInterface, EventEmitter } from '../../stencil-public-runt
 import type { RadioGroupChangeEventDetail, RadioGroupCompareFn } from './radio-group-interface';
 export declare class RadioGroup implements ComponentInterface {
     private inputId;
+    private helperTextId;
+    private errorTextId;
     private labelId;
     private label?;
     el: HTMLElement;
@@ -24,6 +26,14 @@ export declare class RadioGroup implements ComponentInterface {
      * the value of the radio group.
      */
     value?: any | null;
+    /**
+     * The helper text to display at the top of the radio group.
+     */
+    helperText?: string;
+    /**
+     * The error text to display at the top of the radio group.
+     */
+    errorText?: string;
     valueChanged(value: any | undefined): void;
     /**
      * Emitted when the value has changed.
@@ -54,5 +64,10 @@ export declare class RadioGroup implements ComponentInterface {
     onKeydown(ev: KeyboardEvent): void;
     /** @internal */
     setFocus(): Promise<void>;
+    /**
+     * Renders the helper text or error text values
+     */
+    private renderHintText;
+    private getHintTextID;
     render(): any;
 }

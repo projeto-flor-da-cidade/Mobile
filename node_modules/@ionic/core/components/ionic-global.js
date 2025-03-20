@@ -1,7 +1,7 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { setPlatformHelpers, setMode, getMode } from '@stencil/core/internal/client';
+import { setMode, getMode } from '@stencil/core/internal/client';
 
 // TODO(FW-2832): types
 class Config {
@@ -143,7 +143,8 @@ const isHybrid = (win) => isCordova(win) || isCapacitorNative(win);
 const isCordova = (win) => !!(win['cordova'] || win['phonegap'] || win['PhoneGap']);
 const isCapacitorNative = (win) => {
     const capacitor = win['Capacitor'];
-    return !!(capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNative);
+    // TODO(ROU-11693): Remove when we no longer support Capacitor 2, which does not have isNativePlatform
+    return !!((capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNative) || ((capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNativePlatform) && !!capacitor.isNativePlatform()));
 };
 const isElectron = (win) => testUserAgent(win, /electron/i);
 const isPWA = (win) => { var _a; return !!(((_a = win.matchMedia) === null || _a === void 0 ? void 0 : _a.call(win, '(display-mode: standalone)').matches) || win.navigator.standalone); };
@@ -178,17 +179,6 @@ const initialize = (userConfig = {}) => {
     const doc = window.document;
     const win = window;
     const Ionic = (win.Ionic = win.Ionic || {});
-    const platformHelpers = {};
-    if (userConfig._ael) {
-        platformHelpers.ael = userConfig._ael;
-    }
-    if (userConfig._rel) {
-        platformHelpers.rel = userConfig._rel;
-    }
-    if (userConfig._ce) {
-        platformHelpers.ce = userConfig._ce;
-    }
-    setPlatformHelpers(platformHelpers);
     // create the Ionic.config from raw config object (if it exists)
     // and convert Ionic.config into a ConfigApi that has a get() fn
     const configObj = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, configFromSession(win)), { persistConfig: false }), Ionic.config), configFromURL(win)), userConfig);

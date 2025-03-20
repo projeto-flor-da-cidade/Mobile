@@ -23,10 +23,10 @@ export class RouterLink {
             rel: this.rel,
             target: this.target,
         };
-        return (h(Host, { key: '529ceed5beaf92d7b4cc315c82f449eac18310e8', onClick: this.onClick, class: createColorClasses(this.color, {
+        return (h(Host, { key: '11183264fb6ae0db9a7a47c71b6862d60001b834', onClick: this.onClick, class: createColorClasses(this.color, {
                 [mode]: true,
                 'ion-activatable': true,
-            }) }, h("a", Object.assign({ key: 'd5f1f8b256695d70bdafd20ff3d1b625963fa2da' }, attrs), h("slot", { key: '613fcdb36a71e076f989551ea21f1d5c118b1cd2' }))));
+            }) }, h("a", Object.assign({ key: '3e0e5242161cb0df593d6d573e51b8ba750065a1' }, attrs), h("slot", { key: '5bd808e98a4627bb1236f0d955f4b32971355417' }))));
     }
     static get is() { return "ion-router-link"; }
     static get encapsulation() { return "shadow"; }

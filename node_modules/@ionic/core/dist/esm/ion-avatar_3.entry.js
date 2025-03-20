@@ -1,8 +1,8 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, h, f as Host } from './index-28849c61.js';
-import { b as getIonMode } from './ionic-global-c81d82ab.js';
+import { r as registerInstance, h, e as Host } from './index-527b9e34.js';
+import { b as getIonMode } from './ionic-global-ca86cf32.js';
 import { c as createColorClasses } from './theme-01f3f29c.js';
 
 const avatarIosCss = ":host{border-radius:var(--border-radius);display:block}::slotted(ion-img),::slotted(img){border-radius:var(--border-radius);width:100%;height:100%;-o-object-fit:cover;object-fit:cover;overflow:hidden}:host{--border-radius:50%;width:48px;height:48px}";
@@ -55,7 +55,7 @@ const Thumbnail = class {
         registerInstance(this, hostRef);
     }
     render() {
-        return (h(Host, { key: 'cfa9aeb1d4fd624a9732c5230d29dd887e4b7771', class: getIonMode(this) }, h("slot", { key: '29bc6e64063cba44e2643228df54394883933918' })));
+        return (h(Host, { key: '7f5fd6c056da2d82feb2c3c33f3e6dec898787f5', class: getIonMode(this) }, h("slot", { key: 'd15fd2b6cdc03777edc1930be95ad838e1b376c8' })));
     }
 };
 Thumbnail.style = IonThumbnailStyle0;

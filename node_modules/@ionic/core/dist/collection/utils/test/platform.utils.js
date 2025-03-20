@@ -28,7 +28,7 @@ export const PlatformConfiguration = {
     },
     Capacitor: {
         Capacitor: {
-            isNative: true,
+            isNativePlatform: () => true,
         },
     },
     PWA: {

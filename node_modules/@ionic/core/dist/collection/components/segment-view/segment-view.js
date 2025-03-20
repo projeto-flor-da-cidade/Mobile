@@ -94,10 +94,10 @@ export class SegmentView {
     }
     render() {
         const { disabled, isManualScroll } = this;
-        return (h(Host, { key: '9f4f11d31c4db776f077e59ae895b35dd4454717', class: {
+        return (h(Host, { key: 'fa528d2d9ae0f00fc3067defe2a047dce77c814a', class: {
                 'segment-view-disabled': disabled,
                 'segment-view-scroll-disabled': isManualScroll === false,
-            } }, h("slot", { key: 'ea58b21f031cee2ab2b70580f336deaefa364538' })));
+            } }, h("slot", { key: '74dc8b4d073caeff1bab272d11b9ea3e1a215954' })));
     }
     static get is() { return "ion-segment-view"; }
     static get encapsulation() { return "shadow"; }

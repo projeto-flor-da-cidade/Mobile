@@ -46,7 +46,7 @@ export class MenuButton {
             type: this.type,
         };
         const ariaLabel = inheritedAttributes['aria-label'] || 'menu';
-        return (h(Host, { key: '7ec29715ce7926b7c2b08f3d9cac8aaa16b3dc28', onClick: this.onClick, "aria-disabled": disabled ? 'true' : null, "aria-hidden": hidden ? 'true' : null, class: createColorClasses(color, {
+        return (h(Host, { key: '3cde3704f28eb275f4a5ff2985bbb68c1024e79c', onClick: this.onClick, "aria-disabled": disabled ? 'true' : null, "aria-hidden": hidden ? 'true' : null, class: createColorClasses(color, {
                 [mode]: true,
                 button: true, // ion-buttons target .button
                 'menu-button-hidden': hidden,
@@ -55,7 +55,7 @@ export class MenuButton {
                 'in-toolbar-color': hostContext('ion-toolbar[color]', this.el),
                 'ion-activatable': true,
                 'ion-focusable': true,
-            }) }, h("button", Object.assign({ key: 'd4c5929264af3ba0328118bcc27d2ab7ef5d3809' }, attrs, { disabled: disabled, class: "button-native", part: "native", "aria-label": ariaLabel }), h("span", { key: '7bfa6e9a93105486623d044861e879ec79ff64f1', class: "button-inner" }, h("slot", { key: '071ab58e285832fc188706166f5547d45d501ac5' }, h("ion-icon", { key: '918ec5d791921de9821c347af4f65f97dd94aabf', part: "icon", icon: menuIcon, mode: mode, lazy: false, "aria-hidden": "true" }))), mode === 'md' && h("ion-ripple-effect", { key: '00ffdd53f635e706c1dbd01b8e7944498650fe81', type: "unbounded" }))));
+            }) }, h("button", Object.assign({ key: 'a02a3374288bd1759b6e352ada8eab0d45c6422f' }, attrs, { disabled: disabled, class: "button-native", part: "native", "aria-label": ariaLabel }), h("span", { key: 'ba699f2277a4e7b27ce5e42faeefc53d8805bb43', class: "button-inner" }, h("slot", { key: '829fe6cbdeb173f50d1a670389d1565baa6273e4' }, h("ion-icon", { key: 'a9a9f7b8dcffc648a8429fe0adbe766869de72fd', part: "icon", icon: menuIcon, mode: mode, lazy: false, "aria-hidden": "true" }))), mode === 'md' && h("ion-ripple-effect", { key: '48deca9a771a249f2fc76eaa8b9741c8d66d8355', type: "unbounded" }))));
     }
     static get is() { return "ion-menu-button"; }
     static get encapsulation() { return "shadow"; }

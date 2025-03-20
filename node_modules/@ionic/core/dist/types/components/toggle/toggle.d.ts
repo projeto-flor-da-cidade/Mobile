@@ -9,9 +9,14 @@ import type { ToggleChangeEventDetail } from './toggle-interface';
  * @part track - The background track of the toggle.
  * @part handle - The toggle handle, or knob, used to change the checked state.
  * @part label - The label text describing the toggle.
+ * @part supporting-text - Supporting text displayed beneath the toggle label.
+ * @part helper-text - Supporting text displayed beneath the toggle label when the toggle is valid.
+ * @part error-text - Supporting text displayed beneath the toggle label when the toggle is invalid and touched.
  */
 export declare class Toggle implements ComponentInterface {
     private inputId;
+    private helperTextId;
+    private errorTextId;
     private gesture?;
     private focusEl?;
     private lastDrag;
@@ -38,6 +43,14 @@ export declare class Toggle implements ComponentInterface {
      * If `true`, the user cannot interact with the toggle.
      */
     disabled: boolean;
+    /**
+     * Text that is placed under the toggle label and displayed when an error is detected.
+     */
+    errorText?: string;
+    /**
+     * Text that is placed under the toggle label and displayed when no error is detected.
+     */
+    helperText?: string;
     /**
      * The value of the toggle does not mean if it's checked or not, use the `checked`
      * property for that.
@@ -77,6 +90,12 @@ export declare class Toggle implements ComponentInterface {
      */
     alignment?: 'start' | 'center';
     /**
+     * If true, screen readers will announce it as a required field. This property
+     * works only for accessibility purposes, it will not prevent the form from
+     * submitting if the value is invalid.
+     */
+    required: boolean;
+    /**
      * Emitted when the user switches the toggle on or off.
      *
      * This event will not emit when programmatically setting the `checked` property.
@@ -109,5 +128,11 @@ export declare class Toggle implements ComponentInterface {
     private renderOnOffSwitchLabels;
     private renderToggleControl;
     private get hasLabel();
+    private getHintTextID;
+    /**
+     * Responsible for rendering helper text and error text.
+     * This element should only be rendered if hint text is set.
+     */
+    private renderHintText;
     render(): any;
 }

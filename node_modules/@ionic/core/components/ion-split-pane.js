@@ -129,12 +129,12 @@ const SplitPane = /*@__PURE__*/ proxyCustomElement(class SplitPane extends HTMLE
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '1ca0b0299d03605bb358112ca56cbafbe58f00f5', class: {
+        return (h(Host, { key: '76be70d7fbebc52646a5851f47accc1006615b85', class: {
                 [mode]: true,
                 // Used internally for styling
                 [`split-pane-${mode}`]: true,
                 'split-pane-visible': this.visible,
-            } }, h("slot", { key: 'abe231361727ae7fc63edd592a4490caac1909fb' })));
+            } }, h("slot", { key: '9a859530f4fb18aff43255bc3940feb9aca625d7' })));
     }
     get el() { return this; }
     static get watchers() { return {

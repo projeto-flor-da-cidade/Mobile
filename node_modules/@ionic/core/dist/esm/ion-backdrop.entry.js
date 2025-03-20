@@ -1,8 +1,8 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, d as createEvent, h, f as Host } from './index-28849c61.js';
-import { b as getIonMode } from './ionic-global-c81d82ab.js';
+import { r as registerInstance, c as createEvent, h, e as Host } from './index-527b9e34.js';
+import { b as getIonMode } from './ionic-global-ca86cf32.js';
 
 const backdropIosCss = ":host{left:0;right:0;top:0;bottom:0;display:block;position:absolute;-webkit-transform:translateZ(0);transform:translateZ(0);contain:strict;cursor:pointer;opacity:0.01;-ms-touch-action:none;touch-action:none;z-index:2}:host(.backdrop-hide){background:transparent}:host(.backdrop-no-tappable){cursor:auto}:host{background-color:var(--ion-backdrop-color, #000)}";
 const IonBackdropIosStyle0 = backdropIosCss;

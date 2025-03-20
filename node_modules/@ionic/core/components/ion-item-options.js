@@ -27,7 +27,7 @@ const ItemOptions = /*@__PURE__*/ proxyCustomElement(class ItemOptions extends H
     render() {
         const mode = getIonMode(this);
         const isEnd = isEndSide(this.side);
-        return (h(Host, { key: '6d91399d2aaaa81d514d0bbc8dffe53eeec25d36', class: {
+        return (h(Host, { key: '7df4b71547524bf359c48e1b40ccbc44e850f632', class: {
                 [mode]: true,
                 // Used internally for styling
                 [`item-options-${mode}`]: true,

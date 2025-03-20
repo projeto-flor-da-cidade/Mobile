@@ -21,11 +21,11 @@ const ItemDivider = /*@__PURE__*/ proxyCustomElement(class ItemDivider extends H
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '6cff318230a9b2a9db529df154285d3dd9822efe', class: createColorClasses(this.color, {
+        return (h(Host, { key: '7150b1a3a881c3c312db40821acb9830c2885ccf', class: createColorClasses(this.color, {
                 [mode]: true,
                 'item-divider-sticky': this.sticky,
                 item: true,
-            }) }, h("slot", { key: 'eb50dfab74ab0fd13697db17ecd60e8fa0bf1750', name: "start" }), h("div", { key: '2806efd89d086f4fb844a479d9c095e1e0775713', class: "item-divider-inner" }, h("div", { key: '77b7d5fa987e5f1c26d8023cd1f974a8a263a3de', class: "item-divider-wrapper" }, h("slot", { key: 'dbafb0deb140a19a2a9748fd5b48760c39c6fd2e' })), h("slot", { key: 'ef9a848fe21e84ef21cd273b8a4d9f95f558175b', name: "end" }))));
+            }) }, h("slot", { key: '6e9d9615f475392a81177bc49b4b01dbdab67925', name: "start" }), h("div", { key: '12fe6b840ad1a1897cc34529e488207b2df448f7', class: "item-divider-inner" }, h("div", { key: '626776a8c9887dd2df5ecf3b7861beb742b41e03', class: "item-divider-wrapper" }, h("slot", { key: '90379dd99914e24ae45c9571c8d390f9b6622fd4' })), h("slot", { key: '105644332c08530155b9cd8e8c6fa9e332072a63', name: "end" }))));
     }
     get el() { return this; }
     static get style() { return {

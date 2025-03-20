@@ -48,10 +48,10 @@ export class Tab {
     }
     render() {
         const { tab, active, component } = this;
-        return (h(Host, { key: 'cb75d0877979b3b8df8f7e1952bfa9677da1eaa5', role: "tabpanel", "aria-hidden": !active ? 'true' : null, "aria-labelledby": `tab-button-${tab}`, class: {
+        return (h(Host, { key: '2107ece2f1ebdf748bac8adb78a9ad67e7fc9057', role: "tabpanel", "aria-hidden": !active ? 'true' : null, "aria-labelledby": `tab-button-${tab}`, class: {
                 'ion-page': component === undefined,
                 'tab-hidden': !active,
-            } }, h("slot", { key: '37fbb7b7a6b03eb93b1dacd2dc1025b78eb2aa6b' })));
+            } }, h("slot", { key: 'b4a1bc1aa79f6b82b8f77b544bcb74e65229b541' })));
     }
     static get is() { return "ion-tab"; }
     static get encapsulation() { return "shadow"; }

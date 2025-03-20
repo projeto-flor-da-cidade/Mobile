@@ -614,14 +614,14 @@ export class Menu {
          * the ionBackButton listener in the menu controller
          * will handle closing the menu when Escape is pressed.
          */
-        return (h(Host, { key: 'da96fdb4c5ddf60e615cc4cdda7ccdb3fd7e089b', onKeyDown: shouldUseCloseWatcher() ? null : this.onKeydown, role: "navigation", "aria-label": inheritedAttributes['aria-label'] || 'menu', class: {
+        return (h(Host, { key: '342db8551d26604128b29b21d2d8c37593972ed9', onKeyDown: shouldUseCloseWatcher() ? null : this.onKeydown, role: "navigation", "aria-label": inheritedAttributes['aria-label'] || 'menu', class: {
                 [mode]: true,
                 [`menu-type-${type}`]: true,
                 'menu-enabled': !disabled,
                 [`menu-side-${side}`]: true,
                 'menu-pane-visible': isPaneVisible,
                 'split-pane-side': hostContext('ion-split-pane', el),
-            } }, h("div", { key: '894e680fe227534711128c7aca980964ddb5a08a', class: "menu-inner", part: "container", ref: (el) => (this.menuInnerEl = el) }, h("slot", { key: 'e9f5934518dc0cceaeadf1f2820614595fec6bc9' })), h("ion-backdrop", { key: '7282077817657b1bb6c155f1404c0a519fece993', ref: (el) => (this.backdropEl = el), class: "menu-backdrop", tappable: false, stopPropagation: false, part: "backdrop" })));
+            } }, h("div", { key: '3c9bec2862b7fb9d88de66b1600be01f6735e3dd', class: "menu-inner", part: "container", ref: (el) => (this.menuInnerEl = el) }, h("slot", { key: '76283b4b2a65c78646f92c3b273eea021eda499c' })), h("ion-backdrop", { key: '121c395bc4873542a1b6ae2c9e23f2e881e75d93', ref: (el) => (this.backdropEl = el), class: "menu-backdrop", tappable: false, stopPropagation: false, part: "backdrop" })));
     }
     static get is() { return "ion-menu"; }
     static get encapsulation() { return "shadow"; }

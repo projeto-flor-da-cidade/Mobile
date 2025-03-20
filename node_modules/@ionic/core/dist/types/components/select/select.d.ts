@@ -13,9 +13,14 @@ import type { SelectChangeEventDetail, SelectInterface, SelectCompareFn } from '
  * @part icon - The select icon container.
  * @part container - The container for the selected text or placeholder.
  * @part label - The label text describing the select.
+ * @part supporting-text - Supporting text displayed beneath the select.
+ * @part helper-text - Supporting text displayed beneath the select when the select is valid.
+ * @part error-text - Supporting text displayed beneath the select when the select is invalid and touched.
  */
 export declare class Select implements ComponentInterface {
     private inputId;
+    private helperTextId;
+    private errorTextId;
     private overlay?;
     private focusEl?;
     private mutationO?;
@@ -53,6 +58,14 @@ export declare class Select implements ComponentInterface {
      * `"outline"` the item will be transparent with a border. Only available in `md` mode.
      */
     fill?: 'outline' | 'solid';
+    /**
+     * Text that is placed under the select and displayed when an error is detected.
+     */
+    errorText?: string;
+    /**
+     * Text that is placed under the select and displayed when no error is detected.
+     */
+    helperText?: string;
     /**
      * The interface the select should use: `action-sheet`, `popover`, `alert`, or `modal`.
      */
@@ -137,6 +150,12 @@ export declare class Select implements ComponentInterface {
      * The value of the select.
      */
     value?: any | null;
+    /**
+     * If true, screen readers will announce it as a required field. This property
+     * works only for accessibility purposes, it will not prevent the form from
+     * submitting if the value is invalid.
+     */
+    required: boolean;
     /**
      * Emitted when the value has changed.
      *
@@ -239,5 +258,15 @@ export declare class Select implements ComponentInterface {
     private renderSelectIcon;
     private get ariaLabel();
     private renderListbox;
+    private getHintTextID;
+    /**
+     * Renders the helper text or error text values
+     */
+    private renderHintText;
+    /**
+     * Responsible for rendering helper text, and error text. This element
+     * should only be rendered if hint text is set.
+     */
+    private renderBottomContent;
     render(): any;
 }

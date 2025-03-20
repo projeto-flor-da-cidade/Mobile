@@ -9,9 +9,14 @@ import type { CheckboxChangeEventDetail } from './checkbox-interface';
  * @part container - The container for the checkbox mark.
  * @part label - The label text describing the checkbox.
  * @part mark - The checkmark used to indicate the checked state.
+ * @part supporting-text - Supporting text displayed beneath the checkbox label.
+ * @part helper-text - Supporting text displayed beneath the checkbox label when the checkbox is valid.
+ * @part error-text - Supporting text displayed beneath the checkbox label when the checkbox is invalid and touched.
  */
 export declare class Checkbox implements ComponentInterface {
     private inputId;
+    private helperTextId;
+    private errorTextId;
     private focusEl?;
     private inheritedAttributes;
     el: HTMLIonCheckboxElement;
@@ -37,6 +42,14 @@ export declare class Checkbox implements ComponentInterface {
      * If `true`, the user cannot interact with the checkbox.
      */
     disabled: boolean;
+    /**
+     * Text that is placed under the checkbox label and displayed when an error is detected.
+     */
+    errorText?: string;
+    /**
+     * Text that is placed under the checkbox label and displayed when no error is detected.
+     */
+    helperText?: string;
     /**
      * The value of the checkbox does not mean if it's checked or not, use the `checked`
      * property for that.
@@ -72,6 +85,12 @@ export declare class Checkbox implements ComponentInterface {
      */
     alignment?: 'start' | 'center';
     /**
+     * If true, screen readers will announce it as a required field. This property
+     * works only for accessibility purposes, it will not prevent the form from
+     * submitting if the value is invalid.
+     */
+    required: boolean;
+    /**
      * Emitted when the checked property has changed as a result of a user action such as a click.
      *
      * This event will not emit when programmatically setting the `checked` property.
@@ -99,6 +118,12 @@ export declare class Checkbox implements ComponentInterface {
     private onFocus;
     private onBlur;
     private onClick;
+    private getHintTextID;
+    /**
+     * Responsible for rendering helper text and error text.
+     * This element should only be rendered if hint text is set.
+     */
+    private renderHintText;
     render(): any;
     private getSVGPath;
 }

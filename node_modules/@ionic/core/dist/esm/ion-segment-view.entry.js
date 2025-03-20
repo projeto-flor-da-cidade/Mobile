@@ -1,7 +1,7 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, d as createEvent, h, f as Host, i as getElement } from './index-28849c61.js';
+import { r as registerInstance, c as createEvent, h, e as Host, f as getElement } from './index-527b9e34.js';
 
 const segmentViewIosCss = ":host{display:-ms-flexbox;display:flex;height:100%;overflow-x:scroll;-webkit-scroll-snap-type:x mandatory;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}:host::-webkit-scrollbar{display:none}:host(.segment-view-disabled){-ms-touch-action:none;touch-action:none;overflow-x:hidden}:host(.segment-view-scroll-disabled){pointer-events:none}:host(.segment-view-disabled){opacity:0.3}";
 const IonSegmentViewIosStyle0 = segmentViewIosCss;
@@ -103,10 +103,10 @@ const SegmentView = class {
     }
     render() {
         const { disabled, isManualScroll } = this;
-        return (h(Host, { key: '9f4f11d31c4db776f077e59ae895b35dd4454717', class: {
+        return (h(Host, { key: 'fa528d2d9ae0f00fc3067defe2a047dce77c814a', class: {
                 'segment-view-disabled': disabled,
                 'segment-view-scroll-disabled': isManualScroll === false,
-            } }, h("slot", { key: 'ea58b21f031cee2ab2b70580f336deaefa364538' })));
+            } }, h("slot", { key: '74dc8b4d073caeff1bab272d11b9ea3e1a215954' })));
     }
     get el() { return getElement(this); }
 };

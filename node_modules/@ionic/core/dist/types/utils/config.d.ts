@@ -1,6 +1,7 @@
 import type { SpinnerTypes } from '../components/spinner/spinner-configs';
 import type { TabButtonLayout } from '../components/tab-bar/tab-bar-interface';
 import type { AnimationBuilder, Mode } from '../interface';
+import type { LogLevel } from './logging';
 import type { PlatformConfig } from './platform';
 export interface IonicConfig {
     /**
@@ -179,6 +180,14 @@ export interface IonicConfig {
      * Note that the `hardwareBackButton` config option must also be `true`.
      */
     experimentalCloseWatcher?: boolean;
+    /**
+     * Configures the logging level for Ionic Framework:
+     *
+     * - `'OFF'`: No errors or warnings are logged.
+     * - `'ERROR'`: Logs only errors.
+     * - `'WARN'`: Logs errors and warnings.
+     */
+    logLevel?: LogLevel;
     keyboardHeight?: number;
     inputShims?: boolean;
     scrollPadding?: boolean;
@@ -189,9 +198,6 @@ export interface IonicConfig {
     _forceStatusbarPadding?: boolean;
     _testing?: boolean;
     _zoneGate?: (h: () => any) => any;
-    _ael?: (el: any, name: string, cb: any, opts: any) => any;
-    _rel?: (el: any, name: string, cb: any, opts: any) => any;
-    _ce?: (eventName: string, opts: any) => any;
 }
 type FocusManagerPriority = 'content' | 'heading' | 'banner';
 export declare const setupConfig: (config: IonicConfig) => any;

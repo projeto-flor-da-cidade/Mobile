@@ -7,6 +7,8 @@ import { getIonMode } from "../../global/ionic-global";
 export class RadioGroup {
     constructor() {
         this.inputId = `ion-rg-${radioGroupIds++}`;
+        this.helperTextId = `${this.inputId}-helper-text`;
+        this.errorTextId = `${this.inputId}-error-text`;
         this.labelId = `${this.inputId}-lbl`;
         this.setRadioTabindex = (value) => {
             const radios = this.getRadios();
@@ -58,6 +60,8 @@ export class RadioGroup {
         this.compareWith = undefined;
         this.name = this.inputId;
         this.value = undefined;
+        this.helperText = undefined;
+        this.errorText = undefined;
     }
     valueChanged(value) {
         this.setRadioTabindex(value);
@@ -156,13 +160,46 @@ export class RadioGroup {
         const radioToFocus = this.getRadios().find((r) => r.tabIndex !== -1);
         radioToFocus === null || radioToFocus === void 0 ? void 0 : radioToFocus.setFocus();
     }
+    /**
+     * Renders the helper text or error text values
+     */
+    renderHintText() {
+        const { helperText, errorText, helperTextId, errorTextId } = this;
+        const hasHintText = !!helperText || !!errorText;
+        if (!hasHintText) {
+            return;
+        }
+        return (h("div", { class: "radio-group-top" }, h("div", { id: helperTextId, class: "helper-text" }, helperText), h("div", { id: errorTextId, class: "error-text" }, errorText)));
+    }
+    getHintTextID() {
+        const { el, helperText, errorText, helperTextId, errorTextId } = this;
+        if (el.classList.contains('ion-touched') && el.classList.contains('ion-invalid') && errorText) {
+            return errorTextId;
+        }
+        if (helperText) {
+            return helperTextId;
+        }
+        return undefined;
+    }
     render() {
         const { label, labelId, el, name, value } = this;
         const mode = getIonMode(this);
         renderHiddenInput(true, el, name, value, false);
-        return h(Host, { key: 'a853e38901f0f4ba17bbf21ebb5da5b5c20b327e', role: "radiogroup", "aria-labelledby": label ? labelId : null, onClick: this.onClick, class: mode });
+        return (h(Host, { key: 'cac92777297029d7fd1b6af264d92850e35dfbba', role: "radiogroup", "aria-labelledby": label ? labelId : null, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId, onClick: this.onClick, class: mode }, this.renderHintText(), h("div", { key: '6b5c634dba30d54eedc031b077863f3d6a9d9e9b', class: "radio-group-wrapper" }, h("slot", { key: '443edb3ff6f4c59d4c4324c8a19f2d6def47a322' }))));
     }
     static get is() { return "ion-radio-group"; }
+    static get originalStyleUrls() {
+        return {
+            "ios": ["radio-group.ios.scss"],
+            "md": ["radio-group.md.scss"]
+        };
+    }
+    static get styleUrls() {
+        return {
+            "ios": ["radio-group.ios.css"],
+            "md": ["radio-group.md.css"]
+        };
+    }
     static get properties() {
         return {
             "allowEmptySelection": {
@@ -239,6 +276,40 @@ export class RadioGroup {
                     "text": "the value of the radio group."
                 },
                 "attribute": "value",
+                "reflect": false
+            },
+            "helperText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "The helper text to display at the top of the radio group."
+                },
+                "attribute": "helper-text",
+                "reflect": false
+            },
+            "errorText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "The error text to display at the top of the radio group."
+                },
+                "attribute": "error-text",
                 "reflect": false
             }
         };

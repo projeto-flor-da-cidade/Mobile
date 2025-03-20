@@ -145,7 +145,7 @@ export class Tabs {
         return Array.from(this.el.querySelectorAll('ion-tab'));
     }
     render() {
-        return (h(Host, { key: 'e01ccf6bfaccad094515be50e407399c733fc226', onIonTabButtonClick: this.onTabClicked }, h("slot", { key: '38d2d01dbfd8a08f01e6f0e27274b21d75424e37', name: "top" }), h("div", { key: '7e894f0f423e2d43e1c68daff5f9f6c442fad237', class: "tabs-inner" }, h("slot", { key: 'df16be529a0370a26d0adf850530b31607507c23' })), h("slot", { key: '44642e1cb24c3281c43db75fd69a32fe0defe40a', name: "bottom" })));
+        return (h(Host, { key: 'd357c4607cfc89fb88404fe12ea7ef5b397fe6bf', onIonTabButtonClick: this.onTabClicked }, h("slot", { key: '18661896589a4ab3c74164f448b928abec9b4db0', name: "top" }), h("div", { key: '3bf30ea2540a196e868a78a861824b4b5d933afd', class: "tabs-inner" }, h("slot", { key: '7cfc154d4d6c1642188ab6508a6be72c8234585e' })), h("slot", { key: '8057679c959195cbdfae156b8ae0cbfd978c5037', name: "bottom" })));
     }
     static get is() { return "ion-tabs"; }
     static get encapsulation() { return "shadow"; }

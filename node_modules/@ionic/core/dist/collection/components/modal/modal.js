@@ -86,6 +86,7 @@ export class Modal {
         this.enterAnimation = undefined;
         this.leaveAnimation = undefined;
         this.breakpoints = undefined;
+        this.expandToScroll = true;
         this.initialBreakpoint = undefined;
         this.backdropBreakpoint = 0;
         this.handle = undefined;
@@ -301,6 +302,7 @@ export class Modal {
             presentingEl: presentingElement,
             currentBreakpoint: this.initialBreakpoint,
             backdropBreakpoint: this.backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         });
         /* tslint:disable-next-line */
         if (typeof window !== 'undefined') {
@@ -351,7 +353,10 @@ export class Modal {
         // should be in the DOM and referenced by now, except
         // for the presenting el
         const animationBuilder = this.leaveAnimation || config.get('modalLeave', iosLeaveAnimation);
-        const ani = (this.animation = animationBuilder(el, { presentingEl: this.presentingElement }));
+        const ani = (this.animation = animationBuilder(el, {
+            presentingEl: this.presentingElement,
+            expandToScroll: this.expandToScroll,
+        }));
         const contentEl = findIonContent(el);
         if (!contentEl) {
             printIonContentErrorMsg(el);
@@ -396,9 +401,10 @@ export class Modal {
             presentingEl: this.presentingElement,
             currentBreakpoint: initialBreakpoint,
             backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         }));
         ani.progressStart(true, 1);
-        const { gesture, moveSheetToBreakpoint } = createSheetGesture(this.el, this.backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, ani, this.sortedBreakpoints, () => { var _a; return (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : 0; }, () => this.sheetOnDismiss(), (breakpoint) => {
+        const { gesture, moveSheetToBreakpoint } = createSheetGesture(this.el, this.backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, ani, this.sortedBreakpoints, this.expandToScroll, () => { var _a; return (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : 0; }, () => this.sheetOnDismiss(), (breakpoint) => {
             if (this.currentBreakpoint !== breakpoint) {
                 this.currentBreakpoint = breakpoint;
                 this.ionBreakpointDidChange.emit({ breakpoint });
@@ -476,6 +482,7 @@ export class Modal {
             presentingEl: presentingElement,
             currentBreakpoint: (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : this.initialBreakpoint,
             backdropBreakpoint: this.backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         });
         if (dismissed) {
             const { delegate } = this.getDelegate();
@@ -561,23 +568,23 @@ export class Modal {
         return true;
     }
     render() {
-        const { handle, isSheetModal, presentingElement, htmlAttributes, handleBehavior, inheritedAttributes, focusTrap } = this;
+        const { handle, isSheetModal, presentingElement, htmlAttributes, handleBehavior, inheritedAttributes, focusTrap, expandToScroll, } = this;
         const showHandle = handle !== false && isSheetModal;
         const mode = getIonMode(this);
         const isCardModal = presentingElement !== undefined && mode === 'ios';
         const isHandleCycle = handleBehavior === 'cycle';
-        return (h(Host, Object.assign({ key: 'b4da5111fe4719fa450c39b2d4bd884a302a7924', "no-router": true, tabindex: "-1" }, htmlAttributes, { style: {
+        return (h(Host, Object.assign({ key: 'e661562f9e4126136cee337e4ab8ca69ac80faae', "no-router": true, tabindex: "-1" }, htmlAttributes, { style: {
                 zIndex: `${20000 + this.overlayIndex}`,
-            }, class: Object.assign({ [mode]: true, ['modal-default']: !isCardModal && !isSheetModal, [`modal-card`]: isCardModal, [`modal-sheet`]: isSheetModal, 'overlay-hidden': true, [FOCUS_TRAP_DISABLE_CLASS]: focusTrap === false }, getClassMap(this.cssClass)), onIonBackdropTap: this.onBackdropTap, onIonModalDidPresent: this.onLifecycle, onIonModalWillPresent: this.onLifecycle, onIonModalWillDismiss: this.onLifecycle, onIonModalDidDismiss: this.onLifecycle }), h("ion-backdrop", { key: 'c12dbf747e0eb914eaf1331798548ffc7e147763', ref: (el) => (this.backdropEl = el), visible: this.showBackdrop, tappable: this.backdropDismiss, part: "backdrop" }), mode === 'ios' && h("div", { key: 'da546ee80c6576b5acc66e959fd5009e0b9a8160', class: "modal-shadow" }), h("div", Object.assign({ key: '306ebe6427440ad5f7ed36d590e562d15a503b75',
+            }, class: Object.assign({ [mode]: true, ['modal-default']: !isCardModal && !isSheetModal, [`modal-card`]: isCardModal, [`modal-sheet`]: isSheetModal, [`modal-no-expand-scroll`]: isSheetModal && !expandToScroll, 'overlay-hidden': true, [FOCUS_TRAP_DISABLE_CLASS]: focusTrap === false }, getClassMap(this.cssClass)), onIonBackdropTap: this.onBackdropTap, onIonModalDidPresent: this.onLifecycle, onIonModalWillPresent: this.onLifecycle, onIonModalWillDismiss: this.onLifecycle, onIonModalDidDismiss: this.onLifecycle }), h("ion-backdrop", { key: '9221692e0e111f99e80239ca44faaaed9b288425', ref: (el) => (this.backdropEl = el), visible: this.showBackdrop, tappable: this.backdropDismiss, part: "backdrop" }), mode === 'ios' && h("div", { key: '20def7088d31e5eb13c3f2404c514cd8b74cd966', class: "modal-shadow" }), h("div", Object.assign({ key: 'b11229330571d4ff7b9136dfdddcd7d759ada876',
             /*
               role and aria-modal must be used on the
               same element. They must also be set inside the
               shadow DOM otherwise ion-button will not be highlighted
               when using VoiceOver: https://bugs.webkit.org/show_bug.cgi?id=247134
             */
-            role: "dialog" }, inheritedAttributes, { "aria-modal": "true", class: "modal-wrapper ion-overlay-wrapper", part: "content", ref: (el) => (this.wrapperEl = el) }), showHandle && (h("button", { key: 'c5d17e346fe255a7c0cacbbf15c0083f2d09c488', class: "modal-handle",
+            role: "dialog" }, inheritedAttributes, { "aria-modal": "true", class: "modal-wrapper ion-overlay-wrapper", part: "content", ref: (el) => (this.wrapperEl = el) }), showHandle && (h("button", { key: '95b2a62477dfbc063a91910f0d37357388cfd914', class: "modal-handle",
             // Prevents the handle from receiving keyboard focus when it does not cycle
-            tabIndex: !isHandleCycle ? -1 : 0, "aria-label": "Activate to adjust the size of the dialog overlaying the screen", onClick: isHandleCycle ? this.onHandleClick : undefined, part: "handle" })), h("slot", { key: '5cc714170a00b67f3eda0cd1d6f37c1489a99c83' }))));
+            tabIndex: !isHandleCycle ? -1 : 0, "aria-label": "Activate to adjust the size of the dialog overlaying the screen", onClick: isHandleCycle ? this.onHandleClick : undefined, part: "handle" })), h("slot", { key: 'fba17dfdbdffbfd8992f473f633d172c5124dc19' }))));
     }
     static get is() { return "ion-modal"; }
     static get encapsulation() { return "shadow"; }
@@ -734,6 +741,24 @@ export class Modal {
                     "tags": [],
                     "text": "The breakpoints to use when creating a sheet modal. Each value in the\narray must be a decimal between 0 and 1 where 0 indicates the modal is fully\nclosed and 1 indicates the modal is fully open. Values are relative\nto the height of the modal, not the height of the screen. One of the values in this\narray must be the value of the `initialBreakpoint` property.\nFor example: [0, .25, .5, 1]"
                 }
+            },
+            "expandToScroll": {
+                "type": "boolean",
+                "mutable": false,
+                "complexType": {
+                    "original": "boolean",
+                    "resolved": "boolean",
+                    "references": {}
+                },
+                "required": false,
+                "optional": false,
+                "docs": {
+                    "tags": [],
+                    "text": "Controls whether scrolling or dragging within the sheet modal expands\nit to a larger breakpoint. This only takes effect when `breakpoints`\nand `initialBreakpoint` are set.\n\nIf `true`, scrolling or dragging anywhere in the modal will first expand\nit to the next breakpoint. Once fully expanded, scrolling will affect the\ncontent.\nIf `false`, scrolling will always affect the content. The modal will\nonly expand when dragging the header or handle. The modal will close when\ndragging the header or handle. It can also be closed when dragging the\ncontent, but only if the content is scrolled to the top."
+                },
+                "attribute": "expand-to-scroll",
+                "reflect": false,
+                "defaultValue": "true"
             },
             "initialBreakpoint": {
                 "type": "number",

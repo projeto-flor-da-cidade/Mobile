@@ -120,7 +120,7 @@ export class Radio {
         const { checked, disabled, color, el, justify, labelPlacement, hasLabel, buttonTabindex, alignment } = this;
         const mode = getIonMode(this);
         const inItem = hostContext('ion-item', el);
-        return (h(Host, { key: '5a0adab55ad009305de4856fa1b9f93f2279a734', onFocus: this.onFocus, onBlur: this.onBlur, onClick: this.onClick, class: createColorClasses(color, {
+        return (h(Host, { key: '8badd4aec277addc0793e14df21f73bb345e99b7', onFocus: this.onFocus, onBlur: this.onBlur, onClick: this.onClick, class: createColorClasses(color, {
                 [mode]: true,
                 'in-item': inItem,
                 'radio-checked': checked,
@@ -131,10 +131,10 @@ export class Radio {
                 // Focus and active styling should not apply when the radio is in an item
                 'ion-activatable': !inItem,
                 'ion-focusable': !inItem,
-            }), role: "radio", "aria-checked": checked ? 'true' : 'false', "aria-disabled": disabled ? 'true' : null, tabindex: buttonTabindex }, h("label", { key: 'f5673a798e6d87868339f046445f707e1d93b7b6', class: "radio-wrapper" }, h("div", { key: 'e9190c06f75a171cab63e3f74ccf771c3ed87005', class: {
+            }), role: "radio", "aria-checked": checked ? 'true' : 'false', "aria-disabled": disabled ? 'true' : null, tabindex: buttonTabindex }, h("label", { key: '8765b847edc93a1b5a16506e155ed03da807bb10', class: "radio-wrapper" }, h("div", { key: '3d568a0192a32d4f0b8a920019c79ff02639b5c9', class: {
                 'label-text-wrapper': true,
                 'label-text-wrapper-hidden': !hasLabel,
-            }, part: "label" }, h("slot", { key: '6cedf4e7b3bd03e4a635727dd7b6094bab64af64' })), h("div", { key: '26dd48d9d2848b7f100b732abdc4a3171adde483', class: "native-wrapper" }, this.renderRadioControl()))));
+            }, part: "label" }, h("slot", { key: '331f3dc2ce5f6ed8f124fc4560f92e0f7c668a85' })), h("div", { key: '473bd4aaf448753e385f2dda3fddc9f56379aa19', class: "native-wrapper" }, this.renderRadioControl()))));
     }
     static get is() { return "ion-radio"; }
     static get encapsulation() { return "shadow"; }

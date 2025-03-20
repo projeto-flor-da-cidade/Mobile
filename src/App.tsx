@@ -15,6 +15,7 @@ import Agroeco from './pages/informacao/Agroeco';
 import ListaResponsavel from './pages/ListaResponsavel';
 import CadastroResponsavel from './pages/cadastros/CadastroResponsavel';
 import Sitio from './pages/servicos_SAU/Sitio';
+import Cursos from './pages/servicos_SAU/Cursos';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -82,6 +83,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/cadastroresponsavel">
           <CadastroResponsavel />
+        </Route>
+        <Route exact path="/cursos">
+          <Cursos />
         </Route>
         {/* Redireciona a rota raiz para o splash screen */}
         <Route exact path="/">

@@ -1,13 +1,13 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { isIonContent, findClosestIonContent } from "../../../utils/content/index";
+import { findClosestIonContent, isIonContent } from "../../../utils/content/index";
 import { createGesture } from "../../../utils/gesture/index";
-import { clamp, raf, getElementRoot } from "../../../utils/helpers";
+import { clamp, getElementRoot, raf } from "../../../utils/helpers";
 import { FOCUS_TRAP_DISABLE_CLASS } from "../../../utils/overlays";
 import { getBackdropValueForSheet } from "../utils";
 import { calculateSpringStep, handleCanDismiss } from "./utils";
-export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, animation, breakpoints = [], getCurrentBreakpoint, onDismiss, onBreakpointChange) => {
+export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, animation, breakpoints = [], expandToScroll, getCurrentBreakpoint, onDismiss, onBreakpointChange) => {
     // Defaults for the sheet swipe animation
     const defaultBackdrop = [
         { offset: 0, opacity: 'var(--backdrop-opacity)' },
@@ -24,17 +24,23 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
             { offset: 1, transform: 'translateY(100%)' },
         ],
         BACKDROP_KEYFRAMES: backdropBreakpoint !== 0 ? customBackdrop : defaultBackdrop,
+        CONTENT_KEYFRAMES: [
+            { offset: 0, maxHeight: '100%' },
+            { offset: 1, maxHeight: '0%' },
+        ],
     };
     const contentEl = baseEl.querySelector('ion-content');
     const height = wrapperEl.clientHeight;
     let currentBreakpoint = initialBreakpoint;
     let offset = 0;
     let canDismissBlocksGesture = false;
+    let cachedScrollEl = null;
     const canDismissMaxStep = 0.95;
-    const wrapperAnimation = animation.childAnimations.find((ani) => ani.id === 'wrapperAnimation');
-    const backdropAnimation = animation.childAnimations.find((ani) => ani.id === 'backdropAnimation');
     const maxBreakpoint = breakpoints[breakpoints.length - 1];
     const minBreakpoint = breakpoints[0];
+    const wrapperAnimation = animation.childAnimations.find((ani) => ani.id === 'wrapperAnimation');
+    const backdropAnimation = animation.childAnimations.find((ani) => ani.id === 'backdropAnimation');
+    const contentAnimation = animation.childAnimations.find((ani) => ani.id === 'contentAnimation');
     const enableBackdrop = () => {
         baseEl.style.setProperty('pointer-events', 'auto');
         backdropEl.style.setProperty('pointer-events', 'auto');
@@ -58,6 +64,31 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
         baseEl.classList.add(FOCUS_TRAP_DISABLE_CLASS);
     };
     /**
+     * Toggles the visible modal footer when `expandToScroll` is disabled.
+     * @param footer The footer to show.
+     */
+    const swapFooterVisibility = (footer) => {
+        const originalFooter = baseEl.querySelector('ion-footer');
+        if (!originalFooter) {
+            return;
+        }
+        const clonedFooter = wrapperEl.nextElementSibling;
+        const footerToHide = footer === 'original' ? clonedFooter : originalFooter;
+        const footerToShow = footer === 'original' ? originalFooter : clonedFooter;
+        footerToShow.style.removeProperty('display');
+        footerToShow.removeAttribute('aria-hidden');
+        const page = baseEl.querySelector('.ion-page');
+        if (footer === 'original') {
+            page.style.removeProperty('padding-bottom');
+        }
+        else {
+            const pagePadding = footerToShow.clientHeight;
+            page.style.setProperty('padding-bottom', `${pagePadding}px`);
+        }
+        footerToHide.style.setProperty('display', 'none');
+        footerToHide.setAttribute('aria-hidden', 'true');
+    };
+    /**
      * After the entering animation completes,
      * we need to set the animation to go from
      * offset 0 to offset 1 so that users can
@@ -68,6 +99,7 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
     if (wrapperAnimation && backdropAnimation) {
         wrapperAnimation.keyframes([...SheetDefaults.WRAPPER_KEYFRAMES]);
         backdropAnimation.keyframes([...SheetDefaults.BACKDROP_KEYFRAMES]);
+        contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.keyframes([...SheetDefaults.CONTENT_KEYFRAMES]);
         animation.progressStart(true, 1 - currentBreakpoint);
         /**
          * If backdrop is not enabled, then content
@@ -84,7 +116,7 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
             disableBackdrop();
         }
     }
-    if (contentEl && currentBreakpoint !== maxBreakpoint) {
+    if (contentEl && currentBreakpoint !== maxBreakpoint && expandToScroll) {
         contentEl.scrollY = false;
     }
     const canStart = (detail) => {
@@ -98,6 +130,14 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
          */
         const contentEl = findClosestIonContent(detail.event.target);
         currentBreakpoint = getCurrentBreakpoint();
+        /**
+         * If `expandToScroll` is disabled, we should not allow the swipe gesture
+         * to start if the content is not scrolled to the top.
+         */
+        if (!expandToScroll && contentEl) {
+            const scrollEl = isIonContent(contentEl) ? getElementRoot(contentEl).querySelector('.inner-scroll') : contentEl;
+            return scrollEl.scrollTop === 0;
+        }
         if (currentBreakpoint === 1 && contentEl) {
             /**
              * The modal should never swipe to close on the content with a refresher.
@@ -129,6 +169,25 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
          */
         canDismissBlocksGesture = baseEl.canDismiss !== undefined && baseEl.canDismiss !== true && minBreakpoint === 0;
         /**
+         * Cache the scroll element reference when the gesture starts,
+         * this allows us to avoid querying the DOM for the target in onMove,
+         * which would impact performance significantly.
+         */
+        if (!expandToScroll) {
+            const targetEl = findClosestIonContent(detail.event.target);
+            cachedScrollEl =
+                targetEl && isIonContent(targetEl) ? getElementRoot(targetEl).querySelector('.inner-scroll') : targetEl;
+        }
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the footer visibility to the original, so if the modal
+         * is dismissed, the footer dismisses with the modal
+         * and doesn't stay on the screen after the modal is gone.
+         */
+        if (!expandToScroll) {
+            swapFooterVisibility('original');
+        }
+        /**
          * If we are pulling down, then it is possible we are pulling on the content.
          * We do not want scrolling to happen at the same time as the gesture.
          */
@@ -145,6 +204,13 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
         animation.progressStart(true, 1 - currentBreakpoint);
     };
     const onMove = (detail) => {
+        /**
+         * If `expandToScroll` is disabled, and an upwards swipe gesture is done within
+         * the scrollable content, we should not allow the swipe gesture to continue.
+         */
+        if (!expandToScroll && detail.deltaY <= 0 && cachedScrollEl) {
+            return;
+        }
         /**
          * If we are pulling down, then it is possible we are pulling on the content.
          * We do not want scrolling to happen at the same time as the gesture.
@@ -191,6 +257,14 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
         animation.progressStep(offset);
     };
     const onEnd = (detail) => {
+        /**
+         * If expandToScroll is disabled, we should not allow the moveSheetToBreakpoint
+         * function to be called if the user is trying to swipe content upwards and the content
+         * is not scrolled to the top.
+         */
+        if (!expandToScroll && detail.deltaY <= 0 && cachedScrollEl && cachedScrollEl.scrollTop > 0) {
+            return;
+        }
         /**
          * When the gesture releases, we need to determine
          * the closest breakpoint to snap to.
@@ -243,6 +317,19 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
                     opacity: `calc(var(--backdrop-opacity) * ${getBackdropValueForSheet(snapToBreakpoint, backdropBreakpoint)})`,
                 },
             ]);
+            if (contentAnimation) {
+                /**
+                 * The modal content should scroll at any breakpoint when expandToScroll
+                 * is disabled. In order to do this, the content needs to be completely
+                 * viewable so scrolling can access everything. Otherwise, the default
+                 * behavior would show the content off the screen and only allow
+                 * scrolling when the sheet is fully expanded.
+                 */
+                contentAnimation.keyframes([
+                    { offset: 0, maxHeight: `${(1 - breakpointOffset) * 100}%` },
+                    { offset: 1, maxHeight: `${snapToBreakpoint * 100}%` },
+                ]);
+            }
             animation.progressStep(0);
         }
         /**
@@ -250,6 +337,14 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
          * snapping animation completes.
          */
         gesture.enable(false);
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the footer visibility to the cloned one so the footer
+         * doesn't flicker when the sheet's height is animated.
+         */
+        if (!expandToScroll && shouldRemainOpen) {
+            swapFooterVisibility('cloned');
+        }
         if (shouldPreventDismiss) {
             handleCanDismiss(baseEl, animation);
         }
@@ -257,13 +352,13 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
             onDismiss();
         }
         /**
-         * If the sheet is going to be fully expanded then we should enable
-         * scrolling immediately. The sheet modal animation takes ~500ms to finish
-         * so if we wait until then there is a visible delay for when scrolling is
-         * re-enabled. Native iOS allows for scrolling on the sheet modal as soon
-         * as the gesture is released, so we align with that.
+         * Enables scrolling immediately if the sheet is about to fully expand
+         * or if it allows scrolling at any breakpoint. Without this, there would
+         * be a ~500ms delay while the modal animation completes, causing a
+         * noticeable lag. Native iOS allows scrolling as soon as the gesture is
+         * released, so we align with that behavior.
          */
-        if (contentEl && snapToBreakpoint === breakpoints[breakpoints.length - 1]) {
+        if (contentEl && (snapToBreakpoint === breakpoints[breakpoints.length - 1] || !expandToScroll)) {
             contentEl.scrollY = true;
         }
         return new Promise((resolve) => {
@@ -281,6 +376,7 @@ export const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpo
                         raf(() => {
                             wrapperAnimation.keyframes([...SheetDefaults.WRAPPER_KEYFRAMES]);
                             backdropAnimation.keyframes([...SheetDefaults.BACKDROP_KEYFRAMES]);
+                            contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.keyframes([...SheetDefaults.CONTENT_KEYFRAMES]);
                             animation.progressStart(true, 1 - snapToBreakpoint);
                             currentBreakpoint = snapToBreakpoint;
                             onBreakpointChange(currentBreakpoint);

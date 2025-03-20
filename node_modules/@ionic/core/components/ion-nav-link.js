@@ -36,7 +36,7 @@ const NavLink = /*@__PURE__*/ proxyCustomElement(class NavLink extends HTMLEleme
         this.routerAnimation = undefined;
     }
     render() {
-        return h(Host, { key: 'd2f8545b4fbd5aa25ef36eb01dffbc5d35ccfbb9', onClick: this.onClick });
+        return h(Host, { key: '9ba170d1b10e08e8a6b5e6a30d363871d455a0a9', onClick: this.onClick });
     }
     get el() { return this; }
 }, [0, "ion-nav-link", {

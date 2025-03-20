@@ -11,7 +11,7 @@ export declare const PlatformConfiguration: {
     };
     Capacitor: {
         Capacitor: {
-            isNative: boolean;
+            isNativePlatform: () => boolean;
         };
     };
     PWA: {

@@ -17,9 +17,9 @@ const Text = /*@__PURE__*/ proxyCustomElement(class Text extends HTMLElement {
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: 'e134d70c04344b708a2ecf6253722781ad2ca826', class: createColorClasses(this.color, {
+        return (h(Host, { key: '0c2546ea3f24b0a6bfd606199441d0a4edfa4ca1', class: createColorClasses(this.color, {
                 [mode]: true,
-            }) }, h("slot", { key: 'da79c760f7ebbcd007ce110439f05a62cb22eac8' })));
+            }) }, h("slot", { key: 'b7623ccb06f9461090a1f33e9f85886c7a4d5eff' })));
     }
     static get style() { return IonTextStyle0; }
 }, [1, "ion-text", {

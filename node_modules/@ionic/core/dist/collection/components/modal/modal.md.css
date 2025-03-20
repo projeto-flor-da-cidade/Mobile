@@ -201,6 +201,12 @@ ion-backdrop {
   bottom: 0;
 }
 
+:host(.modal-sheet.modal-no-expand-scroll) ion-footer {
+  position: absolute;
+  bottom: 0;
+  width: var(--width);
+}
+
 /**
  * Convert a font size to a dynamic font size.
  * Fonts that participate in Dynamic Type should use

@@ -1,7 +1,7 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, h, f as Host } from './index-28849c61.js';
+import { r as registerInstance, h, e as Host } from './index-527b9e34.js';
 
 const segmentContentCss = ":host{scroll-snap-align:center;scroll-snap-stop:always;-ms-flex-negative:0;flex-shrink:0;width:100%}";
 const IonSegmentContentStyle0 = segmentContentCss;
@@ -11,7 +11,7 @@ const SegmentContent = class {
         registerInstance(this, hostRef);
     }
     render() {
-        return (h(Host, { key: '03684b2999ac64fe13e376fd7e7f279976e9d4f2' }, h("slot", { key: '143031075bf33ca19e7cfd76fc8a67b83ccaf11c' })));
+        return (h(Host, { key: '64b3965b14c749e77e9ce13b59f349d971e245c8' }, h("slot", { key: '2d0bed34f9bc93f92e713cb51e42220f3cecd8f5' })));
     }
 };
 SegmentContent.style = IonSegmentContentStyle0;

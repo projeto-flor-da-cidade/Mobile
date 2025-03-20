@@ -167,6 +167,7 @@ const Alert = /*@__PURE__*/ proxyCustomElement(class Alert extends HTMLElement {
         }
     }
     onKeydown(ev) {
+        var _a;
         const inputTypes = new Set(this.processedInputs.map((i) => i.type));
         /**
          * Based on keyboard navigation requirements, the
@@ -175,6 +176,17 @@ const Alert = /*@__PURE__*/ proxyCustomElement(class Alert extends HTMLElement {
         if (inputTypes.has('checkbox') && ev.key === 'Enter') {
             ev.preventDefault();
             return;
+        }
+        /**
+         * Ensure when alert container is being focused, and the user presses the tab + shift keys, the focus will be set to the last alert button.
+         */
+        if (ev.target.classList.contains('alert-wrapper')) {
+            if (ev.key === 'Tab' && ev.shiftKey) {
+                ev.preventDefault();
+                const lastChildBtn = (_a = this.wrapperEl) === null || _a === void 0 ? void 0 : _a.querySelector('.alert-button:last-child');
+                lastChildBtn.focus();
+                return;
+            }
         }
         // The only inputs we want to navigate between using arrow keys are the radios
         // ignore the keydown event if it is not on a radio button
@@ -307,7 +319,21 @@ const Alert = /*@__PURE__*/ proxyCustomElement(class Alert extends HTMLElement {
     async present() {
         const unlock = await this.lockController.lock();
         await this.delegateController.attachViewToDom();
-        await present(this, 'alertEnter', iosEnterAnimation, mdEnterAnimation);
+        await present(this, 'alertEnter', iosEnterAnimation, mdEnterAnimation).then(() => {
+            var _a, _b;
+            /**
+             * Check if alert has only one button and no inputs.
+             * If so, then focus on the button. Otherwise, focus the alert wrapper.
+             * This will map to the default native alert behavior.
+             */
+            if (this.buttons.length === 1 && this.inputs.length === 0) {
+                const queryBtn = (_a = this.wrapperEl) === null || _a === void 0 ? void 0 : _a.querySelector('.alert-button');
+                queryBtn.focus();
+            }
+            else {
+                (_b = this.wrapperEl) === null || _b === void 0 ? void 0 : _b.focus();
+            }
+        });
         unlock();
     }
     /**
@@ -481,8 +507,8 @@ const Alert = /*@__PURE__*/ proxyCustomElement(class Alert extends HTMLElement {
         const { overlayIndex, header, subHeader, message, htmlAttributes } = this;
         const mode = getIonMode(this);
         const hdrId = `alert-${overlayIndex}-hdr`;
-        const subHdrId = `alert-${overlayIndex}-sub-hdr`;
         const msgId = `alert-${overlayIndex}-msg`;
+        const subHdrId = `alert-${overlayIndex}-sub-hdr`;
         const role = this.inputs.length > 0 || this.buttons.length > 0 ? 'alertdialog' : 'alert';
         /**
          * Use both the header and subHeader ids if they are defined.
@@ -491,9 +517,9 @@ const Alert = /*@__PURE__*/ proxyCustomElement(class Alert extends HTMLElement {
          * If neither are defined, do not set aria-labelledby.
          */
         const ariaLabelledBy = header && subHeader ? `${hdrId} ${subHdrId}` : header ? hdrId : subHeader ? subHdrId : null;
-        return (h(Host, Object.assign({ key: 'ad7e14b4f92a09387aa80abfb718a755e4e889d6', role: role, "aria-modal": "true", "aria-labelledby": ariaLabelledBy, "aria-describedby": message !== undefined ? msgId : null, tabindex: "-1" }, htmlAttributes, { style: {
+        return (h(Host, { key: '755f2398806084f16ee24d9fefce9ebc0b8f30f2', tabindex: "-1", style: {
                 zIndex: `${20000 + overlayIndex}`,
-            }, class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { [mode]: true, 'overlay-hidden': true, 'alert-translucent': this.translucent }), onIonAlertWillDismiss: this.dispatchCancelHandler, onIonBackdropTap: this.onBackdropTap }), h("ion-backdrop", { key: '4b4693dca3c910aa9a61c4d90295d785ec6cbe3d', tappable: this.backdropDismiss }), h("div", { key: '64fd19b8f1d8246dcc869053f858bc33506def4b', tabindex: "0", "aria-hidden": "true" }), h("div", { key: 'e61ba6f339c3a02cecd37d8b641ee5043018eb29', class: "alert-wrapper ion-overlay-wrapper", ref: (el) => (this.wrapperEl = el) }, h("div", { key: '044e00667ffcb74aa2c5e0d0b42669c4004dbb4f', class: "alert-head" }, header && (h("h2", { key: '1aaae8d58722c4cf5debb1f00415ab7ed0a52bbd', id: hdrId, class: "alert-title" }, header)), subHeader && !header && (h("h2", { key: '9c9854dc3b0ad40f1861a49b76d5636afcae9c74', id: subHdrId, class: "alert-sub-title" }, subHeader)), subHeader && header && (h("h3", { key: '19aaca9912f77cde4ae8079be210eda697ed8de1', id: subHdrId, class: "alert-sub-title" }, subHeader))), this.renderAlertMessage(msgId), this.renderAlertInputs(), this.renderAlertButtons()), h("div", { key: 'a85d27c516f7cdbc85b19f40d2f0bd865490b6a7', tabindex: "0", "aria-hidden": "true" })));
+            }, class: Object.assign(Object.assign({}, getClassMap(this.cssClass)), { [mode]: true, 'overlay-hidden': true, 'alert-translucent': this.translucent }), onIonAlertWillDismiss: this.dispatchCancelHandler, onIonBackdropTap: this.onBackdropTap }, h("ion-backdrop", { key: '5965913fb076436e37f4a55cd8778cbc58449bfd', tappable: this.backdropDismiss }), h("div", { key: 'cb17e07896b6ad8c9c607261fe08437b1a3b272f', tabindex: "0", "aria-hidden": "true" }), h("div", Object.assign({ key: 'e1d43053dceab70b9392802767caa70fa7ed0518', class: "alert-wrapper ion-overlay-wrapper", role: role, "aria-modal": "true", "aria-labelledby": ariaLabelledBy, "aria-describedby": message !== undefined ? msgId : null, tabindex: "0", ref: (el) => (this.wrapperEl = el) }, htmlAttributes), h("div", { key: 'a82e0bf863971084f3a8a34d25d6cf7aae1690a8', class: "alert-head" }, header && (h("h2", { key: '36a9b4394f4b4cdcd6972ae60265ac889e2157cf', id: hdrId, class: "alert-title" }, header)), subHeader && !header && (h("h2", { key: '86008c1eb484cc69f66e42c254933ce289180785', id: subHdrId, class: "alert-sub-title" }, subHeader)), subHeader && header && (h("h3", { key: 'bfaacd3b119d06273683019cddef2c42245c3101', id: subHdrId, class: "alert-sub-title" }, subHeader))), this.renderAlertMessage(msgId), this.renderAlertInputs(), this.renderAlertButtons()), h("div", { key: '0e7df4ab31a72953dcf171ebc87074603f848c06', tabindex: "0", "aria-hidden": "true" })));
     }
     get el() { return this; }
     static get watchers() { return {

@@ -149,8 +149,19 @@ export class Input {
             nativeInput.value = value;
         }
     }
+    /**
+     * dir is a globally enumerated attribute.
+     * As a result, creating these as properties
+     * can have unintended side effects. Instead, we
+     * listen for attribute changes and inherit them
+     * to the inner `<input>` element.
+     */
+    onDirChanged(newValue) {
+        this.inheritedAttributes = Object.assign(Object.assign({}, this.inheritedAttributes), { dir: newValue });
+        forceUpdate(this);
+    }
     componentWillLoad() {
-        this.inheritedAttributes = Object.assign(Object.assign({}, inheritAriaAttributes(this.el)), inheritAttributes(this.el, ['tabindex', 'title', 'data-form-type']));
+        this.inheritedAttributes = Object.assign(Object.assign({}, inheritAriaAttributes(this.el)), inheritAttributes(this.el, ['tabindex', 'title', 'data-form-type', 'dir']));
     }
     connectedCallback() {
         const { el } = this;
@@ -414,7 +425,7 @@ export class Input {
          * TODO(FW-5592): Remove hasStartEndSlots condition
          */
         const labelShouldFloat = labelPlacement === 'stacked' || (labelPlacement === 'floating' && (hasValue || hasFocus || hasStartEndSlots));
-        return (h(Host, { key: '54b5662d9a7f011a85e4119650c92b9af275bf96', class: createColorClasses(this.color, {
+        return (h(Host, { key: '166f7dea59931b8276bebef4d7a1fcd5ace90bad', class: createColorClasses(this.color, {
                 [mode]: true,
                 'has-value': hasValue,
                 'has-focus': hasFocus,
@@ -425,7 +436,7 @@ export class Input {
                 'in-item': inItem,
                 'in-item-color': hostContext('ion-item.ion-color', this.el),
                 'input-disabled': disabled,
-            }) }, h("label", { key: '551cf8a932af3275689ecf32988b84355404e8f1', class: "input-wrapper", htmlFor: inputId }, this.renderLabelContainer(), h("div", { key: 'b3601dca7e0f23517748f6e7feb899c953355bc4', class: "native-wrapper" }, h("slot", { key: 'd687a9bb4c5778cfee35ce1b8d6d16ddc8eca768', name: "start" }), h("input", Object.assign({ key: 'ab927e84e43bedf8b7827bb743888a1778292deb', class: "native-input", ref: (input) => (this.nativeInput = input), id: inputId, disabled: disabled, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, enterKeyHint: this.enterkeyhint, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder || '', readOnly: readonly, required: this.required, spellcheck: this.spellcheck, step: this.step, type: this.type, value: value, onInput: this.onInput, onChange: this.onChange, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeydown, onCompositionstart: this.onCompositionStart, onCompositionend: this.onCompositionEnd, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId }, this.inheritedAttributes)), this.clearInput && !readonly && !disabled && (h("button", { key: '0d2ee3f7e69cee75f071f37b2e9bc174572c5a01', "aria-label": "reset", type: "button", class: "input-clear-icon", onPointerDown: (ev) => {
+            }) }, h("label", { key: 'c6da0b068f8abc0fb8ffaee1a71685b03ec837ec', class: "input-wrapper", htmlFor: inputId }, this.renderLabelContainer(), h("div", { key: 'cd25ec6d885bdbfdb2def51f1ad1756cc4f3e9e0', class: "native-wrapper" }, h("slot", { key: '2582b54d551c93a89d4a663a8a61b6de5fae85cc', name: "start" }), h("input", Object.assign({ key: '2b496016ba7a0c51ccd5509183e531f802701455', class: "native-input", ref: (input) => (this.nativeInput = input), id: inputId, disabled: disabled, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, enterKeyHint: this.enterkeyhint, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder || '', readOnly: readonly, required: this.required, spellcheck: this.spellcheck, step: this.step, type: this.type, value: value, onInput: this.onInput, onChange: this.onChange, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeydown, onCompositionstart: this.onCompositionStart, onCompositionend: this.onCompositionEnd, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId }, this.inheritedAttributes)), this.clearInput && !readonly && !disabled && (h("button", { key: '2db9987180cd4030ad63de197af838e152b47998', "aria-label": "reset", type: "button", class: "input-clear-icon", onPointerDown: (ev) => {
                 /**
                  * This prevents mobile browsers from
                  * blurring the input when the clear
@@ -440,7 +451,7 @@ export class Input {
                  * for screen readers as it means users would be unable to swipe past the clear button.
                  */
                 ev.stopPropagation();
-            }, onClick: this.clearTextInput }, h("ion-icon", { key: 'c7715111897f43839c10d38662616edb662cd49b', "aria-hidden": "true", icon: clearIconData }))), h("slot", { key: 'afc44cbe1ad50f17942d5297a12509abecbd6ecd', name: "end" })), shouldRenderHighlight && h("div", { key: 'ee3af32cd9003d497f33e352e56313d43295f3a9', class: "input-highlight" })), this.renderBottomContent()));
+            }, onClick: this.clearTextInput }, h("ion-icon", { key: 'ea5e1a5f61046434bf502db692a05dece19aecd9', "aria-hidden": "true", icon: clearIconData }))), h("slot", { key: 'db1e7452cfc25accdb518ff0cc59ae3e2e47b049', name: "end" })), shouldRenderHighlight && h("div", { key: '0daeaaa5238e0c60ccfd251dedc6a381eba2fcc8', class: "input-highlight" })), this.renderBottomContent()));
     }
     static get is() { return "ion-input"; }
     static get encapsulation() { return "scoped"; }
@@ -1211,6 +1222,9 @@ export class Input {
             }, {
                 "propName": "value",
                 "methodName": "valueChanged"
+            }, {
+                "propName": "dir",
+                "methodName": "onDirChanged"
             }];
     }
 }

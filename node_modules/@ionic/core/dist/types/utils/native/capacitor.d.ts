@@ -1,2 +1,8 @@
 import type { CapacitorGlobal } from '@capacitor/core';
-export declare const getCapacitor: () => CapacitorGlobal | undefined;
+type CustomCapacitorGlobal = CapacitorGlobal & {
+    Plugins: {
+        [key: string]: any;
+    };
+};
+export declare const getCapacitor: () => CustomCapacitorGlobal | undefined;
+export {};

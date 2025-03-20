@@ -238,7 +238,7 @@ export class ReorderGroup {
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: 'a38c7fbceb677201330a602273d5b55abb32da19', class: {
+        return (h(Host, { key: '6ca009dd65302a914d459aec638e62977440db20', class: {
                 [mode]: true,
                 'reorder-enabled': !this.disabled,
                 'reorder-list-active': this.state !== 0 /* ReorderGroupState.Idle */,

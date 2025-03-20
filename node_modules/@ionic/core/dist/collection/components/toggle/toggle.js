@@ -17,10 +17,15 @@ import { getIonMode } from "../../global/ionic-global";
  * @part track - The background track of the toggle.
  * @part handle - The toggle handle, or knob, used to change the checked state.
  * @part label - The label text describing the toggle.
+ * @part supporting-text - Supporting text displayed beneath the toggle label.
+ * @part helper-text - Supporting text displayed beneath the toggle label when the toggle is valid.
+ * @part error-text - Supporting text displayed beneath the toggle label when the toggle is invalid and touched.
  */
 export class Toggle {
     constructor() {
         this.inputId = `ion-tg-${toggleIds++}`;
+        this.helperTextId = `${this.inputId}-helper-text`;
+        this.errorTextId = `${this.inputId}-error-text`;
         this.lastDrag = 0;
         this.inheritedAttributes = {};
         this.didLoad = false;
@@ -66,11 +71,14 @@ export class Toggle {
         this.name = this.inputId;
         this.checked = false;
         this.disabled = false;
+        this.errorText = undefined;
+        this.helperText = undefined;
         this.value = 'on';
         this.enableOnOffLabels = config.get('toggleOnOffLabels');
         this.labelPlacement = 'start';
         this.justify = undefined;
         this.alignment = undefined;
+        this.required = false;
     }
     disabledChanged() {
         if (this.gesture) {
@@ -81,6 +89,7 @@ export class Toggle {
         const { checked, value } = this;
         const isNowChecked = !checked;
         this.checked = isNowChecked;
+        this.setFocus();
         this.ionChange.emit({
             checked: isNowChecked,
             value,
@@ -151,13 +160,39 @@ export class Toggle {
     get hasLabel() {
         return this.el.textContent !== '';
     }
+    getHintTextID() {
+        const { el, helperText, errorText, helperTextId, errorTextId } = this;
+        if (el.classList.contains('ion-touched') && el.classList.contains('ion-invalid') && errorText) {
+            return errorTextId;
+        }
+        if (helperText) {
+            return helperTextId;
+        }
+        return undefined;
+    }
+    /**
+     * Responsible for rendering helper text and error text.
+     * This element should only be rendered if hint text is set.
+     */
+    renderHintText() {
+        const { helperText, errorText, helperTextId, errorTextId } = this;
+        /**
+         * undefined and empty string values should
+         * be treated as not having helper/error text.
+         */
+        const hasHintText = !!helperText || !!errorText;
+        if (!hasHintText) {
+            return;
+        }
+        return (h("div", { class: "toggle-bottom" }, h("div", { id: helperTextId, class: "helper-text", part: "supporting-text helper-text" }, helperText), h("div", { id: errorTextId, class: "error-text", part: "supporting-text error-text" }, errorText)));
+    }
     render() {
-        const { activated, color, checked, disabled, el, justify, labelPlacement, inputId, name, alignment } = this;
+        const { activated, color, checked, disabled, el, justify, labelPlacement, inputId, name, alignment, required } = this;
         const mode = getIonMode(this);
         const value = this.getValue();
         const rtl = isRTL(el) ? 'rtl' : 'ltr';
         renderHiddenInput(true, el, name, checked ? value : '', disabled);
-        return (h(Host, { key: 'f52195ec3bc14c024647cb41319c32a4cd330e19', onClick: this.onClick, class: createColorClasses(color, {
+        return (h(Host, { key: 'c6db7f5bc0b358944c0d79e24aeb4d319793422f', "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId, onClick: this.onClick, class: createColorClasses(color, {
                 [mode]: true,
                 'in-item': hostContext('ion-item', el),
                 'toggle-activated': activated,
@@ -167,10 +202,10 @@ export class Toggle {
                 [`toggle-alignment-${alignment}`]: alignment !== undefined,
                 [`toggle-label-placement-${labelPlacement}`]: true,
                 [`toggle-${rtl}`]: true,
-            }) }, h("label", { key: 'f8b3a215ad85b2cee611ad63449b584e1640f27f', class: "toggle-wrapper" }, h("input", Object.assign({ key: 'f387b1ea840737a9737917e516834c887be99c09', type: "checkbox", role: "switch", "aria-checked": `${checked}`, checked: checked, disabled: disabled, id: inputId, onFocus: () => this.onFocus(), onBlur: () => this.onBlur(), ref: (focusEl) => (this.focusEl = focusEl) }, this.inheritedAttributes)), h("div", { key: '936af880db59fe377cd2de9101eb28a1c4fb8914', class: {
+            }) }, h("label", { key: 'f49531391f4513d084061c27ebc4c4eb1dcd02ab', class: "toggle-wrapper" }, h("input", Object.assign({ key: 'f4ab2dc29eae053f54613d1304f755e151037f47', type: "checkbox", role: "switch", "aria-checked": `${checked}`, checked: checked, disabled: disabled, id: inputId, onFocus: () => this.onFocus(), onBlur: () => this.onBlur(), ref: (focusEl) => (this.focusEl = focusEl), required: required }, this.inheritedAttributes)), h("div", { key: '85674bfab5ec1e422c787d025c4f9f5b3aadd4f2', class: {
                 'label-text-wrapper': true,
                 'label-text-wrapper-hidden': !this.hasLabel,
-            }, part: "label" }, h("slot", { key: '80a6672e2e792c15011a9496dcd75363cdba31c6' })), h("div", { key: '2b2b318b38ab27b194c0dab4cecd77d9d780f2ca', class: "native-wrapper" }, this.renderToggleControl()))));
+            }, part: "label" }, h("slot", { key: '9bdf7e85c95dc7373f18894ebfe6ad022f098107' }), this.renderHintText()), h("div", { key: '33883642b38421a82001e37db3dd5e5c643785b0', class: "native-wrapper" }, this.renderToggleControl()))));
     }
     static get is() { return "ion-toggle"; }
     static get encapsulation() { return "shadow"; }
@@ -265,6 +300,40 @@ export class Toggle {
                 "reflect": false,
                 "defaultValue": "false"
             },
+            "errorText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the toggle label and displayed when an error is detected."
+                },
+                "attribute": "error-text",
+                "reflect": false
+            },
+            "helperText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the toggle label and displayed when no error is detected."
+                },
+                "attribute": "helper-text",
+                "reflect": false
+            },
             "value": {
                 "type": "string",
                 "mutable": false,
@@ -352,6 +421,24 @@ export class Toggle {
                 },
                 "attribute": "alignment",
                 "reflect": false
+            },
+            "required": {
+                "type": "boolean",
+                "mutable": false,
+                "complexType": {
+                    "original": "boolean",
+                    "resolved": "boolean",
+                    "references": {}
+                },
+                "required": false,
+                "optional": false,
+                "docs": {
+                    "tags": [],
+                    "text": "If true, screen readers will announce it as a required field. This property\nworks only for accessibility purposes, it will not prevent the form from\nsubmitting if the value is invalid."
+                },
+                "attribute": "required",
+                "reflect": false,
+                "defaultValue": "false"
             }
         };
     }

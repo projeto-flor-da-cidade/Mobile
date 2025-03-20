@@ -5,7 +5,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-73f75efb.js');
+const index = require('./index-2e236a04.js');
 
 const segmentViewIosCss = ":host{display:-ms-flexbox;display:flex;height:100%;overflow-x:scroll;-webkit-scroll-snap-type:x mandatory;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}:host::-webkit-scrollbar{display:none}:host(.segment-view-disabled){-ms-touch-action:none;touch-action:none;overflow-x:hidden}:host(.segment-view-scroll-disabled){pointer-events:none}:host(.segment-view-disabled){opacity:0.3}";
 const IonSegmentViewIosStyle0 = segmentViewIosCss;
@@ -107,10 +107,10 @@ const SegmentView = class {
     }
     render() {
         const { disabled, isManualScroll } = this;
-        return (index.h(index.Host, { key: '9f4f11d31c4db776f077e59ae895b35dd4454717', class: {
+        return (index.h(index.Host, { key: 'fa528d2d9ae0f00fc3067defe2a047dce77c814a', class: {
                 'segment-view-disabled': disabled,
                 'segment-view-scroll-disabled': isManualScroll === false,
-            } }, index.h("slot", { key: 'ea58b21f031cee2ab2b70580f336deaefa364538' })));
+            } }, index.h("slot", { key: '74dc8b4d073caeff1bab272d11b9ea3e1a215954' })));
     }
     get el() { return index.getElement(this); }
 };

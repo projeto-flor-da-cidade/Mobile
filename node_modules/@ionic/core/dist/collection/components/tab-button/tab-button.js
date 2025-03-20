@@ -70,7 +70,7 @@ export class TabButton {
             rel,
             target,
         };
-        return (h(Host, { key: '5976c45943ea7ea8e7c1a85fc9996de421439f08', onClick: this.onClick, onKeyup: this.onKeyUp, id: tab !== undefined ? `tab-button-${tab}` : null, class: {
+        return (h(Host, { key: 'a86d441d8df350fe991f2f948fc6b6ad007728f7', onClick: this.onClick, onKeyup: this.onKeyUp, id: tab !== undefined ? `tab-button-${tab}` : null, class: {
                 [mode]: true,
                 'tab-selected': selected,
                 'tab-disabled': disabled,
@@ -82,7 +82,7 @@ export class TabButton {
                 'ion-activatable': true,
                 'ion-selectable': true,
                 'ion-focusable': true,
-            } }, h("a", Object.assign({ key: '1db09d861b67ff292018fb4b0dc7b85bd4677eb8' }, attrs, { class: "button-native", part: "native", role: "tab", "aria-selected": selected ? 'true' : null, "aria-disabled": disabled ? 'true' : null, tabindex: disabled ? '-1' : undefined }, inheritedAttributes), h("span", { key: '4381eafcb27e8c7bb0d86d4f115ceb0caf03b9b4', class: "button-inner" }, h("slot", { key: '1981135f6fbb88376c1bd923c55c70fe8b5c5159' })), mode === 'md' && h("ion-ripple-effect", { key: '0509bc7155d055d1ed710600e9cf4df135881491', type: "unbounded" }))));
+            } }, h("a", Object.assign({ key: '8dfe1ccff2cf21601c5aea7f7f877c0fbe384e09' }, attrs, { class: "button-native", part: "native", role: "tab", "aria-selected": selected ? 'true' : null, "aria-disabled": disabled ? 'true' : null, tabindex: disabled ? '-1' : undefined }, inheritedAttributes), h("span", { key: '3f557cf6e96e22b9318b4aee19ede810eb7fb720', class: "button-inner" }, h("slot", { key: '836dd090dbe3c2ea97dc263fca7d01dea6ea0eb6' })), mode === 'md' && h("ion-ripple-effect", { key: '488a924fd04602c1b23e03d1a4c84dfa0f2ca03d', type: "unbounded" }))));
     }
     static get is() { return "ion-tab-button"; }
     static get encapsulation() { return "shadow"; }

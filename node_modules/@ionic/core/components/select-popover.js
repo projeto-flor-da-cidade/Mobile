@@ -117,7 +117,7 @@ const SelectPopover = /*@__PURE__*/ proxyCustomElement(class SelectPopover exten
     render() {
         const { header, message, options, subHeader } = this;
         const hasSubHeaderOrMessage = subHeader !== undefined || message !== undefined;
-        return (h(Host, { key: 'dd0990db4de4f175b176b27f35501dd1604ca400', class: getIonMode(this) }, h("ion-list", { key: 'cea2bc3687b8b2490a2a9ff4a1e16cd34169558e' }, header !== undefined && h("ion-list-header", { key: '194aebb53453c43f913daae45a1a3066a1708c4c' }, header), hasSubHeaderOrMessage && (h("ion-item", { key: 'b706b07a3c63ad8104d2db413e210c735ec1bec9' }, h("ion-label", { key: '6e52b5b4cf6b04ff3dd5671d64264233de4190d5', class: "ion-text-wrap" }, subHeader !== undefined && h("h3", { key: '6ef4440d17f5db8c96c63b9aa5073f4fe4b8ad62' }, subHeader), message !== undefined && h("p", { key: 'c7b3b76c30ecd606c0e985a0258c13d3a75756e7' }, message)))), this.renderOptions(options))));
+        return (h(Host, { key: '542367ab8fb72bfebf7e65630b91017d68827fd6', class: getIonMode(this) }, h("ion-list", { key: 'f2f0f37e1365cd7780b02de1a1698700d0df48a7' }, header !== undefined && h("ion-list-header", { key: '4b8800a68e800f19277a44b7074ca24b70218daf' }, header), hasSubHeaderOrMessage && (h("ion-item", { key: '932b7903daf97d5a57d289b7ee49e868bb9b0cf5' }, h("ion-label", { key: 'fc3f1b69aa2a0bc6125d35692dcad3a8a99fd160', class: "ion-text-wrap" }, subHeader !== undefined && h("h3", { key: 'eceab2f47afa95f04b138342b0bdbfa1f50919a8' }, subHeader), message !== undefined && h("p", { key: '70f4e27ad1316318efd0c17efce31e5e45c8fa02' }, message)))), this.renderOptions(options))));
     }
     get el() { return this; }
     static get style() { return {

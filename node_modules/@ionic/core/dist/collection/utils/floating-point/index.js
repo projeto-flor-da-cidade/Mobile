@@ -1,7 +1,10 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
+import { isSafeNumber } from "../helpers";
 export function getDecimalPlaces(n) {
+    if (!isSafeNumber(n))
+        return 0;
     if (n % 1 === 0)
         return 0;
     return n.toString().split('.')[1].length;
@@ -39,6 +42,8 @@ export function getDecimalPlaces(n) {
  * be used as a reference for the desired specificity.
  */
 export function roundToMaxDecimalPlaces(n, ...references) {
+    if (!isSafeNumber(n))
+        return 0;
     const maxPlaces = Math.max(...references.map((r) => getDecimalPlaces(r)));
     return Number(n.toFixed(maxPlaces));
 }

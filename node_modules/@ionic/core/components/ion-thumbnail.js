@@ -14,7 +14,7 @@ const Thumbnail = /*@__PURE__*/ proxyCustomElement(class Thumbnail extends HTMLE
         this.__attachShadow();
     }
     render() {
-        return (h(Host, { key: 'cfa9aeb1d4fd624a9732c5230d29dd887e4b7771', class: getIonMode(this) }, h("slot", { key: '29bc6e64063cba44e2643228df54394883933918' })));
+        return (h(Host, { key: '7f5fd6c056da2d82feb2c3c33f3e6dec898787f5', class: getIonMode(this) }, h("slot", { key: 'd15fd2b6cdc03777edc1930be95ad838e1b376c8' })));
     }
     static get style() { return IonThumbnailStyle0; }
 }, [1, "ion-thumbnail"]);

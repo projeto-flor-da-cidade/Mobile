@@ -171,32 +171,39 @@ input {
   align-items: center;
 }
 
-:host(.toggle-justify-space-between) .toggle-wrapper {
+.toggle-bottom {
+  padding-top: 4px;
+  display: flex;
   justify-content: space-between;
+  font-size: 0.75rem;
+  white-space: normal;
 }
 
-:host(.toggle-justify-start) .toggle-wrapper {
-  justify-content: start;
+:host(.toggle-label-placement-stacked) .toggle-bottom {
+  font-size: 1rem;
 }
 
-:host(.toggle-justify-end) .toggle-wrapper {
-  justify-content: end;
+/**
+ * Error text should only be shown when .ion-invalid is
+ * present on the checkbox. Otherwise the helper text should
+ * be shown.
+ */
+.toggle-bottom .error-text {
+  display: none;
+  color: var(--ion-color-danger, #c5000f);
 }
 
-:host(.toggle-alignment-start) .toggle-wrapper {
-  align-items: start;
-}
-
-:host(.toggle-alignment-center) .toggle-wrapper {
-  align-items: center;
-}
-
-:host(.toggle-justify-space-between),
-:host(.toggle-justify-start),
-:host(.toggle-justify-end),
-:host(.toggle-alignment-start),
-:host(.toggle-alignment-center) {
+.toggle-bottom .helper-text {
   display: block;
+  color: var(--ion-color-step-700, var(--ion-text-color-step-300, #4d4d4d));
+}
+
+:host(.ion-touched.ion-invalid) .toggle-bottom .error-text {
+  display: block;
+}
+
+:host(.ion-touched.ion-invalid) .toggle-bottom .helper-text {
+  display: none;
 }
 
 /**
@@ -225,6 +232,7 @@ input {
  */
 :host(.toggle-label-placement-end) .toggle-wrapper {
   flex-direction: row-reverse;
+  justify-content: start;
 }
 
 /**
@@ -267,6 +275,7 @@ input {
  */
 :host(.toggle-label-placement-stacked) .toggle-wrapper {
   flex-direction: column;
+  text-align: center;
 }
 
 :host(.toggle-label-placement-stacked) .label-text-wrapper {
@@ -310,6 +319,34 @@ input {
   :host(.toggle-label-placement-stacked.toggle-alignment-center:dir(rtl)) .label-text-wrapper {
     transform-origin: calc(100% - center) top;
   }
+}
+
+:host(.toggle-justify-space-between) .toggle-wrapper {
+  justify-content: space-between;
+}
+
+:host(.toggle-justify-start) .toggle-wrapper {
+  justify-content: start;
+}
+
+:host(.toggle-justify-end) .toggle-wrapper {
+  justify-content: end;
+}
+
+:host(.toggle-alignment-start) .toggle-wrapper {
+  align-items: start;
+}
+
+:host(.toggle-alignment-center) .toggle-wrapper {
+  align-items: center;
+}
+
+:host(.toggle-justify-space-between),
+:host(.toggle-justify-start),
+:host(.toggle-justify-end),
+:host(.toggle-alignment-start),
+:host(.toggle-alignment-center) {
+  display: block;
 }
 
 .toggle-icon-wrapper {

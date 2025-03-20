@@ -62,6 +62,20 @@ export declare class Modal implements ComponentInterface, OverlayInterface {
      */
     breakpoints?: number[];
     /**
+     * Controls whether scrolling or dragging within the sheet modal expands
+     * it to a larger breakpoint. This only takes effect when `breakpoints`
+     * and `initialBreakpoint` are set.
+     *
+     * If `true`, scrolling or dragging anywhere in the modal will first expand
+     * it to the next breakpoint. Once fully expanded, scrolling will affect the
+     * content.
+     * If `false`, scrolling will always affect the content. The modal will
+     * only expand when dragging the header or handle. The modal will close when
+     * dragging the header or handle. It can also be closed when dragging the
+     * content, but only if the content is scrolled to the top.
+     */
+    expandToScroll: boolean;
+    /**
      * A decimal value between 0 and 1 that indicates the
      * initial point the modal will open at when creating a
      * sheet modal. This value must also be listed in the

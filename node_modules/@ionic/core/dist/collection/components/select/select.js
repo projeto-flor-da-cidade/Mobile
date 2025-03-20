@@ -23,10 +23,15 @@ import { getIonMode } from "../../global/ionic-global";
  * @part icon - The select icon container.
  * @part container - The container for the selected text or placeholder.
  * @part label - The label text describing the select.
+ * @part supporting-text - Supporting text displayed beneath the select.
+ * @part helper-text - Supporting text displayed beneath the select when the select is valid.
+ * @part error-text - Supporting text displayed beneath the select when the select is invalid and touched.
  */
 export class Select {
     constructor() {
         this.inputId = `ion-sel-${selectIds++}`;
+        this.helperTextId = `${this.inputId}-helper-text`;
+        this.errorTextId = `${this.inputId}-error-text`;
         this.inheritedAttributes = {};
         this.onClick = (ev) => {
             const target = ev.target;
@@ -77,6 +82,8 @@ export class Select {
         this.compareWith = undefined;
         this.disabled = false;
         this.fill = undefined;
+        this.errorText = undefined;
+        this.helperText = undefined;
         this.interface = 'alert';
         this.interfaceOptions = {};
         this.justify = undefined;
@@ -91,6 +98,7 @@ export class Select {
         this.expandedIcon = undefined;
         this.shape = undefined;
         this.value = undefined;
+        this.required = false;
     }
     styleChanged() {
         this.emitStyle();
@@ -153,15 +161,8 @@ export class Select {
         }
         this.isExpanded = true;
         const overlay = (this.overlay = await this.createOverlay(event));
-        overlay.onDidDismiss().then(() => {
-            this.overlay = undefined;
-            this.isExpanded = false;
-            this.ionDismiss.emit();
-            this.setFocus();
-        });
-        await overlay.present();
-        // focus selected option for popovers and modals
-        if (this.interface === 'popover' || this.interface === 'modal') {
+        // Add logic to scroll selected item into view before presenting
+        const scrollSelectedIntoView = () => {
             const indexOfSelected = this.childOpts.findIndex((o) => o.value === this.value);
             if (indexOfSelected > -1) {
                 const selectedItem = overlay.querySelector(`.select-interface-option:nth-child(${indexOfSelected + 1})`);
@@ -179,6 +180,7 @@ export class Select {
                      */
                     const interactiveEl = selectedItem.querySelector('ion-radio, ion-checkbox');
                     if (interactiveEl) {
+                        selectedItem.scrollIntoView({ block: 'nearest' });
                         // Needs to be called before `focusVisibleElement` to prevent issue with focus event bubbling
                         // and removing `ion-focused` style
                         interactiveEl.setFocus();
@@ -202,7 +204,40 @@ export class Select {
                     focusVisibleElement(firstEnabledOption.closest('ion-item'));
                 }
             }
+        };
+        // For modals and popovers, we can scroll before they're visible
+        if (this.interface === 'modal') {
+            overlay.addEventListener('ionModalWillPresent', scrollSelectedIntoView, { once: true });
         }
+        else if (this.interface === 'popover') {
+            overlay.addEventListener('ionPopoverWillPresent', scrollSelectedIntoView, { once: true });
+        }
+        else {
+            /**
+             * For alerts and action sheets, we need to wait a frame after willPresent
+             * because these overlays don't have their content in the DOM immediately
+             * when willPresent fires. By waiting a frame, we ensure the content is
+             * rendered and can be properly scrolled into view.
+             */
+            const scrollAfterRender = () => {
+                requestAnimationFrame(() => {
+                    scrollSelectedIntoView();
+                });
+            };
+            if (this.interface === 'alert') {
+                overlay.addEventListener('ionAlertWillPresent', scrollAfterRender, { once: true });
+            }
+            else if (this.interface === 'action-sheet') {
+                overlay.addEventListener('ionActionSheetWillPresent', scrollAfterRender, { once: true });
+            }
+        }
+        overlay.onDidDismiss().then(() => {
+            this.overlay = undefined;
+            this.isExpanded = false;
+            this.ionDismiss.emit();
+            this.setFocus();
+        });
+        await overlay.present();
         return overlay;
     }
     createOverlay(ev) {
@@ -628,8 +663,44 @@ export class Select {
         return renderedLabel;
     }
     renderListbox() {
-        const { disabled, inputId, isExpanded } = this;
-        return (h("button", { disabled: disabled, id: inputId, "aria-label": this.ariaLabel, "aria-haspopup": "dialog", "aria-expanded": `${isExpanded}`, onFocus: this.onFocus, onBlur: this.onBlur, ref: (focusEl) => (this.focusEl = focusEl) }));
+        const { disabled, inputId, isExpanded, required } = this;
+        return (h("button", { disabled: disabled, id: inputId, "aria-label": this.ariaLabel, "aria-haspopup": "dialog", "aria-expanded": `${isExpanded}`, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId, "aria-required": `${required}`, onFocus: this.onFocus, onBlur: this.onBlur, ref: (focusEl) => (this.focusEl = focusEl) }));
+    }
+    getHintTextID() {
+        const { el, helperText, errorText, helperTextId, errorTextId } = this;
+        if (el.classList.contains('ion-touched') && el.classList.contains('ion-invalid') && errorText) {
+            return errorTextId;
+        }
+        if (helperText) {
+            return helperTextId;
+        }
+        return undefined;
+    }
+    /**
+     * Renders the helper text or error text values
+     */
+    renderHintText() {
+        const { helperText, errorText, helperTextId, errorTextId } = this;
+        return [
+            h("div", { id: helperTextId, class: "helper-text", part: "supporting-text helper-text" }, helperText),
+            h("div", { id: errorTextId, class: "error-text", part: "supporting-text error-text" }, errorText),
+        ];
+    }
+    /**
+     * Responsible for rendering helper text, and error text. This element
+     * should only be rendered if hint text is set.
+     */
+    renderBottomContent() {
+        const { helperText, errorText } = this;
+        /**
+         * undefined and empty string values should
+         * be treated as not having helper/error text.
+         */
+        const hasHintText = !!helperText || !!errorText;
+        if (!hasHintText) {
+            return;
+        }
+        return h("div", { class: "select-bottom" }, this.renderHintText());
     }
     render() {
         const { disabled, el, isExpanded, expandedIcon, labelPlacement, justify, placeholder, fill, shape, name, value } = this;
@@ -660,7 +731,7 @@ export class Select {
          * TODO(FW-5592): Remove hasStartEndSlots condition
          */
         const labelShouldFloat = labelPlacement === 'stacked' || (labelPlacement === 'floating' && (hasValue || isExpanded || hasStartEndSlots));
-        return (h(Host, { key: '144dfa5c49549a74fe516c65b9b8104a477ac789', onClick: this.onClick, class: createColorClasses(this.color, {
+        return (h(Host, { key: 'aa7bd7fbb6479c7805486990650a406e5470fd13', onClick: this.onClick, class: createColorClasses(this.color, {
                 [mode]: true,
                 'in-item': inItem,
                 'in-item-color': hostContext('ion-item.ion-color', el),
@@ -676,7 +747,7 @@ export class Select {
                 [`select-justify-${justify}`]: justifyEnabled,
                 [`select-shape-${shape}`]: shape !== undefined,
                 [`select-label-placement-${labelPlacement}`]: true,
-            }) }, h("label", { key: '0edcfcbac575a9dccc77991531b6980d1caebf42', class: "select-wrapper", id: "select-label" }, this.renderLabelContainer(), h("div", { key: '348151d90cb093f5d21c7d4a834264ac4a312c40', class: "select-wrapper-inner" }, h("slot", { key: '8b7708c7f81217435c58276da0c08bba766d9500', name: "start" }), h("div", { key: '10c520a335da0a0d1cf40f9365597beb244d3b48', class: "native-wrapper", ref: (el) => (this.nativeWrapperEl = el), part: "container" }, this.renderSelectText(), this.renderListbox()), h("slot", { key: '0f15c40a5495e98e29d2a21ba21e0bc6f1c0125a', name: "end" }), !hasFloatingOrStackedLabel && this.renderSelectIcon()), hasFloatingOrStackedLabel && this.renderSelectIcon(), shouldRenderHighlight && h("div", { key: 'c87faad2e5ebf7f9453397d7ede43abd64d21294', class: "select-highlight" }))));
+            }) }, h("label", { key: 'fde3cdfd0ef7d1a20263e35ff4358ee7f61a789f', class: "select-wrapper", id: "select-label" }, this.renderLabelContainer(), h("div", { key: '6fb8deedc827b6be2f19f9e57a62efefaaba200f', class: "select-wrapper-inner" }, h("slot", { key: 'a57a204ea1cbd9c4bac338f14e196e780dab0a10', name: "start" }), h("div", { key: '78b83e1484a446537e038527d539d997e330cd69', class: "native-wrapper", ref: (el) => (this.nativeWrapperEl = el), part: "container" }, this.renderSelectText(), this.renderListbox()), h("slot", { key: '9fc660134e5247c4e5243c7d9d71ac6cec08705d', name: "end" }), !hasFloatingOrStackedLabel && this.renderSelectIcon()), hasFloatingOrStackedLabel && this.renderSelectIcon(), shouldRenderHighlight && h("div", { key: '7f143285efa7fd7756dfdc5517ca33e84c8a027e', class: "select-highlight" })), this.renderBottomContent()));
     }
     static get is() { return "ion-select"; }
     static get encapsulation() { return "shadow"; }
@@ -791,6 +862,40 @@ export class Select {
                     "text": "The fill for the item. If `\"solid\"` the item will have a background. If\n`\"outline\"` the item will be transparent with a border. Only available in `md` mode."
                 },
                 "attribute": "fill",
+                "reflect": false
+            },
+            "errorText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the select and displayed when an error is detected."
+                },
+                "attribute": "error-text",
+                "reflect": false
+            },
+            "helperText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the select and displayed when no error is detected."
+                },
+                "attribute": "helper-text",
                 "reflect": false
             },
             "interface": {
@@ -1042,6 +1147,24 @@ export class Select {
                 },
                 "attribute": "value",
                 "reflect": false
+            },
+            "required": {
+                "type": "boolean",
+                "mutable": false,
+                "complexType": {
+                    "original": "boolean",
+                    "resolved": "boolean",
+                    "references": {}
+                },
+                "required": false,
+                "optional": false,
+                "docs": {
+                    "tags": [],
+                    "text": "If true, screen readers will announce it as a required field. This property\nworks only for accessibility purposes, it will not prevent the form from\nsubmitting if the value is invalid."
+                },
+                "attribute": "required",
+                "reflect": false,
+                "defaultValue": "false"
             }
         };
     }

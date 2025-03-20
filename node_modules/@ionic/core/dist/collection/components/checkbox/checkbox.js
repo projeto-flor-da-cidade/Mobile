@@ -13,10 +13,15 @@ import { getIonMode } from "../../global/ionic-global";
  * @part container - The container for the checkbox mark.
  * @part label - The label text describing the checkbox.
  * @part mark - The checkmark used to indicate the checked state.
+ * @part supporting-text - Supporting text displayed beneath the checkbox label.
+ * @part helper-text - Supporting text displayed beneath the checkbox label when the checkbox is valid.
+ * @part error-text - Supporting text displayed beneath the checkbox label when the checkbox is invalid and touched.
  */
 export class Checkbox {
     constructor() {
         this.inputId = `ion-cb-${checkboxIds++}`;
+        this.helperTextId = `${this.inputId}-helper-text`;
+        this.errorTextId = `${this.inputId}-error-text`;
         this.inheritedAttributes = {};
         /**
          * Sets the checked property and emits
@@ -54,10 +59,13 @@ export class Checkbox {
         this.checked = false;
         this.indeterminate = false;
         this.disabled = false;
+        this.errorText = undefined;
+        this.helperText = undefined;
         this.value = 'on';
         this.labelPlacement = 'start';
         this.justify = undefined;
         this.alignment = undefined;
+        this.required = false;
     }
     componentWillLoad() {
         this.inheritedAttributes = Object.assign({}, inheritAriaAttributes(this.el));
@@ -68,12 +76,38 @@ export class Checkbox {
             this.focusEl.focus();
         }
     }
+    getHintTextID() {
+        const { el, helperText, errorText, helperTextId, errorTextId } = this;
+        if (el.classList.contains('ion-touched') && el.classList.contains('ion-invalid') && errorText) {
+            return errorTextId;
+        }
+        if (helperText) {
+            return helperTextId;
+        }
+        return undefined;
+    }
+    /**
+     * Responsible for rendering helper text and error text.
+     * This element should only be rendered if hint text is set.
+     */
+    renderHintText() {
+        const { helperText, errorText, helperTextId, errorTextId } = this;
+        /**
+         * undefined and empty string values should
+         * be treated as not having helper/error text.
+         */
+        const hasHintText = !!helperText || !!errorText;
+        if (!hasHintText) {
+            return;
+        }
+        return (h("div", { class: "checkbox-bottom" }, h("div", { id: helperTextId, class: "helper-text", part: "supporting-text helper-text" }, helperText), h("div", { id: errorTextId, class: "error-text", part: "supporting-text error-text" }, errorText)));
+    }
     render() {
-        const { color, checked, disabled, el, getSVGPath, indeterminate, inheritedAttributes, inputId, justify, labelPlacement, name, value, alignment, } = this;
+        const { color, checked, disabled, el, getSVGPath, indeterminate, inheritedAttributes, inputId, justify, labelPlacement, name, value, alignment, required, } = this;
         const mode = getIonMode(this);
         const path = getSVGPath(mode, indeterminate);
         renderHiddenInput(true, el, name, checked ? value : '', disabled);
-        return (h(Host, { key: '6dc787e1100521d08c4900104e1a3e2f594e919f', "aria-checked": indeterminate ? 'mixed' : `${checked}`, class: createColorClasses(color, {
+        return (h(Host, { key: '7ac31df89b07c781ddcd30a6a8c109494d0c500a', "aria-checked": indeterminate ? 'mixed' : `${checked}`, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId, class: createColorClasses(color, {
                 [mode]: true,
                 'in-item': hostContext('ion-item', el),
                 'checkbox-checked': checked,
@@ -83,10 +117,10 @@ export class Checkbox {
                 [`checkbox-justify-${justify}`]: justify !== undefined,
                 [`checkbox-alignment-${alignment}`]: alignment !== undefined,
                 [`checkbox-label-placement-${labelPlacement}`]: true,
-            }), onClick: this.onClick }, h("label", { key: '68222fb736a5ec3f2e488649b0e2ce0417dcb224', class: "checkbox-wrapper" }, h("input", Object.assign({ key: 'f12962d7e9b19c744cfdbdeccc67ae7f5d080281', type: "checkbox", checked: checked ? true : undefined, disabled: disabled, id: inputId, onChange: this.toggleChecked, onFocus: () => this.onFocus(), onBlur: () => this.onBlur(), ref: (focusEl) => (this.focusEl = focusEl) }, inheritedAttributes)), h("div", { key: 'c72df2699414b1e5a41a1bc267bc634f0c93dcff', class: {
+            }), onClick: this.onClick }, h("label", { key: '674e923fe1ec83a33c31d67b0d414d61ba8f9e4b', class: "checkbox-wrapper" }, h("input", Object.assign({ key: 'c4866e392fbdf3b76edcd1507cb67f40a213a4e7', type: "checkbox", checked: checked ? true : undefined, disabled: disabled, id: inputId, onChange: this.toggleChecked, onFocus: () => this.onFocus(), onBlur: () => this.onBlur(), ref: (focusEl) => (this.focusEl = focusEl), required: required }, inheritedAttributes)), h("div", { key: '79cb96e5963b9331a760438ec8cc9e456215de91', class: {
                 'label-text-wrapper': true,
                 'label-text-wrapper-hidden': el.textContent === '',
-            }, part: "label" }, h("slot", { key: 'a2a80285178a7e0e3b536fc9ca26b8b444aa4307' })), h("div", { key: 'c2b05e0d1fe8df5dcd72858220b5ff51ecaee4cc', class: "native-wrapper" }, h("svg", { key: 'ee24913fded72258ebd9713654a6dba92a18fcf7', class: "checkbox-icon", viewBox: "0 0 24 24", part: "container" }, path)))));
+            }, part: "label" }, h("slot", { key: '896cb26292c9a4a6c105afb39611472b93bf5e90' }), this.renderHintText()), h("div", { key: '52cd22e79fd5db30b45d7b092aa5af3944392336', class: "native-wrapper" }, h("svg", { key: '18d862ab7cc32055eaf200eea560ff1b2b6cbde0', class: "checkbox-icon", viewBox: "0 0 24 24", part: "container" }, path)))));
     }
     getSVGPath(mode, indeterminate) {
         let path = indeterminate ? (h("path", { d: "M6 12L18 12", part: "mark" })) : (h("path", { d: "M5.9,12.5l3.8,3.8l8.8-8.8", part: "mark" }));
@@ -206,6 +240,40 @@ export class Checkbox {
                 "reflect": false,
                 "defaultValue": "false"
             },
+            "errorText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the checkbox label and displayed when an error is detected."
+                },
+                "attribute": "error-text",
+                "reflect": false
+            },
+            "helperText": {
+                "type": "string",
+                "mutable": false,
+                "complexType": {
+                    "original": "string",
+                    "resolved": "string | undefined",
+                    "references": {}
+                },
+                "required": false,
+                "optional": true,
+                "docs": {
+                    "tags": [],
+                    "text": "Text that is placed under the checkbox label and displayed when no error is detected."
+                },
+                "attribute": "helper-text",
+                "reflect": false
+            },
             "value": {
                 "type": "any",
                 "mutable": false,
@@ -275,6 +343,24 @@ export class Checkbox {
                 },
                 "attribute": "alignment",
                 "reflect": false
+            },
+            "required": {
+                "type": "boolean",
+                "mutable": false,
+                "complexType": {
+                    "original": "boolean",
+                    "resolved": "boolean",
+                    "references": {}
+                },
+                "required": false,
+                "optional": false,
+                "docs": {
+                    "tags": [],
+                    "text": "If true, screen readers will announce it as a required field. This property\nworks only for accessibility purposes, it will not prevent the form from\nsubmitting if the value is invalid."
+                },
+                "attribute": "required",
+                "reflect": false,
+                "defaultValue": "false"
             }
         };
     }

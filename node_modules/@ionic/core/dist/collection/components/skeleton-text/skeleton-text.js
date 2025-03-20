@@ -25,11 +25,11 @@ export class SkeletonText {
         const animated = this.animated && config.getBoolean('animated', true);
         const inMedia = hostContext('ion-avatar', this.el) || hostContext('ion-thumbnail', this.el);
         const mode = getIonMode(this);
-        return (h(Host, { key: 'fdfabf9364caf507450239b62be24f08873bd650', class: {
+        return (h(Host, { key: 'c193f9a8e8efab5139544f047bdae4b6d421aa86', class: {
                 [mode]: true,
                 'skeleton-text-animated': animated,
                 'in-media': inMedia,
-            } }, h("span", { key: '3482c88dcc177547185ce87972afa064a542367d' }, "\u00A0")));
+            } }, h("span", { key: 'e15db679bd3c359b4df5123efd2f92e5b380fde3' }, "\u00A0")));
     }
     static get is() { return "ion-skeleton-text"; }
     static get encapsulation() { return "shadow"; }

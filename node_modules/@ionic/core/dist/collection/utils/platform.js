@@ -67,7 +67,8 @@ const isHybrid = (win) => isCordova(win) || isCapacitorNative(win);
 const isCordova = (win) => !!(win['cordova'] || win['phonegap'] || win['PhoneGap']);
 const isCapacitorNative = (win) => {
     const capacitor = win['Capacitor'];
-    return !!(capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNative);
+    // TODO(ROU-11693): Remove when we no longer support Capacitor 2, which does not have isNativePlatform
+    return !!((capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNative) || ((capacitor === null || capacitor === void 0 ? void 0 : capacitor.isNativePlatform) && !!capacitor.isNativePlatform()));
 };
 const isElectron = (win) => testUserAgent(win, /electron/i);
 const isPWA = (win) => { var _a; return !!(((_a = win.matchMedia) === null || _a === void 0 ? void 0 : _a.call(win, '(display-mode: standalone)').matches) || win.navigator.standalone); };

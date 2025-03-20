@@ -86,10 +86,10 @@ const PickerColumnOption = /*@__PURE__*/ proxyCustomElement(class PickerColumnOp
     render() {
         const { color, disabled, ariaLabel } = this;
         const mode = getIonMode(this);
-        return (h(Host, { key: 'c743c6ef44bb9f765cc15b3b5d2864de6520203a', class: createColorClasses(color, {
+        return (h(Host, { key: 'c1353e99c2aa19c0e3ddbe433557ed18e72e1c66', class: createColorClasses(color, {
                 [mode]: true,
                 ['option-disabled']: disabled,
-            }) }, h("button", { key: '4c3d9eb245c52b2c007f727e145cfb55759bd7a9', tabindex: "-1", "aria-label": ariaLabel, disabled: disabled, onClick: () => this.onClick() }, h("slot", { key: '4c907d2187cbe9d5941e27f2b12578e2b7271461' }))));
+            }) }, h("button", { key: 'b4ee62ecf7458a07a56e8aa494485766a87a3fcb', tabindex: "-1", "aria-label": ariaLabel, disabled: disabled, onClick: () => this.onClick() }, h("slot", { key: '9ab1e4700c27103b676670a4b3521c183c6ab83d' }))));
     }
     get el() { return this; }
     static get watchers() { return {

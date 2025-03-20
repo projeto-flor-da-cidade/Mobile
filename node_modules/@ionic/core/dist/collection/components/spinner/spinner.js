@@ -39,7 +39,7 @@ export class Spinner {
                 svgs.push(buildLine(spinner, duration, i, spinner.lines));
             }
         }
-        return (h(Host, { key: '9d30ee9f5aa0dd0e220da07e75d05b8b2435224d', class: createColorClasses(self.color, {
+        return (h(Host, { key: 'e0dfa8a3ee2a0469eb31323f506750bd77d65797', class: createColorClasses(self.color, {
                 [mode]: true,
                 [`spinner-${spinnerName}`]: true,
                 'spinner-paused': self.paused || config.getBoolean('_testing'),

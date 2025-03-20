@@ -30,10 +30,10 @@ const MenuToggle = /*@__PURE__*/ proxyCustomElement(class MenuToggle extends HTM
     render() {
         const mode = getIonMode(this);
         const hidden = this.autoHide && !this.visible;
-        return (h(Host, { key: '7c27ea5b0795676bf5cb33e1f83aa142c197f64e', onClick: this.onClick, "aria-hidden": hidden ? 'true' : null, class: {
+        return (h(Host, { key: '88e88fa13ac7f10ba3acfe378bd11cda0c7e2749', onClick: this.onClick, "aria-hidden": hidden ? 'true' : null, class: {
                 [mode]: true,
                 'menu-toggle-hidden': hidden,
-            } }, h("slot", { key: '69f187becedc0fe34603d41d279f043cf0fdf776' })));
+            } }, h("slot", { key: '0a14c7b63eda64702d2fd1b4bc7db4809892842d' })));
     }
     static get style() { return IonMenuToggleStyle0; }
 }, [1, "ion-menu-toggle", {

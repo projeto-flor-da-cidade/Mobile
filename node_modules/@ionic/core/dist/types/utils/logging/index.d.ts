@@ -1,3 +1,8 @@
+export declare const enum LogLevel {
+    OFF = "OFF",
+    ERROR = "ERROR",
+    WARN = "WARN"
+}
 /**
  * Logs a warning to the console with an Ionic prefix
  * to indicate the library that is warning the developer.
@@ -5,7 +10,14 @@
  * @param message - The string message to be logged to the console.
  */
 export declare const printIonWarning: (message: string, ...params: any[]) => void;
-export declare const printIonError: (message: string, ...params: any) => void;
+/**
+ * Logs an error to the console with an Ionic prefix
+ * to indicate the library that is warning the developer.
+ *
+ * @param message - The string message to be logged to the console.
+ * @param params - Additional arguments to supply to the console.error.
+ */
+export declare const printIonError: (message: string, ...params: any[]) => void;
 /**
  * Prints an error informing developers that an implementation requires an element to be used
  * within a specific selector.

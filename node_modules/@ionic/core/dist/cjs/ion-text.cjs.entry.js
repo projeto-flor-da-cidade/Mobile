@@ -5,9 +5,9 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-73f75efb.js');
+const index = require('./index-2e236a04.js');
 const theme = require('./theme-d1c573d2.js');
-const ionicGlobal = require('./ionic-global-d9a8bb5b.js');
+const ionicGlobal = require('./ionic-global-acb665ad.js');
 
 const textCss = ":host(.ion-color){color:var(--ion-color-base)}";
 const IonTextStyle0 = textCss;
@@ -19,9 +19,9 @@ const Text = class {
     }
     render() {
         const mode = ionicGlobal.getIonMode(this);
-        return (index.h(index.Host, { key: 'e134d70c04344b708a2ecf6253722781ad2ca826', class: theme.createColorClasses(this.color, {
+        return (index.h(index.Host, { key: '0c2546ea3f24b0a6bfd606199441d0a4edfa4ca1', class: theme.createColorClasses(this.color, {
                 [mode]: true,
-            }) }, index.h("slot", { key: 'da79c760f7ebbcd007ce110439f05a62cb22eac8' })));
+            }) }, index.h("slot", { key: 'b7623ccb06f9461090a1f33e9f85886c7a4d5eff' })));
     }
 };
 Text.style = IonTextStyle0;

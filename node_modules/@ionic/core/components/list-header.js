@@ -22,10 +22,10 @@ const ListHeader = /*@__PURE__*/ proxyCustomElement(class ListHeader extends HTM
     render() {
         const { lines } = this;
         const mode = getIonMode(this);
-        return (h(Host, { key: 'fb78bd8601cbd7b90ec84a96e0c8325be1132b1e', class: createColorClasses(this.color, {
+        return (h(Host, { key: '95ce2135e2b1ad4d7d6020b0fb9bc6e02b3c0851', class: createColorClasses(this.color, {
                 [mode]: true,
                 [`list-header-lines-${lines}`]: lines !== undefined,
-            }) }, h("div", { key: '2580ad49f3a54973e15f14d645a1e55a6fa066ac', class: "list-header-inner" }, h("slot", { key: '677b2e2ec8eeb3ae6ad329e86c76451cf3ae6c2f' }))));
+            }) }, h("div", { key: '3065b0a094bc31a90518898a5126a813c8a33816', class: "list-header-inner" }, h("slot", { key: 'fe15c87d7867f3e5d8185645c49c0228496697b8' }))));
     }
     static get style() { return {
         ios: IonListHeaderIosStyle0,

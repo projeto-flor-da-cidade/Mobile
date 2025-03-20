@@ -621,7 +621,7 @@ export class Refresher {
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '9d4ac22988aec2c6af0b0c90934c52f62f0e4ce3', slot: "fixed", class: {
+        return (h(Host, { key: '4c36bffbfa32ef1bd28a60f4455c125842880659', slot: "fixed", class: {
                 [mode]: true,
                 // Used internally for styling
                 [`refresher-${mode}`]: true,

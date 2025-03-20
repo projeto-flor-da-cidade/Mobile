@@ -27,11 +27,11 @@ export class ToolbarTitle {
     render() {
         const mode = getIonMode(this);
         const size = this.getSize();
-        return (h(Host, { key: '7293d2ecd6262feb0d8d769effbb208230baed89', class: createColorClasses(this.color, {
+        return (h(Host, { key: '3f7b19c99961dbb86c0a925218332528b22e6880', class: createColorClasses(this.color, {
                 [mode]: true,
                 [`title-${size}`]: true,
                 'title-rtl': document.dir === 'rtl',
-            }) }, h("div", { key: '086ec3a361ebdf6506846a8704b457cda3a6f897', class: "toolbar-title" }, h("slot", { key: '59add7eb92b82d6832a8f0894f897c51fdf4f214' }))));
+            }) }, h("div", { key: '12054fbdd60e40a15875e442c20143766fc34fc3', class: "toolbar-title" }, h("slot", { key: '9f14fb14a67d4bd1e4536a4d64a637fbe5a151c7' }))));
     }
     static get is() { return "ion-title"; }
     static get encapsulation() { return "shadow"; }

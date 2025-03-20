@@ -1,6 +1,7 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
+import { config } from "../../global/config";
 /**
  * Logs a warning to the console with an Ionic prefix
  * to indicate the library that is warning the developer.
@@ -8,9 +9,12 @@
  * @param message - The string message to be logged to the console.
  */
 export const printIonWarning = (message, ...params) => {
-    return console.warn(`[Ionic Warning]: ${message}`, ...params);
+    const logLevel = config.get('logLevel', "WARN" /* LogLevel.WARN */);
+    if (["WARN" /* LogLevel.WARN */].includes(logLevel)) {
+        return console.warn(`[Ionic Warning]: ${message}`, ...params);
+    }
 };
-/*
+/**
  * Logs an error to the console with an Ionic prefix
  * to indicate the library that is warning the developer.
  *
@@ -18,7 +22,10 @@ export const printIonWarning = (message, ...params) => {
  * @param params - Additional arguments to supply to the console.error.
  */
 export const printIonError = (message, ...params) => {
-    return console.error(`[Ionic Error]: ${message}`, ...params);
+    const logLevel = config.get('logLevel', "ERROR" /* LogLevel.ERROR */);
+    if (["ERROR" /* LogLevel.ERROR */, "WARN" /* LogLevel.WARN */].includes(logLevel)) {
+        return console.error(`[Ionic Error]: ${message}`, ...params);
+    }
 };
 /**
  * Prints an error informing developers that an implementation requires an element to be used

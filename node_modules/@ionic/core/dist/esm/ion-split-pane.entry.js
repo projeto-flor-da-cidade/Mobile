@@ -1,8 +1,8 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, d as createEvent, h, f as Host, i as getElement } from './index-28849c61.js';
-import { b as getIonMode } from './ionic-global-c81d82ab.js';
+import { r as registerInstance, c as createEvent, h, e as Host, f as getElement } from './index-527b9e34.js';
+import { b as getIonMode } from './ionic-global-ca86cf32.js';
 
 const splitPaneIosCss = ":host{--side-width:100%;left:0;right:0;top:0;bottom:0;display:-ms-flexbox;display:flex;position:absolute;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:nowrap;flex-wrap:nowrap;contain:strict}:host(.split-pane-visible) ::slotted(.split-pane-main){left:0;right:0;top:0;bottom:0;position:relative;-ms-flex:1;flex:1;-webkit-box-shadow:none;box-shadow:none;overflow:hidden;z-index:0}::slotted(.split-pane-side:not(ion-menu)){display:none}:host{--border:0.55px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-250, var(--ion-background-color-step-250, #c8c7cc))));--side-min-width:270px;--side-max-width:28%}";
 const IonSplitPaneIosStyle0 = splitPaneIosCss;
@@ -121,12 +121,12 @@ const SplitPane = class {
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '1ca0b0299d03605bb358112ca56cbafbe58f00f5', class: {
+        return (h(Host, { key: '76be70d7fbebc52646a5851f47accc1006615b85', class: {
                 [mode]: true,
                 // Used internally for styling
                 [`split-pane-${mode}`]: true,
                 'split-pane-visible': this.visible,
-            } }, h("slot", { key: 'abe231361727ae7fc63edd592a4490caac1909fb' })));
+            } }, h("slot", { key: '9a859530f4fb18aff43255bc3940feb9aca625d7' })));
     }
     get el() { return getElement(this); }
     static get watchers() { return {

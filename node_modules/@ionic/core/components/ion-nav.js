@@ -905,7 +905,7 @@ const Nav = /*@__PURE__*/ proxyCustomElement(class Nav extends HTMLElement {
         }
     }
     render() {
-        return h("slot", { key: 'dfe98cb6604a2015a49f41beffebdd2da957dfff' });
+        return h("slot", { key: '71e9b5d07fc90ca5534197a63a003a4154aabd59' });
     }
     get el() { return this; }
     static get watchers() { return {

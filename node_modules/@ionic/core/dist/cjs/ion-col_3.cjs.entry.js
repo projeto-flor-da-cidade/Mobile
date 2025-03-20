@@ -5,8 +5,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-73f75efb.js');
-const ionicGlobal = require('./ionic-global-d9a8bb5b.js');
+const index = require('./index-2e236a04.js');
+const ionicGlobal = require('./ionic-global-acb665ad.js');
 
 const SIZE_TO_MEDIA = {
     xs: '(min-width: 0px)',
@@ -173,7 +173,7 @@ const Row = class {
         index.registerInstance(this, hostRef);
     }
     render() {
-        return (index.h(index.Host, { key: 'aea072a5005e3f1f309f0d1ae5be5ee19869b035', class: ionicGlobal.getIonMode(this) }, index.h("slot", { key: '2a481c2126ac6ca65f0a1bbd07c2d3365409cb78' })));
+        return (index.h(index.Host, { key: 'a690022e2abdce6946d24264574e4aa0886a8ea5', class: ionicGlobal.getIonMode(this) }, index.h("slot", { key: 'd1a0e831dd1dbfe7877d3ad01d0a3045a5fb29e3' })));
     }
 };
 Row.style = IonRowStyle0;

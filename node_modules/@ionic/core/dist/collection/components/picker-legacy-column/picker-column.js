@@ -336,9 +336,9 @@ export class PickerColumnCmp {
     render() {
         const col = this.col;
         const mode = getIonMode(this);
-        return (h(Host, { key: 'c015eb8bc01b3287cbd1d71af0aa311b6be89d36', class: Object.assign({ [mode]: true, 'picker-col': true, 'picker-opts-left': this.col.align === 'left', 'picker-opts-right': this.col.align === 'right' }, getClassMap(col.cssClass)), style: {
+        return (h(Host, { key: '88a3c9397c9ac92dd814074c8ae6ecf8e3420a2c', class: Object.assign({ [mode]: true, 'picker-col': true, 'picker-opts-left': this.col.align === 'left', 'picker-opts-right': this.col.align === 'right' }, getClassMap(col.cssClass)), style: {
                 'max-width': this.col.columnWidth,
-            } }, col.prefix && (h("div", { key: 'f9de3fe2f5c7ad3256d6e5f44b6d03a2b1f96ffb', class: "picker-prefix", style: { width: col.prefixWidth } }, col.prefix)), h("div", { key: '10f9c12aa174f96c7cf9adc30efbb26695c0aa64', class: "picker-opts", style: { maxWidth: col.optionsWidth }, ref: (el) => (this.optsEl = el) }, col.options.map((o, index) => (h("button", { "aria-label": o.ariaLabel, class: { 'picker-opt': true, 'picker-opt-disabled': !!o.disabled }, "opt-index": index }, o.text)))), col.suffix && (h("div", { key: '1d9c0892ce56e0da9044c79eb953827166f5190b', class: "picker-suffix", style: { width: col.suffixWidth } }, col.suffix))));
+            } }, col.prefix && (h("div", { key: '4491a705d15337e6f45f3cf6fd21af5242474729', class: "picker-prefix", style: { width: col.prefixWidth } }, col.prefix)), h("div", { key: 'b0dd4b7a7a4c1edc4b73e7fb134ac85264072365', class: "picker-opts", style: { maxWidth: col.optionsWidth }, ref: (el) => (this.optsEl = el) }, col.options.map((o, index) => (h("button", { "aria-label": o.ariaLabel, class: { 'picker-opt': true, 'picker-opt-disabled': !!o.disabled }, "opt-index": index }, o.text)))), col.suffix && (h("div", { key: 'c16419ce6481d60fc3ba6b8d102a4edf0ede02aa', class: "picker-suffix", style: { width: col.suffixWidth } }, col.suffix))));
     }
     static get is() { return "ion-picker-legacy-column"; }
     static get originalStyleUrls() {

@@ -1,11 +1,11 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { r as registerInstance, h, f as Host, i as getElement } from './index-28849c61.js';
-import { p as printIonWarning } from './index-9b0d46f4.js';
+import { r as registerInstance, h, e as Host, f as getElement } from './index-527b9e34.js';
+import { p as printIonWarning } from './index-738d7504.js';
 import { c as createColorClasses } from './theme-01f3f29c.js';
 import { x as eye, y as eyeOff } from './index-e2cf2ceb.js';
-import { b as getIonMode } from './ionic-global-c81d82ab.js';
+import { b as getIonMode } from './ionic-global-ca86cf32.js';
 
 const iosInputPasswordToggleCss = "";
 const IonInputPasswordToggleIosStyle0 = iosInputPasswordToggleCss;

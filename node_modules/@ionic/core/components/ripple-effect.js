@@ -66,7 +66,7 @@ const RippleEffect = /*@__PURE__*/ proxyCustomElement(class RippleEffect extends
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '7ae559bda5d2c1856a45bfa150c2cb4f83373f8e', role: "presentation", class: {
+        return (h(Host, { key: '40c7f73e7f5f67e29f83e1236a61c6e1c9943c42', role: "presentation", class: {
                 [mode]: true,
                 unbounded: this.unbounded,
             } }));

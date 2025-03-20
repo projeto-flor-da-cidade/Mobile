@@ -20,9 +20,9 @@ const Note = /*@__PURE__*/ proxyCustomElement(class Note extends HTMLElement {
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: '10a3495bc21166176986441479f8f7539029d161', class: createColorClasses(this.color, {
+        return (h(Host, { key: '3c3d9b2aa805c0bc1fdc6270a2bbf4dcc1b96c5b', class: createColorClasses(this.color, {
                 [mode]: true,
-            }) }, h("slot", { key: 'b6a9459e1b85f608fafd060a4bfeb11637ebe873' })));
+            }) }, h("slot", { key: '39e34682009fcb705ecafe51825162734bdf14d3' })));
     }
     static get style() { return {
         ios: IonNoteIosStyle0,

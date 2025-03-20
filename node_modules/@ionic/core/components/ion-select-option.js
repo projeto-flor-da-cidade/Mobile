@@ -17,7 +17,7 @@ const SelectOption = /*@__PURE__*/ proxyCustomElement(class SelectOption extends
         this.value = undefined;
     }
     render() {
-        return h(Host, { key: '2e6fa159464f04f6d8720f960141f67918bc7534', role: "option", id: this.inputId, class: getIonMode(this) });
+        return h(Host, { key: '8c96c199ce3a3065de3fe446500f567236e0610a', role: "option", id: this.inputId, class: getIonMode(this) });
     }
     get el() { return this; }
     static get style() { return IonSelectOptionStyle0; }

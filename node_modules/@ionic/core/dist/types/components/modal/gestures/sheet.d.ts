@@ -29,7 +29,7 @@ export interface MoveSheetToBreakpointOptions {
      */
     animated: boolean;
 }
-export declare const createSheetGesture: (baseEl: HTMLIonModalElement, backdropEl: HTMLIonBackdropElement, wrapperEl: HTMLElement, initialBreakpoint: number, backdropBreakpoint: number, animation: Animation, breakpoints: number[] | undefined, getCurrentBreakpoint: () => number, onDismiss: () => void, onBreakpointChange: (breakpoint: number) => void) => {
+export declare const createSheetGesture: (baseEl: HTMLIonModalElement, backdropEl: HTMLIonBackdropElement, wrapperEl: HTMLElement, initialBreakpoint: number, backdropBreakpoint: number, animation: Animation, breakpoints: number[] | undefined, expandToScroll: boolean, getCurrentBreakpoint: () => number, onDismiss: () => void, onBreakpointChange: (breakpoint: number) => void) => {
     gesture: import("@utils/gesture").Gesture;
     moveSheetToBreakpoint: (options: MoveSheetToBreakpointOptions) => Promise<void>;
 };

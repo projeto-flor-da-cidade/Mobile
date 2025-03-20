@@ -201,6 +201,12 @@ ion-backdrop {
   bottom: 0;
 }
 
+:host(.modal-sheet.modal-no-expand-scroll) ion-footer {
+  position: absolute;
+  bottom: 0;
+  width: var(--width);
+}
+
 /**
  * Convert a font size to a dynamic font size.
  * Fonts that participate in Dynamic Type should use
@@ -325,4 +331,14 @@ ion-backdrop {
   border-start-end-radius: var(--border-radius);
   border-end-end-radius: 0;
   border-end-start-radius: 0;
+}
+
+/**
+ * Sheet modals require an additional padding as mentioned in the
+ * `core.scss` file. However, there's a workaround that requires
+ * a cloned footer to be added to the modal. This is only necessary
+ * because the core styles are not being applied to the cloned footer.
+ */
+:host(.modal-sheet.modal-no-expand-scroll) ion-footer ion-toolbar:first-of-type {
+  padding-top: 6px;
 }

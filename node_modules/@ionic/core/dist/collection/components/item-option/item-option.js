@@ -44,12 +44,12 @@ export class ItemOption {
                 href: this.href,
                 target: this.target,
             };
-        return (h(Host, { key: '89310624997821858c1abde60c0ffb142ca466e0', onClick: this.onClick, class: createColorClasses(this.color, {
+        return (h(Host, { key: '1b7708dd178dc2c9280652ca3da38c84ba7b767f', onClick: this.onClick, class: createColorClasses(this.color, {
                 [mode]: true,
                 'item-option-disabled': disabled,
                 'item-option-expandable': expandable,
                 'ion-activatable': true,
-            }) }, h(TagType, Object.assign({ key: 'e4dfbb3048eed03a7f7e84c6f75545e0ca9b45fb' }, attrs, { class: "button-native", part: "native", disabled: disabled }), h("span", { key: 'dffcf437fbdc15f2e7a19e60a015e90c73c8377d', class: "button-inner" }, h("slot", { key: '48a23512e0601e062118d8b2c46c8bb96f25509f', name: "top" }), h("div", { key: '952a9a9aa3a476aa1f4408d7e208bf9e916b8c30', class: "horizontal-wrapper" }, h("slot", { key: 'f8d18a61c1ecec4a22a55443cf72bbc51383b64f', name: "start" }), h("slot", { key: '1f9f219e6f879d2e0bf6d80cf0d3f518eb14ce0e', name: "icon-only" }), h("slot", { key: 'a55adcdbe68131e5b1855c2dd45dd9454ab544fb' }), h("slot", { key: '3c4c85a4fbb7efc797d8bc5adf6d238da022ff9f', name: "end" })), h("slot", { key: '503c7e4b306745c523f57f24399ea06ba9b1e21d', name: "bottom" })), mode === 'md' && h("ion-ripple-effect", { key: 'b0e270b0c4f3ff9f9b6d74bad12a9278d7633226' }))));
+            }) }, h(TagType, Object.assign({ key: 'd9f899f5425ad6b97071494485aa3ca90bc89d30' }, attrs, { class: "button-native", part: "native", disabled: disabled }), h("span", { key: 'adc2cf72b4363be9b9eeb3584723e2bfc862af20', class: "button-inner" }, h("slot", { key: 'e668fe8e655a74e6a35e979e0cd488506b962dbf', name: "top" }), h("div", { key: '2ddcdb92b6b19c3cc549a7aee2400d1a6eeb51f1', class: "horizontal-wrapper" }, h("slot", { key: '441f13df18b72e5ed6bb51b157722e065b5847d2', name: "start" }), h("slot", { key: '425d815874b49e1628880160d7175ed3ca36ca39', name: "icon-only" }), h("slot", { key: '27437d3fa3365b12bc030704e18481fdfb14aebb' }), h("slot", { key: 'bd39330771c7f85c6df10f7f9050335ee7f14ff0', name: "end" })), h("slot", { key: '440cb6dc7743d50b261d4bf61d2c24e24b89e58c', name: "bottom" })), mode === 'md' && h("ion-ripple-effect", { key: '29632941464bbb34551cf64961187643f62bf755' }))));
     }
     static get is() { return "ion-item-option"; }
     static get encapsulation() { return "shadow"; }

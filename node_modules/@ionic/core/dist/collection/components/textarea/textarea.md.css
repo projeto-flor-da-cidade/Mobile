@@ -373,6 +373,7 @@
   justify-content: space-between;
   border-top: var(--border-width) var(--border-style) var(--border-color);
   font-size: 0.75rem;
+  white-space: normal;
 }
 
 /**
@@ -396,7 +397,7 @@
 
 .textarea-bottom .helper-text {
   display: block;
-  color: var(--ion-color-step-550, var(--ion-text-color-step-450, #737373));
+  color: var(--ion-color-step-700, var(--ion-text-color-step-300, #4d4d4d));
 }
 
 :host(.ion-touched.ion-invalid) .textarea-bottom .error-text {
@@ -415,7 +416,7 @@
    */
   -webkit-margin-start: auto;
   margin-inline-start: auto;
-  color: var(--ion-color-step-550, var(--ion-text-color-step-450, #737373));
+  color: var(--ion-color-step-700, var(--ion-text-color-step-300, #4d4d4d));
   white-space: nowrap;
   padding-inline-start: 16px;
 }
@@ -928,6 +929,10 @@
   --border-color: var(--highlight-color);
 }
 
+/**
+ * The bottom content should never have
+ * a border with the solid style.
+ */
 :host(.textarea-fill-solid) .textarea-bottom {
   border-top: none;
 }

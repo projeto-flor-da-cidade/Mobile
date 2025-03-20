@@ -500,7 +500,7 @@ const computeDuration = (remaining, velocity) => {
 };
 
 const createSheetEnterAnimation = (opts) => {
-    const { currentBreakpoint, backdropBreakpoint } = opts;
+    const { currentBreakpoint, backdropBreakpoint, expandToScroll } = opts;
     /**
      * If the backdropBreakpoint is undefined, then the backdrop
      * should always fade in. If the backdropBreakpoint came before the
@@ -520,7 +520,16 @@ const createSheetEnterAnimation = (opts) => {
         { offset: 0, opacity: 1, transform: 'translateY(100%)' },
         { offset: 1, opacity: 1, transform: `translateY(${100 - currentBreakpoint * 100}%)` },
     ]);
-    return { wrapperAnimation, backdropAnimation };
+    /**
+     * This allows the content to be scrollable at any breakpoint.
+     */
+    const contentAnimation = !expandToScroll
+        ? createAnimation('contentAnimation').keyframes([
+            { offset: 0, opacity: 1, maxHeight: `${(1 - currentBreakpoint) * 100}%` },
+            { offset: 1, opacity: 1, maxHeight: `${currentBreakpoint * 100}%` },
+        ])
+        : undefined;
+    return { wrapperAnimation, backdropAnimation, contentAnimation };
 };
 const createSheetLeaveAnimation = (opts) => {
     const { currentBreakpoint, backdropBreakpoint } = opts;
@@ -555,22 +564,68 @@ const createEnterAnimation$1 = () => {
     })
         .afterClearStyles(['pointer-events']);
     const wrapperAnimation = createAnimation().fromTo('transform', 'translateY(100vh)', 'translateY(0vh)');
-    return { backdropAnimation, wrapperAnimation };
+    return { backdropAnimation, wrapperAnimation, contentAnimation: undefined };
 };
 /**
  * iOS Modal Enter Animation for the Card presentation style
  */
 const iosEnterAnimation = (baseEl, opts) => {
-    const { presentingEl, currentBreakpoint } = opts;
+    const { presentingEl, currentBreakpoint, expandToScroll } = opts;
     const root = getElementRoot(baseEl);
-    const { wrapperAnimation, backdropAnimation } = currentBreakpoint !== undefined ? createSheetEnterAnimation(opts) : createEnterAnimation$1();
+    const { wrapperAnimation, backdropAnimation, contentAnimation } = currentBreakpoint !== undefined ? createSheetEnterAnimation(opts) : createEnterAnimation$1();
     backdropAnimation.addElement(root.querySelector('ion-backdrop'));
     wrapperAnimation.addElement(root.querySelectorAll('.modal-wrapper, .modal-shadow')).beforeStyles({ opacity: 1 });
+    // The content animation is only added if scrolling is enabled for
+    // all the breakpoints.
+    !expandToScroll && (contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.addElement(baseEl.querySelector('.ion-page')));
     const baseAnimation = createAnimation('entering-base')
         .addElement(baseEl)
         .easing('cubic-bezier(0.32,0.72,0,1)')
         .duration(500)
-        .addAnimation(wrapperAnimation);
+        .addAnimation([wrapperAnimation])
+        .beforeAddWrite(() => {
+        if (expandToScroll) {
+            // Scroll can only be done when the modal is fully expanded.
+            return;
+        }
+        /**
+         * There are some browsers that causes flickering when
+         * dragging the content when scroll is enabled at every
+         * breakpoint. This is due to the wrapper element being
+         * transformed off the screen and having a snap animation.
+         *
+         * A workaround is to clone the footer element and append
+         * it outside of the wrapper element. This way, the footer
+         * is still visible and the drag can be done without
+         * flickering. The original footer is hidden until the modal
+         * is dismissed. This maintains the animation of the footer
+         * when the modal is dismissed.
+         *
+         * The workaround needs to be done before the animation starts
+         * so there are no flickering issues.
+         */
+        const ionFooter = baseEl.querySelector('ion-footer');
+        /**
+         * This check is needed to prevent more than one footer
+         * from being appended to the shadow root.
+         * Otherwise, iOS and MD enter animations would append
+         * the footer twice.
+         */
+        const ionFooterAlreadyAppended = baseEl.shadowRoot.querySelector('ion-footer');
+        if (ionFooter && !ionFooterAlreadyAppended) {
+            const footerHeight = ionFooter.clientHeight;
+            const clonedFooter = ionFooter.cloneNode(true);
+            baseEl.shadowRoot.appendChild(clonedFooter);
+            ionFooter.style.setProperty('display', 'none');
+            ionFooter.setAttribute('aria-hidden', 'true');
+            // Padding is added to prevent some content from being hidden.
+            const page = baseEl.querySelector('.ion-page');
+            page.style.setProperty('padding-bottom', `${footerHeight}px`);
+        }
+    });
+    if (contentAnimation) {
+        baseAnimation.addAnimation(contentAnimation);
+    }
     if (presentingEl) {
         const isMobile = window.innerWidth < 768;
         const hasCardModal = presentingEl.tagName === 'ION-MODAL' && presentingEl.presentingElement !== undefined;
@@ -648,7 +703,7 @@ const createLeaveAnimation$1 = () => {
  * iOS Modal Leave Animation
  */
 const iosLeaveAnimation = (baseEl, opts, duration = 500) => {
-    const { presentingEl, currentBreakpoint } = opts;
+    const { presentingEl, currentBreakpoint, expandToScroll } = opts;
     const root = getElementRoot(baseEl);
     const { wrapperAnimation, backdropAnimation } = currentBreakpoint !== undefined ? createSheetLeaveAnimation(opts) : createLeaveAnimation$1();
     backdropAnimation.addElement(root.querySelector('ion-backdrop'));
@@ -657,7 +712,29 @@ const iosLeaveAnimation = (baseEl, opts, duration = 500) => {
         .addElement(baseEl)
         .easing('cubic-bezier(0.32,0.72,0,1)')
         .duration(duration)
-        .addAnimation(wrapperAnimation);
+        .addAnimation(wrapperAnimation)
+        .beforeAddWrite(() => {
+        if (expandToScroll) {
+            // Scroll can only be done when the modal is fully expanded.
+            return;
+        }
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the visibility to the original, so the footer
+         * dismisses with the modal and doesn't stay
+         * until the modal is removed from the DOM.
+         */
+        const ionFooter = baseEl.querySelector('ion-footer');
+        if (ionFooter) {
+            const clonedFooter = baseEl.shadowRoot.querySelector('ion-footer');
+            ionFooter.style.removeProperty('display');
+            ionFooter.removeAttribute('aria-hidden');
+            clonedFooter.style.setProperty('display', 'none');
+            clonedFooter.setAttribute('aria-hidden', 'true');
+            const page = baseEl.querySelector('.ion-page');
+            page.style.removeProperty('padding-bottom');
+        }
+    });
     if (presentingEl) {
         const isMobile = window.innerWidth < 768;
         const hasCardModal = presentingEl.tagName === 'ION-MODAL' && presentingEl.presentingElement !== undefined;
@@ -735,22 +812,69 @@ const createEnterAnimation = () => {
         { offset: 0, opacity: 0.01, transform: 'translateY(40px)' },
         { offset: 1, opacity: 1, transform: `translateY(0px)` },
     ]);
-    return { backdropAnimation, wrapperAnimation };
+    return { backdropAnimation, wrapperAnimation, contentAnimation: undefined };
 };
 /**
  * Md Modal Enter Animation
  */
 const mdEnterAnimation = (baseEl, opts) => {
-    const { currentBreakpoint } = opts;
+    const { currentBreakpoint, expandToScroll } = opts;
     const root = getElementRoot(baseEl);
-    const { wrapperAnimation, backdropAnimation } = currentBreakpoint !== undefined ? createSheetEnterAnimation(opts) : createEnterAnimation();
+    const { wrapperAnimation, backdropAnimation, contentAnimation } = currentBreakpoint !== undefined ? createSheetEnterAnimation(opts) : createEnterAnimation();
     backdropAnimation.addElement(root.querySelector('ion-backdrop'));
     wrapperAnimation.addElement(root.querySelector('.modal-wrapper'));
-    return createAnimation()
+    // The content animation is only added if scrolling is enabled for
+    // all the breakpoints.
+    expandToScroll && (contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.addElement(baseEl.querySelector('.ion-page')));
+    const baseAnimation = createAnimation()
         .addElement(baseEl)
         .easing('cubic-bezier(0.36,0.66,0.04,1)')
         .duration(280)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
+        .addAnimation([backdropAnimation, wrapperAnimation])
+        .beforeAddWrite(() => {
+        if (expandToScroll) {
+            // Scroll can only be done when the modal is fully expanded.
+            return;
+        }
+        /**
+         * There are some browsers that causes flickering when
+         * dragging the content when scroll is enabled at every
+         * breakpoint. This is due to the wrapper element being
+         * transformed off the screen and having a snap animation.
+         *
+         * A workaround is to clone the footer element and append
+         * it outside of the wrapper element. This way, the footer
+         * is still visible and the drag can be done without
+         * flickering. The original footer is hidden until the modal
+         * is dismissed. This maintains the animation of the footer
+         * when the modal is dismissed.
+         *
+         * The workaround needs to be done before the animation starts
+         * so there are no flickering issues.
+         */
+        const ionFooter = baseEl.querySelector('ion-footer');
+        /**
+         * This check is needed to prevent more than one footer
+         * from being appended to the shadow root.
+         * Otherwise, iOS and MD enter animations would append
+         * the footer twice.
+         */
+        const ionFooterAlreadyAppended = baseEl.shadowRoot.querySelector('ion-footer');
+        if (ionFooter && !ionFooterAlreadyAppended) {
+            const footerHeight = ionFooter.clientHeight;
+            const clonedFooter = ionFooter.cloneNode(true);
+            baseEl.shadowRoot.appendChild(clonedFooter);
+            ionFooter.style.setProperty('display', 'none');
+            ionFooter.setAttribute('aria-hidden', 'true');
+            // Padding is added to prevent some content from being hidden.
+            const page = baseEl.querySelector('.ion-page');
+            page.style.setProperty('padding-bottom', `${footerHeight}px`);
+        }
+    });
+    if (contentAnimation) {
+        baseAnimation.addAnimation(contentAnimation);
+    }
+    return baseAnimation;
 };
 
 const createLeaveAnimation = () => {
@@ -765,18 +889,41 @@ const createLeaveAnimation = () => {
  * Md Modal Leave Animation
  */
 const mdLeaveAnimation = (baseEl, opts) => {
-    const { currentBreakpoint } = opts;
+    const { currentBreakpoint, expandToScroll } = opts;
     const root = getElementRoot(baseEl);
     const { wrapperAnimation, backdropAnimation } = currentBreakpoint !== undefined ? createSheetLeaveAnimation(opts) : createLeaveAnimation();
     backdropAnimation.addElement(root.querySelector('ion-backdrop'));
     wrapperAnimation.addElement(root.querySelector('.modal-wrapper'));
-    return createAnimation()
+    const baseAnimation = createAnimation()
         .easing('cubic-bezier(0.47,0,0.745,0.715)')
         .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
+        .addAnimation([backdropAnimation, wrapperAnimation])
+        .beforeAddWrite(() => {
+        if (expandToScroll) {
+            // Scroll can only be done when the modal is fully expanded.
+            return;
+        }
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the visibility to the original, so the footer
+         * dismisses with the modal and doesn't stay
+         * until the modal is removed from the DOM.
+         */
+        const ionFooter = baseEl.querySelector('ion-footer');
+        if (ionFooter) {
+            const clonedFooter = baseEl.shadowRoot.querySelector('ion-footer');
+            ionFooter.style.removeProperty('display');
+            ionFooter.removeAttribute('aria-hidden');
+            clonedFooter.style.setProperty('display', 'none');
+            clonedFooter.setAttribute('aria-hidden', 'true');
+            const page = baseEl.querySelector('.ion-page');
+            page.style.removeProperty('padding-bottom');
+        }
+    });
+    return baseAnimation;
 };
 
-const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, animation, breakpoints = [], getCurrentBreakpoint, onDismiss, onBreakpointChange) => {
+const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, animation, breakpoints = [], expandToScroll, getCurrentBreakpoint, onDismiss, onBreakpointChange) => {
     // Defaults for the sheet swipe animation
     const defaultBackdrop = [
         { offset: 0, opacity: 'var(--backdrop-opacity)' },
@@ -793,17 +940,23 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
             { offset: 1, transform: 'translateY(100%)' },
         ],
         BACKDROP_KEYFRAMES: backdropBreakpoint !== 0 ? customBackdrop : defaultBackdrop,
+        CONTENT_KEYFRAMES: [
+            { offset: 0, maxHeight: '100%' },
+            { offset: 1, maxHeight: '0%' },
+        ],
     };
     const contentEl = baseEl.querySelector('ion-content');
     const height = wrapperEl.clientHeight;
     let currentBreakpoint = initialBreakpoint;
     let offset = 0;
     let canDismissBlocksGesture = false;
+    let cachedScrollEl = null;
     const canDismissMaxStep = 0.95;
-    const wrapperAnimation = animation.childAnimations.find((ani) => ani.id === 'wrapperAnimation');
-    const backdropAnimation = animation.childAnimations.find((ani) => ani.id === 'backdropAnimation');
     const maxBreakpoint = breakpoints[breakpoints.length - 1];
     const minBreakpoint = breakpoints[0];
+    const wrapperAnimation = animation.childAnimations.find((ani) => ani.id === 'wrapperAnimation');
+    const backdropAnimation = animation.childAnimations.find((ani) => ani.id === 'backdropAnimation');
+    const contentAnimation = animation.childAnimations.find((ani) => ani.id === 'contentAnimation');
     const enableBackdrop = () => {
         baseEl.style.setProperty('pointer-events', 'auto');
         backdropEl.style.setProperty('pointer-events', 'auto');
@@ -827,6 +980,31 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
         baseEl.classList.add(FOCUS_TRAP_DISABLE_CLASS);
     };
     /**
+     * Toggles the visible modal footer when `expandToScroll` is disabled.
+     * @param footer The footer to show.
+     */
+    const swapFooterVisibility = (footer) => {
+        const originalFooter = baseEl.querySelector('ion-footer');
+        if (!originalFooter) {
+            return;
+        }
+        const clonedFooter = wrapperEl.nextElementSibling;
+        const footerToHide = footer === 'original' ? clonedFooter : originalFooter;
+        const footerToShow = footer === 'original' ? originalFooter : clonedFooter;
+        footerToShow.style.removeProperty('display');
+        footerToShow.removeAttribute('aria-hidden');
+        const page = baseEl.querySelector('.ion-page');
+        if (footer === 'original') {
+            page.style.removeProperty('padding-bottom');
+        }
+        else {
+            const pagePadding = footerToShow.clientHeight;
+            page.style.setProperty('padding-bottom', `${pagePadding}px`);
+        }
+        footerToHide.style.setProperty('display', 'none');
+        footerToHide.setAttribute('aria-hidden', 'true');
+    };
+    /**
      * After the entering animation completes,
      * we need to set the animation to go from
      * offset 0 to offset 1 so that users can
@@ -837,6 +1015,7 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
     if (wrapperAnimation && backdropAnimation) {
         wrapperAnimation.keyframes([...SheetDefaults.WRAPPER_KEYFRAMES]);
         backdropAnimation.keyframes([...SheetDefaults.BACKDROP_KEYFRAMES]);
+        contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.keyframes([...SheetDefaults.CONTENT_KEYFRAMES]);
         animation.progressStart(true, 1 - currentBreakpoint);
         /**
          * If backdrop is not enabled, then content
@@ -853,7 +1032,7 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
             disableBackdrop();
         }
     }
-    if (contentEl && currentBreakpoint !== maxBreakpoint) {
+    if (contentEl && currentBreakpoint !== maxBreakpoint && expandToScroll) {
         contentEl.scrollY = false;
     }
     const canStart = (detail) => {
@@ -867,6 +1046,14 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
          */
         const contentEl = findClosestIonContent(detail.event.target);
         currentBreakpoint = getCurrentBreakpoint();
+        /**
+         * If `expandToScroll` is disabled, we should not allow the swipe gesture
+         * to start if the content is not scrolled to the top.
+         */
+        if (!expandToScroll && contentEl) {
+            const scrollEl = isIonContent(contentEl) ? getElementRoot(contentEl).querySelector('.inner-scroll') : contentEl;
+            return scrollEl.scrollTop === 0;
+        }
         if (currentBreakpoint === 1 && contentEl) {
             /**
              * The modal should never swipe to close on the content with a refresher.
@@ -898,6 +1085,25 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
          */
         canDismissBlocksGesture = baseEl.canDismiss !== undefined && baseEl.canDismiss !== true && minBreakpoint === 0;
         /**
+         * Cache the scroll element reference when the gesture starts,
+         * this allows us to avoid querying the DOM for the target in onMove,
+         * which would impact performance significantly.
+         */
+        if (!expandToScroll) {
+            const targetEl = findClosestIonContent(detail.event.target);
+            cachedScrollEl =
+                targetEl && isIonContent(targetEl) ? getElementRoot(targetEl).querySelector('.inner-scroll') : targetEl;
+        }
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the footer visibility to the original, so if the modal
+         * is dismissed, the footer dismisses with the modal
+         * and doesn't stay on the screen after the modal is gone.
+         */
+        if (!expandToScroll) {
+            swapFooterVisibility('original');
+        }
+        /**
          * If we are pulling down, then it is possible we are pulling on the content.
          * We do not want scrolling to happen at the same time as the gesture.
          */
@@ -914,6 +1120,13 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
         animation.progressStart(true, 1 - currentBreakpoint);
     };
     const onMove = (detail) => {
+        /**
+         * If `expandToScroll` is disabled, and an upwards swipe gesture is done within
+         * the scrollable content, we should not allow the swipe gesture to continue.
+         */
+        if (!expandToScroll && detail.deltaY <= 0 && cachedScrollEl) {
+            return;
+        }
         /**
          * If we are pulling down, then it is possible we are pulling on the content.
          * We do not want scrolling to happen at the same time as the gesture.
@@ -960,6 +1173,14 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
         animation.progressStep(offset);
     };
     const onEnd = (detail) => {
+        /**
+         * If expandToScroll is disabled, we should not allow the moveSheetToBreakpoint
+         * function to be called if the user is trying to swipe content upwards and the content
+         * is not scrolled to the top.
+         */
+        if (!expandToScroll && detail.deltaY <= 0 && cachedScrollEl && cachedScrollEl.scrollTop > 0) {
+            return;
+        }
         /**
          * When the gesture releases, we need to determine
          * the closest breakpoint to snap to.
@@ -1012,6 +1233,19 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
                     opacity: `calc(var(--backdrop-opacity) * ${getBackdropValueForSheet(snapToBreakpoint, backdropBreakpoint)})`,
                 },
             ]);
+            if (contentAnimation) {
+                /**
+                 * The modal content should scroll at any breakpoint when expandToScroll
+                 * is disabled. In order to do this, the content needs to be completely
+                 * viewable so scrolling can access everything. Otherwise, the default
+                 * behavior would show the content off the screen and only allow
+                 * scrolling when the sheet is fully expanded.
+                 */
+                contentAnimation.keyframes([
+                    { offset: 0, maxHeight: `${(1 - breakpointOffset) * 100}%` },
+                    { offset: 1, maxHeight: `${snapToBreakpoint * 100}%` },
+                ]);
+            }
             animation.progressStep(0);
         }
         /**
@@ -1019,6 +1253,14 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
          * snapping animation completes.
          */
         gesture.enable(false);
+        /**
+         * If expandToScroll is disabled, we need to swap
+         * the footer visibility to the cloned one so the footer
+         * doesn't flicker when the sheet's height is animated.
+         */
+        if (!expandToScroll && shouldRemainOpen) {
+            swapFooterVisibility('cloned');
+        }
         if (shouldPreventDismiss) {
             handleCanDismiss(baseEl, animation);
         }
@@ -1026,13 +1268,13 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
             onDismiss();
         }
         /**
-         * If the sheet is going to be fully expanded then we should enable
-         * scrolling immediately. The sheet modal animation takes ~500ms to finish
-         * so if we wait until then there is a visible delay for when scrolling is
-         * re-enabled. Native iOS allows for scrolling on the sheet modal as soon
-         * as the gesture is released, so we align with that.
+         * Enables scrolling immediately if the sheet is about to fully expand
+         * or if it allows scrolling at any breakpoint. Without this, there would
+         * be a ~500ms delay while the modal animation completes, causing a
+         * noticeable lag. Native iOS allows scrolling as soon as the gesture is
+         * released, so we align with that behavior.
          */
-        if (contentEl && snapToBreakpoint === breakpoints[breakpoints.length - 1]) {
+        if (contentEl && (snapToBreakpoint === breakpoints[breakpoints.length - 1] || !expandToScroll)) {
             contentEl.scrollY = true;
         }
         return new Promise((resolve) => {
@@ -1050,6 +1292,7 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
                         raf(() => {
                             wrapperAnimation.keyframes([...SheetDefaults.WRAPPER_KEYFRAMES]);
                             backdropAnimation.keyframes([...SheetDefaults.BACKDROP_KEYFRAMES]);
+                            contentAnimation === null || contentAnimation === void 0 ? void 0 : contentAnimation.keyframes([...SheetDefaults.CONTENT_KEYFRAMES]);
                             animation.progressStart(true, 1 - snapToBreakpoint);
                             currentBreakpoint = snapToBreakpoint;
                             onBreakpointChange(currentBreakpoint);
@@ -1102,10 +1345,10 @@ const createSheetGesture = (baseEl, backdropEl, wrapperEl, initialBreakpoint, ba
     };
 };
 
-const modalIosCss = ":host{--width:100%;--min-width:auto;--max-width:auto;--height:100%;--min-height:auto;--max-height:auto;--overflow:hidden;--border-radius:0;--border-width:0;--border-style:none;--border-color:transparent;--background:var(--ion-background-color, #fff);--box-shadow:none;--backdrop-opacity:0;left:0;right:0;top:0;bottom:0;display:-ms-flexbox;display:flex;position:absolute;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;outline:none;color:var(--ion-text-color, #000);contain:strict}.modal-wrapper,ion-backdrop{pointer-events:auto}:host(.overlay-hidden){display:none}.modal-wrapper,.modal-shadow{border-radius:var(--border-radius);width:var(--width);min-width:var(--min-width);max-width:var(--max-width);height:var(--height);min-height:var(--min-height);max-height:var(--max-height);border-width:var(--border-width);border-style:var(--border-style);border-color:var(--border-color);background:var(--background);-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow);overflow:var(--overflow);z-index:10}.modal-shadow{position:absolute;background:transparent}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--width:600px;--height:500px;--ion-safe-area-top:0px;--ion-safe-area-bottom:0px;--ion-safe-area-right:0px;--ion-safe-area-left:0px}}@media only screen and (min-width: 768px) and (min-height: 768px){:host{--width:600px;--height:600px}}.modal-handle{left:0px;right:0px;top:5px;border-radius:8px;-webkit-margin-start:auto;margin-inline-start:auto;-webkit-margin-end:auto;margin-inline-end:auto;position:absolute;width:36px;height:5px;-webkit-transform:translateZ(0);transform:translateZ(0);border:0;background:var(--ion-color-step-350, var(--ion-background-color-step-350, #c0c0be));cursor:pointer;z-index:11}.modal-handle::before{-webkit-padding-start:4px;padding-inline-start:4px;-webkit-padding-end:4px;padding-inline-end:4px;padding-top:4px;padding-bottom:4px;position:absolute;width:36px;height:5px;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);content:\"\"}:host(.modal-sheet){--height:calc(100% - (var(--ion-safe-area-top) + 10px))}:host(.modal-sheet) .modal-wrapper,:host(.modal-sheet) .modal-shadow{position:absolute;bottom:0}:host{--backdrop-opacity:var(--ion-backdrop-opacity, 0.4)}:host(.modal-card),:host(.modal-sheet){--border-radius:10px}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--border-radius:10px}}.modal-wrapper{-webkit-transform:translate3d(0,  100%,  0);transform:translate3d(0,  100%,  0)}@media screen and (max-width: 767px){@supports (width: max(0px, 1px)){:host(.modal-card){--height:calc(100% - max(30px, var(--ion-safe-area-top)) - 10px)}}@supports not (width: max(0px, 1px)){:host(.modal-card){--height:calc(100% - 40px)}}:host(.modal-card) .modal-wrapper{border-start-start-radius:var(--border-radius);border-start-end-radius:var(--border-radius);border-end-end-radius:0;border-end-start-radius:0}:host(.modal-card){--backdrop-opacity:0;--width:100%;-ms-flex-align:end;align-items:flex-end}:host(.modal-card) .modal-shadow{display:none}:host(.modal-card) ion-backdrop{pointer-events:none}}@media screen and (min-width: 768px){:host(.modal-card){--width:calc(100% - 120px);--height:calc(100% - (120px + var(--ion-safe-area-top) + var(--ion-safe-area-bottom)));--max-width:720px;--max-height:1000px;--backdrop-opacity:0;--box-shadow:0px 0px 30px 10px rgba(0, 0, 0, 0.1);-webkit-transition:all 0.5s ease-in-out;transition:all 0.5s ease-in-out}:host(.modal-card) .modal-wrapper{-webkit-box-shadow:none;box-shadow:none}:host(.modal-card) .modal-shadow{-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow)}}:host(.modal-sheet) .modal-wrapper{border-start-start-radius:var(--border-radius);border-start-end-radius:var(--border-radius);border-end-end-radius:0;border-end-start-radius:0}";
+const modalIosCss = ":host{--width:100%;--min-width:auto;--max-width:auto;--height:100%;--min-height:auto;--max-height:auto;--overflow:hidden;--border-radius:0;--border-width:0;--border-style:none;--border-color:transparent;--background:var(--ion-background-color, #fff);--box-shadow:none;--backdrop-opacity:0;left:0;right:0;top:0;bottom:0;display:-ms-flexbox;display:flex;position:absolute;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;outline:none;color:var(--ion-text-color, #000);contain:strict}.modal-wrapper,ion-backdrop{pointer-events:auto}:host(.overlay-hidden){display:none}.modal-wrapper,.modal-shadow{border-radius:var(--border-radius);width:var(--width);min-width:var(--min-width);max-width:var(--max-width);height:var(--height);min-height:var(--min-height);max-height:var(--max-height);border-width:var(--border-width);border-style:var(--border-style);border-color:var(--border-color);background:var(--background);-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow);overflow:var(--overflow);z-index:10}.modal-shadow{position:absolute;background:transparent}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--width:600px;--height:500px;--ion-safe-area-top:0px;--ion-safe-area-bottom:0px;--ion-safe-area-right:0px;--ion-safe-area-left:0px}}@media only screen and (min-width: 768px) and (min-height: 768px){:host{--width:600px;--height:600px}}.modal-handle{left:0px;right:0px;top:5px;border-radius:8px;-webkit-margin-start:auto;margin-inline-start:auto;-webkit-margin-end:auto;margin-inline-end:auto;position:absolute;width:36px;height:5px;-webkit-transform:translateZ(0);transform:translateZ(0);border:0;background:var(--ion-color-step-350, var(--ion-background-color-step-350, #c0c0be));cursor:pointer;z-index:11}.modal-handle::before{-webkit-padding-start:4px;padding-inline-start:4px;-webkit-padding-end:4px;padding-inline-end:4px;padding-top:4px;padding-bottom:4px;position:absolute;width:36px;height:5px;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);content:\"\"}:host(.modal-sheet){--height:calc(100% - (var(--ion-safe-area-top) + 10px))}:host(.modal-sheet) .modal-wrapper,:host(.modal-sheet) .modal-shadow{position:absolute;bottom:0}:host(.modal-sheet.modal-no-expand-scroll) ion-footer{position:absolute;bottom:0;width:var(--width)}:host{--backdrop-opacity:var(--ion-backdrop-opacity, 0.4)}:host(.modal-card),:host(.modal-sheet){--border-radius:10px}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--border-radius:10px}}.modal-wrapper{-webkit-transform:translate3d(0,  100%,  0);transform:translate3d(0,  100%,  0)}@media screen and (max-width: 767px){@supports (width: max(0px, 1px)){:host(.modal-card){--height:calc(100% - max(30px, var(--ion-safe-area-top)) - 10px)}}@supports not (width: max(0px, 1px)){:host(.modal-card){--height:calc(100% - 40px)}}:host(.modal-card) .modal-wrapper{border-start-start-radius:var(--border-radius);border-start-end-radius:var(--border-radius);border-end-end-radius:0;border-end-start-radius:0}:host(.modal-card){--backdrop-opacity:0;--width:100%;-ms-flex-align:end;align-items:flex-end}:host(.modal-card) .modal-shadow{display:none}:host(.modal-card) ion-backdrop{pointer-events:none}}@media screen and (min-width: 768px){:host(.modal-card){--width:calc(100% - 120px);--height:calc(100% - (120px + var(--ion-safe-area-top) + var(--ion-safe-area-bottom)));--max-width:720px;--max-height:1000px;--backdrop-opacity:0;--box-shadow:0px 0px 30px 10px rgba(0, 0, 0, 0.1);-webkit-transition:all 0.5s ease-in-out;transition:all 0.5s ease-in-out}:host(.modal-card) .modal-wrapper{-webkit-box-shadow:none;box-shadow:none}:host(.modal-card) .modal-shadow{-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow)}}:host(.modal-sheet) .modal-wrapper{border-start-start-radius:var(--border-radius);border-start-end-radius:var(--border-radius);border-end-end-radius:0;border-end-start-radius:0}:host(.modal-sheet.modal-no-expand-scroll) ion-footer ion-toolbar:first-of-type{padding-top:6px}";
 const IonModalIosStyle0 = modalIosCss;
 
-const modalMdCss = ":host{--width:100%;--min-width:auto;--max-width:auto;--height:100%;--min-height:auto;--max-height:auto;--overflow:hidden;--border-radius:0;--border-width:0;--border-style:none;--border-color:transparent;--background:var(--ion-background-color, #fff);--box-shadow:none;--backdrop-opacity:0;left:0;right:0;top:0;bottom:0;display:-ms-flexbox;display:flex;position:absolute;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;outline:none;color:var(--ion-text-color, #000);contain:strict}.modal-wrapper,ion-backdrop{pointer-events:auto}:host(.overlay-hidden){display:none}.modal-wrapper,.modal-shadow{border-radius:var(--border-radius);width:var(--width);min-width:var(--min-width);max-width:var(--max-width);height:var(--height);min-height:var(--min-height);max-height:var(--max-height);border-width:var(--border-width);border-style:var(--border-style);border-color:var(--border-color);background:var(--background);-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow);overflow:var(--overflow);z-index:10}.modal-shadow{position:absolute;background:transparent}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--width:600px;--height:500px;--ion-safe-area-top:0px;--ion-safe-area-bottom:0px;--ion-safe-area-right:0px;--ion-safe-area-left:0px}}@media only screen and (min-width: 768px) and (min-height: 768px){:host{--width:600px;--height:600px}}.modal-handle{left:0px;right:0px;top:5px;border-radius:8px;-webkit-margin-start:auto;margin-inline-start:auto;-webkit-margin-end:auto;margin-inline-end:auto;position:absolute;width:36px;height:5px;-webkit-transform:translateZ(0);transform:translateZ(0);border:0;background:var(--ion-color-step-350, var(--ion-background-color-step-350, #c0c0be));cursor:pointer;z-index:11}.modal-handle::before{-webkit-padding-start:4px;padding-inline-start:4px;-webkit-padding-end:4px;padding-inline-end:4px;padding-top:4px;padding-bottom:4px;position:absolute;width:36px;height:5px;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);content:\"\"}:host(.modal-sheet){--height:calc(100% - (var(--ion-safe-area-top) + 10px))}:host(.modal-sheet) .modal-wrapper,:host(.modal-sheet) .modal-shadow{position:absolute;bottom:0}:host{--backdrop-opacity:var(--ion-backdrop-opacity, 0.32)}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--border-radius:2px;--box-shadow:0 28px 48px rgba(0, 0, 0, 0.4)}}.modal-wrapper{-webkit-transform:translate3d(0,  40px,  0);transform:translate3d(0,  40px,  0);opacity:0.01}";
+const modalMdCss = ":host{--width:100%;--min-width:auto;--max-width:auto;--height:100%;--min-height:auto;--max-height:auto;--overflow:hidden;--border-radius:0;--border-width:0;--border-style:none;--border-color:transparent;--background:var(--ion-background-color, #fff);--box-shadow:none;--backdrop-opacity:0;left:0;right:0;top:0;bottom:0;display:-ms-flexbox;display:flex;position:absolute;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;outline:none;color:var(--ion-text-color, #000);contain:strict}.modal-wrapper,ion-backdrop{pointer-events:auto}:host(.overlay-hidden){display:none}.modal-wrapper,.modal-shadow{border-radius:var(--border-radius);width:var(--width);min-width:var(--min-width);max-width:var(--max-width);height:var(--height);min-height:var(--min-height);max-height:var(--max-height);border-width:var(--border-width);border-style:var(--border-style);border-color:var(--border-color);background:var(--background);-webkit-box-shadow:var(--box-shadow);box-shadow:var(--box-shadow);overflow:var(--overflow);z-index:10}.modal-shadow{position:absolute;background:transparent}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--width:600px;--height:500px;--ion-safe-area-top:0px;--ion-safe-area-bottom:0px;--ion-safe-area-right:0px;--ion-safe-area-left:0px}}@media only screen and (min-width: 768px) and (min-height: 768px){:host{--width:600px;--height:600px}}.modal-handle{left:0px;right:0px;top:5px;border-radius:8px;-webkit-margin-start:auto;margin-inline-start:auto;-webkit-margin-end:auto;margin-inline-end:auto;position:absolute;width:36px;height:5px;-webkit-transform:translateZ(0);transform:translateZ(0);border:0;background:var(--ion-color-step-350, var(--ion-background-color-step-350, #c0c0be));cursor:pointer;z-index:11}.modal-handle::before{-webkit-padding-start:4px;padding-inline-start:4px;-webkit-padding-end:4px;padding-inline-end:4px;padding-top:4px;padding-bottom:4px;position:absolute;width:36px;height:5px;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);content:\"\"}:host(.modal-sheet){--height:calc(100% - (var(--ion-safe-area-top) + 10px))}:host(.modal-sheet) .modal-wrapper,:host(.modal-sheet) .modal-shadow{position:absolute;bottom:0}:host(.modal-sheet.modal-no-expand-scroll) ion-footer{position:absolute;bottom:0;width:var(--width)}:host{--backdrop-opacity:var(--ion-backdrop-opacity, 0.32)}@media only screen and (min-width: 768px) and (min-height: 600px){:host{--border-radius:2px;--box-shadow:0 28px 48px rgba(0, 0, 0, 0.4)}}.modal-wrapper{-webkit-transform:translate3d(0,  40px,  0);transform:translate3d(0,  40px,  0);opacity:0.01}";
 const IonModalMdStyle0 = modalMdCss;
 
 const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
@@ -1176,6 +1419,7 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
         this.enterAnimation = undefined;
         this.leaveAnimation = undefined;
         this.breakpoints = undefined;
+        this.expandToScroll = true;
         this.initialBreakpoint = undefined;
         this.backdropBreakpoint = 0;
         this.handle = undefined;
@@ -1391,6 +1635,7 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
             presentingEl: presentingElement,
             currentBreakpoint: this.initialBreakpoint,
             backdropBreakpoint: this.backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         });
         /* tslint:disable-next-line */
         if (typeof window !== 'undefined') {
@@ -1441,7 +1686,10 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
         // should be in the DOM and referenced by now, except
         // for the presenting el
         const animationBuilder = this.leaveAnimation || config.get('modalLeave', iosLeaveAnimation);
-        const ani = (this.animation = animationBuilder(el, { presentingEl: this.presentingElement }));
+        const ani = (this.animation = animationBuilder(el, {
+            presentingEl: this.presentingElement,
+            expandToScroll: this.expandToScroll,
+        }));
         const contentEl = findIonContent(el);
         if (!contentEl) {
             printIonContentErrorMsg(el);
@@ -1486,9 +1734,10 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
             presentingEl: this.presentingElement,
             currentBreakpoint: initialBreakpoint,
             backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         }));
         ani.progressStart(true, 1);
-        const { gesture, moveSheetToBreakpoint } = createSheetGesture(this.el, this.backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, ani, this.sortedBreakpoints, () => { var _a; return (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : 0; }, () => this.sheetOnDismiss(), (breakpoint) => {
+        const { gesture, moveSheetToBreakpoint } = createSheetGesture(this.el, this.backdropEl, wrapperEl, initialBreakpoint, backdropBreakpoint, ani, this.sortedBreakpoints, this.expandToScroll, () => { var _a; return (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : 0; }, () => this.sheetOnDismiss(), (breakpoint) => {
             if (this.currentBreakpoint !== breakpoint) {
                 this.currentBreakpoint = breakpoint;
                 this.ionBreakpointDidChange.emit({ breakpoint });
@@ -1566,6 +1815,7 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
             presentingEl: presentingElement,
             currentBreakpoint: (_a = this.currentBreakpoint) !== null && _a !== void 0 ? _a : this.initialBreakpoint,
             backdropBreakpoint: this.backdropBreakpoint,
+            expandToScroll: this.expandToScroll,
         });
         if (dismissed) {
             const { delegate } = this.getDelegate();
@@ -1651,23 +1901,23 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
         return true;
     }
     render() {
-        const { handle, isSheetModal, presentingElement, htmlAttributes, handleBehavior, inheritedAttributes, focusTrap } = this;
+        const { handle, isSheetModal, presentingElement, htmlAttributes, handleBehavior, inheritedAttributes, focusTrap, expandToScroll, } = this;
         const showHandle = handle !== false && isSheetModal;
         const mode = getIonMode(this);
         const isCardModal = presentingElement !== undefined && mode === 'ios';
         const isHandleCycle = handleBehavior === 'cycle';
-        return (h(Host, Object.assign({ key: 'b4da5111fe4719fa450c39b2d4bd884a302a7924', "no-router": true, tabindex: "-1" }, htmlAttributes, { style: {
+        return (h(Host, Object.assign({ key: 'e661562f9e4126136cee337e4ab8ca69ac80faae', "no-router": true, tabindex: "-1" }, htmlAttributes, { style: {
                 zIndex: `${20000 + this.overlayIndex}`,
-            }, class: Object.assign({ [mode]: true, ['modal-default']: !isCardModal && !isSheetModal, [`modal-card`]: isCardModal, [`modal-sheet`]: isSheetModal, 'overlay-hidden': true, [FOCUS_TRAP_DISABLE_CLASS]: focusTrap === false }, getClassMap(this.cssClass)), onIonBackdropTap: this.onBackdropTap, onIonModalDidPresent: this.onLifecycle, onIonModalWillPresent: this.onLifecycle, onIonModalWillDismiss: this.onLifecycle, onIonModalDidDismiss: this.onLifecycle }), h("ion-backdrop", { key: 'c12dbf747e0eb914eaf1331798548ffc7e147763', ref: (el) => (this.backdropEl = el), visible: this.showBackdrop, tappable: this.backdropDismiss, part: "backdrop" }), mode === 'ios' && h("div", { key: 'da546ee80c6576b5acc66e959fd5009e0b9a8160', class: "modal-shadow" }), h("div", Object.assign({ key: '306ebe6427440ad5f7ed36d590e562d15a503b75',
+            }, class: Object.assign({ [mode]: true, ['modal-default']: !isCardModal && !isSheetModal, [`modal-card`]: isCardModal, [`modal-sheet`]: isSheetModal, [`modal-no-expand-scroll`]: isSheetModal && !expandToScroll, 'overlay-hidden': true, [FOCUS_TRAP_DISABLE_CLASS]: focusTrap === false }, getClassMap(this.cssClass)), onIonBackdropTap: this.onBackdropTap, onIonModalDidPresent: this.onLifecycle, onIonModalWillPresent: this.onLifecycle, onIonModalWillDismiss: this.onLifecycle, onIonModalDidDismiss: this.onLifecycle }), h("ion-backdrop", { key: '9221692e0e111f99e80239ca44faaaed9b288425', ref: (el) => (this.backdropEl = el), visible: this.showBackdrop, tappable: this.backdropDismiss, part: "backdrop" }), mode === 'ios' && h("div", { key: '20def7088d31e5eb13c3f2404c514cd8b74cd966', class: "modal-shadow" }), h("div", Object.assign({ key: 'b11229330571d4ff7b9136dfdddcd7d759ada876',
             /*
               role and aria-modal must be used on the
               same element. They must also be set inside the
               shadow DOM otherwise ion-button will not be highlighted
               when using VoiceOver: https://bugs.webkit.org/show_bug.cgi?id=247134
             */
-            role: "dialog" }, inheritedAttributes, { "aria-modal": "true", class: "modal-wrapper ion-overlay-wrapper", part: "content", ref: (el) => (this.wrapperEl = el) }), showHandle && (h("button", { key: 'c5d17e346fe255a7c0cacbbf15c0083f2d09c488', class: "modal-handle",
+            role: "dialog" }, inheritedAttributes, { "aria-modal": "true", class: "modal-wrapper ion-overlay-wrapper", part: "content", ref: (el) => (this.wrapperEl = el) }), showHandle && (h("button", { key: '95b2a62477dfbc063a91910f0d37357388cfd914', class: "modal-handle",
             // Prevents the handle from receiving keyboard focus when it does not cycle
-            tabIndex: !isHandleCycle ? -1 : 0, "aria-label": "Activate to adjust the size of the dialog overlaying the screen", onClick: isHandleCycle ? this.onHandleClick : undefined, part: "handle" })), h("slot", { key: '5cc714170a00b67f3eda0cd1d6f37c1489a99c83' }))));
+            tabIndex: !isHandleCycle ? -1 : 0, "aria-label": "Activate to adjust the size of the dialog overlaying the screen", onClick: isHandleCycle ? this.onHandleClick : undefined, part: "handle" })), h("slot", { key: 'fba17dfdbdffbfd8992f473f633d172c5124dc19' }))));
     }
     get el() { return this; }
     static get watchers() { return {
@@ -1686,6 +1936,7 @@ const Modal = /*@__PURE__*/ proxyCustomElement(class Modal extends HTMLElement {
         "enterAnimation": [16],
         "leaveAnimation": [16],
         "breakpoints": [16],
+        "expandToScroll": [4, "expand-to-scroll"],
         "initialBreakpoint": [2, "initial-breakpoint"],
         "backdropBreakpoint": [2, "backdrop-breakpoint"],
         "handle": [4],

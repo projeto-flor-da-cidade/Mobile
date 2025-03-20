@@ -63,10 +63,10 @@ const Toolbar = /*@__PURE__*/ proxyCustomElement(class Toolbar extends HTMLEleme
         this.childrenStyles.forEach((value) => {
             Object.assign(childStyles, value);
         });
-        return (h(Host, { key: '462538a5ecd01baf3cde116c9f029aeda26c81be', class: Object.assign(Object.assign({}, childStyles), createColorClasses(this.color, {
+        return (h(Host, { key: '402afe7ce0c97883cedd0e48a5a0492a9bfe76ae', class: Object.assign(Object.assign({}, childStyles), createColorClasses(this.color, {
                 [mode]: true,
                 'in-toolbar': hostContext('ion-toolbar', this.el),
-            })) }, h("div", { key: 'c0b4415d3b2472de643a9be7cb3b13b3b628621b', class: "toolbar-background" }), h("div", { key: '0ccb8a2dbeaa28d8f9bed87629c0c097446690c2', class: "toolbar-container" }, h("slot", { key: '3e726dac359e923df21d80301651f16063a3de20', name: "start" }), h("slot", { key: 'cd799330b56a7f8833bc61bb2807aafb21846f71', name: "secondary" }), h("div", { key: '395282e6ac8c53576922dcdb5f08c25d34638c86', class: "toolbar-content" }, h("slot", { key: 'a437c60e4ba5aae65e55169ae82a6f379868ec1d' })), h("slot", { key: '711af9b9d321a7b31ede924c9bdcad767aa9a1ca', name: "primary" }), h("slot", { key: 'ecc02edeaf80a837890bcb08d5096df1e22a0b9a', name: "end" }))));
+            })) }, h("div", { key: '2465a6dc8d507ec650538378d1be2abd399c58ad', class: "toolbar-background", part: "background" }), h("div", { key: '6075096afd12303b961e4fe9ad345ef2887573af', class: "toolbar-container", part: "container" }, h("slot", { key: '8b7eec1148cfeb339d87cdf9273f2104703e7601', name: "start" }), h("slot", { key: 'b102d3926cade24faf78b7af78ad5e192c4c0308', name: "secondary" }), h("div", { key: 'c6ab2e978328324c6f9e7892024cbcd8b8987067', class: "toolbar-content", part: "content" }, h("slot", { key: '86f8952c4355a9df5b4bbb95e9d0cafefd272d5b' })), h("slot", { key: '501e43431da6b9dd35b47b79222f948d445f7a78', name: "primary" }), h("slot", { key: '84bf1a15a5e52e8e94df9f479c4ce18004f5ab57', name: "end" }))));
     }
     get el() { return this; }
     static get style() { return {

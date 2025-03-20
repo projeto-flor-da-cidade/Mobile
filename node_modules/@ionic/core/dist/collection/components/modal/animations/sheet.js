@@ -4,7 +4,7 @@
 import { createAnimation } from "../../../utils/animation/animation";
 import { getBackdropValueForSheet } from "../utils";
 export const createSheetEnterAnimation = (opts) => {
-    const { currentBreakpoint, backdropBreakpoint } = opts;
+    const { currentBreakpoint, backdropBreakpoint, expandToScroll } = opts;
     /**
      * If the backdropBreakpoint is undefined, then the backdrop
      * should always fade in. If the backdropBreakpoint came before the
@@ -24,7 +24,16 @@ export const createSheetEnterAnimation = (opts) => {
         { offset: 0, opacity: 1, transform: 'translateY(100%)' },
         { offset: 1, opacity: 1, transform: `translateY(${100 - currentBreakpoint * 100}%)` },
     ]);
-    return { wrapperAnimation, backdropAnimation };
+    /**
+     * This allows the content to be scrollable at any breakpoint.
+     */
+    const contentAnimation = !expandToScroll
+        ? createAnimation('contentAnimation').keyframes([
+            { offset: 0, opacity: 1, maxHeight: `${(1 - currentBreakpoint) * 100}%` },
+            { offset: 1, opacity: 1, maxHeight: `${currentBreakpoint * 100}%` },
+        ])
+        : undefined;
+    return { wrapperAnimation, backdropAnimation, contentAnimation };
 };
 export const createSheetLeaveAnimation = (opts) => {
     const { currentBreakpoint, backdropBreakpoint } = opts;

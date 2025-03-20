@@ -17,7 +17,7 @@ const ItemGroup = /*@__PURE__*/ proxyCustomElement(class ItemGroup extends HTMLE
     }
     render() {
         const mode = getIonMode(this);
-        return (h(Host, { key: 'f9ffe0290d3fa546494fe55f952d8554f2a8abf8', role: "group", class: {
+        return (h(Host, { key: 'de2a969ed0dda880bc560a325848b28d0287fdb9', role: "group", class: {
                 [mode]: true,
                 // Used internally for styling
                 [`item-group-${mode}`]: true,

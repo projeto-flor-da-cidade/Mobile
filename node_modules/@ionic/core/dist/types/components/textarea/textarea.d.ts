@@ -175,6 +175,14 @@ export declare class Textarea implements ComponentInterface {
      */
     protected valueChanged(): void;
     /**
+     * dir is a globally enumerated attribute.
+     * As a result, creating these as properties
+     * can have unintended side effects. Instead, we
+     * listen for attribute changes and inherit them
+     * to the inner `<textarea>` element.
+     */
+    onDirChanged(newValue: string): void;
+    /**
      * The `ionChange` event is fired when the user modifies the textarea's value.
      * Unlike the `ionInput` event, the `ionChange` event is fired when
      * the element loses focus after its value has been modified.

@@ -239,6 +239,14 @@ export declare class Input implements ComponentInterface {
      * Update the native input element when the value changes
      */
     protected valueChanged(): void;
+    /**
+     * dir is a globally enumerated attribute.
+     * As a result, creating these as properties
+     * can have unintended side effects. Instead, we
+     * listen for attribute changes and inherit them
+     * to the inner `<input>` element.
+     */
+    onDirChanged(newValue: string): void;
     componentWillLoad(): void;
     connectedCallback(): void;
     componentDidLoad(): void;

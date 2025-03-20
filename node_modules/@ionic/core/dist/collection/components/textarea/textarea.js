@@ -112,6 +112,17 @@ export class Textarea {
         }
         this.runAutoGrow();
     }
+    /**
+     * dir is a globally enumerated attribute.
+     * As a result, creating these as properties
+     * can have unintended side effects. Instead, we
+     * listen for attribute changes and inherit them
+     * to the inner `<textarea>` element.
+     */
+    onDirChanged(newValue) {
+        this.inheritedAttributes = Object.assign(Object.assign({}, this.inheritedAttributes), { dir: newValue });
+        forceUpdate(this);
+    }
     connectedCallback() {
         const { el } = this;
         this.slotMutationController = createSlotMutationController(el, ['label', 'start', 'end'], () => forceUpdate(this));
@@ -139,7 +150,7 @@ export class Textarea {
         }
     }
     componentWillLoad() {
-        this.inheritedAttributes = Object.assign(Object.assign({}, inheritAriaAttributes(this.el)), inheritAttributes(this.el, ['data-form-type', 'title', 'tabindex']));
+        this.inheritedAttributes = Object.assign(Object.assign({}, inheritAriaAttributes(this.el)), inheritAttributes(this.el, ['data-form-type', 'title', 'tabindex', 'dir']));
     }
     componentDidLoad() {
         this.originalIonInput = this.ionInput;
@@ -374,7 +385,7 @@ export class Textarea {
          * TODO(FW-5592): Remove hasStartEndSlots condition
          */
         const labelShouldFloat = labelPlacement === 'stacked' || (labelPlacement === 'floating' && (hasValue || hasFocus || hasStartEndSlots));
-        return (h(Host, { key: 'd6e25c83d8eab8cb1a5b6ab411c9a13847f69f8d', class: createColorClasses(this.color, {
+        return (h(Host, { key: '3bf42ea1fa739f334427c70f91a89b8b0e0f21ec', class: createColorClasses(this.color, {
                 [mode]: true,
                 'has-value': hasValue,
                 'has-focus': hasFocus,
@@ -383,7 +394,7 @@ export class Textarea {
                 [`textarea-shape-${shape}`]: shape !== undefined,
                 [`textarea-label-placement-${labelPlacement}`]: true,
                 'textarea-disabled': disabled,
-            }) }, h("label", { key: 'f840a5be2b776a4b9c18c6da24e0b7d3d4838fee', class: "textarea-wrapper", htmlFor: inputId }, this.renderLabelContainer(), h("div", { key: '979461fc0d4684926d79d75759c63c6867b7622b', class: "textarea-wrapper-inner" }, h("div", { key: '88f0d5d4bac29597cc2588e5b2ed72fb4fbe153d', class: "start-slot-wrapper" }, h("slot", { key: '21dcca0e59c1260e3d0d1e126c1c590de15c4bad', name: "start" })), h("div", { key: '3c48a4bb3d763a389d3429123e7c110064b9b8d4', class: "native-wrapper", ref: (el) => (this.textareaWrapper = el) }, h("textarea", Object.assign({ key: '1550599ad15b3f215c104c014e90711f073ace8b', class: "native-textarea", ref: (el) => (this.nativeInput = el), id: inputId, disabled: disabled, autoCapitalize: this.autocapitalize, autoFocus: this.autofocus, enterKeyHint: this.enterkeyhint, inputMode: this.inputmode, minLength: this.minlength, maxLength: this.maxlength, name: this.name, placeholder: this.placeholder || '', readOnly: this.readonly, required: this.required, spellcheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput, onChange: this.onChange, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeyDown, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId }, this.inheritedAttributes), value)), h("div", { key: '4f01ab4d2994a6de6f49eb9ed2e310d00daf21b2', class: "end-slot-wrapper" }, h("slot", { key: '501e288b6807e039972bb4f0b63906114255518a', name: "end" }))), shouldRenderHighlight && h("div", { key: 'd3008eed34494aa9f8e98a28eac3b465dc4c2bd0', class: "textarea-highlight" })), this.renderBottomContent()));
+            }) }, h("label", { key: 'f7acceeb74849d13a6af8d39b66ea2701384c955', class: "textarea-wrapper", htmlFor: inputId }, this.renderLabelContainer(), h("div", { key: '05e9f2ebad1742a9e66d243d18c22ddd4c83ee04', class: "textarea-wrapper-inner" }, h("div", { key: '70a9935351c38413ced05f5e4dc0055b9b001ee9', class: "start-slot-wrapper" }, h("slot", { key: '11206eaa31d112c01f2218bf2ff46375ad819d1f', name: "start" })), h("div", { key: 'bfd215dbb5f4d60f5fb62d37226fdc6ce61ec107', class: "native-wrapper", ref: (el) => (this.textareaWrapper = el) }, h("textarea", Object.assign({ key: '2fa5cdf4c6614dd8cd4b7d2a19811a79c96ac50d', class: "native-textarea", ref: (el) => (this.nativeInput = el), id: inputId, disabled: disabled, autoCapitalize: this.autocapitalize, autoFocus: this.autofocus, enterKeyHint: this.enterkeyhint, inputMode: this.inputmode, minLength: this.minlength, maxLength: this.maxlength, name: this.name, placeholder: this.placeholder || '', readOnly: this.readonly, required: this.required, spellcheck: this.spellcheck, cols: this.cols, rows: this.rows, wrap: this.wrap, onInput: this.onInput, onChange: this.onChange, onBlur: this.onBlur, onFocus: this.onFocus, onKeyDown: this.onKeyDown, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId }, this.inheritedAttributes), value)), h("div", { key: '8a67ad8e3b5650680f770cefc562d190f6760718', class: "end-slot-wrapper" }, h("slot", { key: '03bb6bc5f2808c1f474a6c3168169d17f7569fda', name: "end" }))), shouldRenderHighlight && h("div", { key: 'cd564bd01a1ca3f914218e34a78d296ad0838e4a', class: "textarea-highlight" })), this.renderBottomContent()));
     }
     static get is() { return "ion-textarea"; }
     static get encapsulation() { return "scoped"; }
@@ -1035,6 +1046,9 @@ export class Textarea {
             }, {
                 "propName": "value",
                 "methodName": "valueChanged"
+            }, {
+                "propName": "dir",
+                "methodName": "onDirChanged"
             }];
     }
 }

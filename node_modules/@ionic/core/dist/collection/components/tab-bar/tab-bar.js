@@ -51,11 +51,11 @@ export class TabBar {
         const { color, translucent, keyboardVisible } = this;
         const mode = getIonMode(this);
         const shouldHide = keyboardVisible && this.el.getAttribute('slot') !== 'top';
-        return (h(Host, { key: 'a87fd2ea5df053705a37ea7ffec043e75c4a9907', role: "tablist", "aria-hidden": shouldHide ? 'true' : null, class: createColorClasses(color, {
+        return (h(Host, { key: '62303a7f9d8c98ffab51a5900c144c5117b9c543', role: "tablist", "aria-hidden": shouldHide ? 'true' : null, class: createColorClasses(color, {
                 [mode]: true,
                 'tab-bar-translucent': translucent,
                 'tab-bar-hidden': shouldHide,
-            }) }, h("slot", { key: '81a6223299b6cab29d7ddced590e9152e2b3ded0' })));
+            }) }, h("slot", { key: '5771a9828f748c2bd6b5e26758b9723c6b3de5ff' })));
     }
     static get is() { return "ion-tab-bar"; }
     static get encapsulation() { return "shadow"; }

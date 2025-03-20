@@ -20,7 +20,7 @@ export class Reorder {
     render() {
         const mode = getIonMode(this);
         const reorderIcon = mode === 'ios' ? reorderThreeOutline : reorderTwoSharp;
-        return (h(Host, { key: '27266e30bcb7e10c57fb6d546399cfb1f1c93b23', class: mode }, h("slot", { key: '8745cb9a31458e884c27eed1fb90d104fe9a79eb' }, h("ion-icon", { key: '6c4b9631a2f5610f1e21b2db025b6702d0d593bf', icon: reorderIcon, lazy: false, class: "reorder-icon", part: "icon", "aria-hidden": "true" }))));
+        return (h(Host, { key: '17adf3165f4e09283d5d6434d7cd47bd23519048', class: mode }, h("slot", { key: 'd00d1cd97c689fc5c7b7175a2051cf697fe22871' }, h("ion-icon", { key: 'eec219aebde6083de98358be3e75965c5a5dc3d0', icon: reorderIcon, lazy: false, class: "reorder-icon", part: "icon", "aria-hidden": "true" }))));
     }
     static get is() { return "ion-reorder"; }
     static get encapsulation() { return "shadow"; }

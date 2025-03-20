@@ -5,6 +5,12 @@ import { proxyCustomElement, HTMLElement, createEvent, h, Host } from '@stencil/
 import { e as renderHiddenInput } from './helpers.js';
 import { b as getIonMode } from './ionic-global.js';
 
+const radioGroupIosCss = "ion-radio-group{vertical-align:top}.radio-group-wrapper{display:inline}.radio-group-top{line-height:1.5}.radio-group-top .error-text{display:none;color:var(--ion-color-danger, #c5000f)}.radio-group-top .helper-text{display:block;color:var(--ion-color-step-700, var(--ion-text-color-step-300, #4d4d4d))}.ion-touched.ion-invalid .radio-group-top .error-text{display:block}.ion-touched.ion-invalid .radio-group-top .helper-text{display:none}ion-list .radio-group-top{-webkit-padding-start:16px;padding-inline-start:16px;-webkit-padding-end:16px;padding-inline-end:16px}";
+const IonRadioGroupIosStyle0 = radioGroupIosCss;
+
+const radioGroupMdCss = "ion-radio-group{vertical-align:top}.radio-group-wrapper{display:inline}.radio-group-top{line-height:1.5}.radio-group-top .error-text{display:none;color:var(--ion-color-danger, #c5000f)}.radio-group-top .helper-text{display:block;color:var(--ion-color-step-700, var(--ion-text-color-step-300, #4d4d4d))}.ion-touched.ion-invalid .radio-group-top .error-text{display:block}.ion-touched.ion-invalid .radio-group-top .helper-text{display:none}ion-list .radio-group-top{-webkit-padding-start:16px;padding-inline-start:16px;-webkit-padding-end:16px;padding-inline-end:16px}";
+const IonRadioGroupMdStyle0 = radioGroupMdCss;
+
 const RadioGroup = /*@__PURE__*/ proxyCustomElement(class RadioGroup extends HTMLElement {
     constructor() {
         super();
@@ -12,6 +18,8 @@ const RadioGroup = /*@__PURE__*/ proxyCustomElement(class RadioGroup extends HTM
         this.ionChange = createEvent(this, "ionChange", 7);
         this.ionValueChange = createEvent(this, "ionValueChange", 7);
         this.inputId = `ion-rg-${radioGroupIds++}`;
+        this.helperTextId = `${this.inputId}-helper-text`;
+        this.errorTextId = `${this.inputId}-error-text`;
         this.labelId = `${this.inputId}-lbl`;
         this.setRadioTabindex = (value) => {
             const radios = this.getRadios();
@@ -63,6 +71,8 @@ const RadioGroup = /*@__PURE__*/ proxyCustomElement(class RadioGroup extends HTM
         this.compareWith = undefined;
         this.name = this.inputId;
         this.value = undefined;
+        this.helperText = undefined;
+        this.errorText = undefined;
     }
     valueChanged(value) {
         this.setRadioTabindex(value);
@@ -161,21 +171,48 @@ const RadioGroup = /*@__PURE__*/ proxyCustomElement(class RadioGroup extends HTM
         const radioToFocus = this.getRadios().find((r) => r.tabIndex !== -1);
         radioToFocus === null || radioToFocus === void 0 ? void 0 : radioToFocus.setFocus();
     }
+    /**
+     * Renders the helper text or error text values
+     */
+    renderHintText() {
+        const { helperText, errorText, helperTextId, errorTextId } = this;
+        const hasHintText = !!helperText || !!errorText;
+        if (!hasHintText) {
+            return;
+        }
+        return (h("div", { class: "radio-group-top" }, h("div", { id: helperTextId, class: "helper-text" }, helperText), h("div", { id: errorTextId, class: "error-text" }, errorText)));
+    }
+    getHintTextID() {
+        const { el, helperText, errorText, helperTextId, errorTextId } = this;
+        if (el.classList.contains('ion-touched') && el.classList.contains('ion-invalid') && errorText) {
+            return errorTextId;
+        }
+        if (helperText) {
+            return helperTextId;
+        }
+        return undefined;
+    }
     render() {
         const { label, labelId, el, name, value } = this;
         const mode = getIonMode(this);
         renderHiddenInput(true, el, name, value, false);
-        return h(Host, { key: 'a853e38901f0f4ba17bbf21ebb5da5b5c20b327e', role: "radiogroup", "aria-labelledby": label ? labelId : null, onClick: this.onClick, class: mode });
+        return (h(Host, { key: 'cac92777297029d7fd1b6af264d92850e35dfbba', role: "radiogroup", "aria-labelledby": label ? labelId : null, "aria-describedby": this.getHintTextID(), "aria-invalid": this.getHintTextID() === this.errorTextId, onClick: this.onClick, class: mode }, this.renderHintText(), h("div", { key: '6b5c634dba30d54eedc031b077863f3d6a9d9e9b', class: "radio-group-wrapper" }, h("slot", { key: '443edb3ff6f4c59d4c4324c8a19f2d6def47a322' }))));
     }
     get el() { return this; }
     static get watchers() { return {
         "value": ["valueChanged"]
     }; }
-}, [0, "ion-radio-group", {
+    static get style() { return {
+        ios: IonRadioGroupIosStyle0,
+        md: IonRadioGroupMdStyle0
+    }; }
+}, [36, "ion-radio-group", {
         "allowEmptySelection": [4, "allow-empty-selection"],
         "compareWith": [1, "compare-with"],
         "name": [1],
         "value": [1032],
+        "helperText": [1, "helper-text"],
+        "errorText": [1, "error-text"],
         "setFocus": [64]
     }, [[4, "keydown", "onKeydown"]], {
         "value": ["valueChanged"]

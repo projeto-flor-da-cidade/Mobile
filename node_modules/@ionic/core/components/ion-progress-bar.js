@@ -29,7 +29,7 @@ const ProgressBar = /*@__PURE__*/ proxyCustomElement(class ProgressBar extends H
         const mode = getIonMode(this);
         // If the progress is displayed as a solid bar.
         const progressSolid = buffer === 1;
-        return (h(Host, { key: '8d8ddf0b26fe33803d3a6168cbedd523d1a888e7', role: "progressbar", "aria-valuenow": type === 'determinate' ? value : null, "aria-valuemin": "0", "aria-valuemax": "1", class: createColorClasses(color, {
+        return (h(Host, { key: 'd60eeaa18aaee607e083c0ef9d0de8178d47c4cd', role: "progressbar", "aria-valuenow": type === 'determinate' ? value : null, "aria-valuemin": "0", "aria-valuemax": "1", class: createColorClasses(color, {
                 [mode]: true,
                 [`progress-bar-${type}`]: true,
                 'progress-paused': paused,

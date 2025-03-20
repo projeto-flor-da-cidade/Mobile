@@ -1,7 +1,7 @@
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
  */
-import { getMode, setMode, setPlatformHelpers } from "@stencil/core";
+import { getMode, setMode } from "@stencil/core";
 import { isPlatform, setupPlatforms } from "../utils/platform";
 import { config, configFromSession, configFromURL, saveConfig } from "./config";
 // TODO(FW-2832): types
@@ -16,17 +16,6 @@ export const initialize = (userConfig = {}) => {
     const doc = window.document;
     const win = window;
     const Ionic = (win.Ionic = win.Ionic || {});
-    const platformHelpers = {};
-    if (userConfig._ael) {
-        platformHelpers.ael = userConfig._ael;
-    }
-    if (userConfig._rel) {
-        platformHelpers.rel = userConfig._rel;
-    }
-    if (userConfig._ce) {
-        platformHelpers.ce = userConfig._ce;
-    }
-    setPlatformHelpers(platformHelpers);
     // create the Ionic.config from raw config object (if it exists)
     // and convert Ionic.config into a ConfigApi that has a get() fn
     const configObj = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, configFromSession(win)), { persistConfig: false }), Ionic.config), configFromURL(win)), userConfig);

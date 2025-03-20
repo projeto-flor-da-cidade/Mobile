@@ -1,31 +1,144 @@
-/* Classe para quando os campos estão habilitados */
-.fields-enabled {
-  pointer-events: auto;
-  opacity: 1;
+/* Permite rolagem no conteúdo */
+ion-content {
+  --overflow: auto !important;
+  display: block;
 }
 
-/* Classe para quando os campos estão desabilitados */
-.fields-disabled {
-  pointer-events: none;
-  opacity: 0.5;
+/* Fundo com imagem */
+.background-custom {
+  background: url('../../assets/servicoimagenova.png') center center no-repeat;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  overflow-y: auto;
+  display: block;
 }
 
-/* Exemplo de customização para botões */
-.botao-personalizado {
-  --background: white;
-  --color: #5985B6;
-  --border-color: #5985B6;
-  border-width: 2px;
+/* Toolbar clara com sombra */
+.toolbar-custom {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Ícones do header */
+.icon-menu,
+.icon-user {
+  font-size: 1.8rem;
+  color: #000000;
+  cursor: pointer;
+}
+
+/* Título centralizado no header */
+.header-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+}
+
+/* Container do formulário */
+.form-container {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  overflow-y: visible;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 80px;
+  margin: 20px auto;
+}
+
+/* Título de seção */
+.section-title {
+  font-weight: bold;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Campos de entrada */
+.input-container {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: green;
+}
+
+/* Placeholder em verde escuro */
+.input-container input::placeholder {
+  color: #4a7c59;
   font-weight: bold;
 }
 
-.botao-personalizado:hover {
-  --background: #5985B6;
-  --color: white;
-  --border-color: #5985B6;
+/* Remove o placeholder ao focar */
+.input-container input:focus::placeholder {
+  color: transparent;
 }
 
-/* Ajuste de margem */
-.ion-margin-top {
-  margin-top: 1rem;
+/* Mensagem de erro ou instrução */
+.input-warning {
+  font-size: 0.85rem;
+  margin-top: 4px;
+  color: red;
 }
+
+/* Container dos horários */
+.horario-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.horario-container select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 1rem;
+}
+
+/* Ajuste do captcha */
+.captcha {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+/* Botão de envio */
+.submit-button {
+  --background: #6d933d;
+  --color: #ffffff;
+  border-radius: 15px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.submit-button:hover {
+  background-color: #6d933d;
+}
+
+/* Responsividade em telas menores */
+@media (max-height: 700px) {
+  .form-container {
+    padding-bottom: 120px;
+  }
+  .horario-container {
+    flex-direction: column;
+  }
+}
+
+

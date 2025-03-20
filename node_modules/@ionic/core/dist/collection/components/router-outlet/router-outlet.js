@@ -177,7 +177,7 @@ export class RouterOutlet {
         return true;
     }
     render() {
-        return h("slot", { key: 'a70341f58d19df55de1dad00e3464388e446aa2a' });
+        return h("slot", { key: '8d0c163c5f63158e16ef2db7cc3c756cf597461d' });
     }
     static get is() { return "ion-router-outlet"; }
     static get encapsulation() { return "shadow"; }
